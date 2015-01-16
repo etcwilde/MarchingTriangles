@@ -1,0 +1,7 @@
+Incremental Polygonization of Implicit Surface
+E. Galin and S. Akkouche,
+Graphical Models, 62, 19-39, 2000.
+
+Shinkrwrap: An efficient adaptive algorithm for triangulating an iso-surface
+C.W.A.M van Overveld and B. Wyvill
+
