@@ -4,8 +4,13 @@
 #define PNTS_MAX 300
 #define PNTS_RAD 8
 
-#include "vector.h"
+
+#include <vector>
+
 #include <string.h>
+
+#include "vector.h"
+
 
 class Polygon
 {
@@ -19,7 +24,6 @@ class Polygon
 		unsigned int size();
 
 	private:
-		Vector2<int> m_points[PNTS_MAX];
 		unsigned int m_count;
 };
 

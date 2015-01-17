@@ -34,9 +34,17 @@ int main(int argc, char** argv)
 			<< " <File>" <<'\n';
 		return EXIT_FAILURE;
 	}
-	OpenGLView window(640, 480, "Delaunay Triangulation");
+
+	Vector2<int> a (1, 4);
+	Vector2<int> b (2, 3);
+	Vector2<int> d (0, 2);
+	Vector2<float> c(0.f, 3.f);
+	std::cout << a << b << a + b << a.Dot(b) << ' ' << d.Length() << std::endl;
+	std::cout << c.Length() << std::endl;
+
+	/*OpenGLView window(640, 480, "Delaunay Triangulation");
 	FileLoader data_loader;
 	data_loader.LoadPolygons(window.get_world(),
-			argv[1]);
+			argv[1]); */
 	return EXIT_SUCCESS;
 }
