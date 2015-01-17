@@ -4,7 +4,8 @@
  * Contains several functions used for context handling.
  */
 
-
+#ifndef CONTEXT_H
+#define CONTEXT_H
 #pragma once
 #include <GLFW/glfw3.h>
 #include <string>
@@ -139,3 +140,4 @@ namespace glfw
 		glproc GetProcAddress(std::string procname);
 	}
 }
+#endif // CONTEXT_H

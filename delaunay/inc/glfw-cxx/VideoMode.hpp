@@ -1,3 +1,5 @@
+#ifndef GLFW_VIDEOMODE_H
+#define GLFW_VIDEOMODE_H
 #pragma once
 #include <GLFW/glfw3.h>
 #include <glfw-cxx/Vector2.hpp>
@@ -98,3 +100,4 @@ namespace glfw
 		VideoMode();
 	};
 }
+#endif // GLFW_VIDEOMODE_H

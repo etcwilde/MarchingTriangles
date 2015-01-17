@@ -1,3 +1,5 @@
+#ifndef GAMMA_RAMP_H
+#define GAMMA_RAMP_H
 #pragma once
 #include <GLFW/glfw3.h>
 
@@ -57,3 +59,4 @@ namespace glfw
 		GammaRamp();
 	};
 }
+#endif // GAMMA_RAMP_H

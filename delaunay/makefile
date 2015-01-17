@@ -31,7 +31,8 @@ INC	= inc/
 # Flags
 CFLAGS 	= -c -g -pthread
 CXFLAGS	= $(CFLAGS) -std=c++11
-LIBS	= -pthread -lglfw -lGL -L${LIB} -lglfw-cxx
+LFLAGS	= -std=c++11 -O3
+LIBS	= -pthread -lglfw -lGL
 
 # Source Files
 SRCS	= \
@@ -76,5 +77,5 @@ $(BUILD)%.o: $(SRC)%.cpp
 	$(CXX) $(CXFLAGS) -I $(INC) $< -o $@
 
 # Link executable
-$(BIN)$(EXEC): $(OBJS) $(INC)*
-	$(CXX) -o $@ $< $(LIBS)
+$(BIN)$(EXEC): $(OBJS)
+	$(CXX) $(LFLAGS) $(OBJS) -o $@ -L$(LIB) -rdynamic $(LIB)libglfw-cxx.so $(LIBS) -Wl,-rpath,$(LIB):$(BIN)

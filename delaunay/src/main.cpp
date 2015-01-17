@@ -1,33 +1,42 @@
-#include <stdio.h>
-#include <glfw-cxx/glfw-cxx.hpp>
-#include <glfw-cxx/my_math.h>
-
+#include <iostream>
+#include "OpenGlView.h"
+#include "vector.h"
 
 int main(int argc, char** argv)
 {
+	OpenGLView window(640, 480, "Window");
 
-	glfw::Window window;
-	window.Create(640, 480, "Window Test");
+/*	glfw::Window window;
+	window.Create(640, 480, "Window");
 	window.MakeContextCurrent();
-	while (!window.ShouldClose())
+	glfw::FramebufferSize fb_size = window.GetFramebufferSize();
+	float ratio = fb_size.x /(float) fb_size.y;
+	glViewport(0, 0, fb_size.x, fb_size.y);
+	glClear(GL_COLOR_BUFFER_BIT);
+	while(!window.ShouldClose())
 	{
 		window.PollEvents();
 		glfw::Event event;
-		while (window.GetEvents(event))
+		while(window.GetEvents(event))
 		{
-			switch (event.type)
+			switch(event.type)
 			{
 				case glfw::Event::Type::Key:
-					if (event.key.action == glfw::KeyAction::Press)
-						if (event.key.key == glfw::Key::Escape)
+					if(event.key.action == glfw::KeyAction::Press)
+						if(event.key.key == glfw::Key::Escape)
 							window.SetShouldClose(GL_TRUE);
+
+				case glfw::Event::Type::FramebufferSize:
+					{fb_size = window.GetFramebufferSize();
+					ratio = fb_size.x, fb_size.y;
+					glViewport(0, 0, fb_size.x, fb_size.y);
+					}
 			}
 		}
 
-		glfw::FramebufferSize fb_size = window.GetFramebufferSize();
-		float ratio = fb_size.x /(float)fb_size.y;
-		glViewport(0, 0, fb_size.x, fb_size.y);
 		glClear(GL_COLOR_BUFFER_BIT);
+
+
 		glMatrixMode(GL_PROJECTION);
 
 		glLoadIdentity();
@@ -35,22 +44,20 @@ int main(int argc, char** argv)
 		glMatrixMode(GL_MODELVIEW);
 
 		glLoadIdentity();
-		glRotatef(glfw::Time::Get() * 50.f, 0.f, 0.f, 1.f);
+		glRotatef(glfw::Time::Get() * 45.f, 0.f, 0.f, 1.f);
+
 		glBegin(GL_TRIANGLES);
 		{
 			glColor3f(1.f, 0.f, 0.f);
-			glVertex3f(-0.6f, -0.4f, 0.f);
+			glVertex2f(1.f, 0.f);
 			glColor3f(0.f, 1.f, 0.f);
-			glVertex3f(0.6f, -0.4f, 0.f);
+			glVertex2f(-1.f, 0.f);
 			glColor3f(0.f, 0.f, 1.f);
-			glVertex3f(0.f, 0.6f, 0.f);
+			glVertex2f(0.f, 1.f);
 		}
 		glEnd();
-
 		window.SwapBuffers();
 		window.PollEvents();
-	}
-
-	printf("Hello World\n");
+	} */
 	return 0;
 }

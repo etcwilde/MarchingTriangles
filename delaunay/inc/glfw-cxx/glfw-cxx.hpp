@@ -1,3 +1,5 @@
+#ifndef GLFW_CXX_H
+#define GLFW_CXX_H
 #include <glfw-cxx/Version.hpp>
 #include <glfw-cxx/Window.hpp>
 #include <glfw-cxx/Monitor.hpp>
@@ -9,3 +11,4 @@
 #include <glfw-cxx/GammaRamp.hpp>
 #include <glfw-cxx/Input.hpp>
 #include <glfw-cxx/Init.hpp>
+#endif // GLFW_CXX_H

@@ -1,3 +1,5 @@
+#ifndef GLFW_WINDOW_H
+#define GLFW_WINDOW_H
 #pragma once
 #include <GLFW/glfw3.h>
 #include <glfw-cxx/Monitor.hpp>
@@ -926,3 +928,4 @@ namespace glfw
 		void SetCharCallback(CharFunctionPointerRaw* fun);
 	};
 }
+#endif // GLFW_WINDOW_H

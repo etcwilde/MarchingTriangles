@@ -1,3 +1,5 @@
+#ifndef GLFW_TIME_H
+#define GLFW_TIME_H
 #pragma once
 #include <GLFW/glfw3.h>
 
@@ -19,3 +21,5 @@ namespace glfw
 		static void Set(double time);
 	};
 }
+
+#endif // GLFW_TIME_H

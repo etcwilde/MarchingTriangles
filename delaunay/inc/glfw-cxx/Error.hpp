@@ -1,3 +1,5 @@
+#ifndef ERROR_H
+#define ERROR_H
 #pragma once
 #include <GLFW/glfw3.h>
 #include <string>
@@ -124,3 +126,5 @@ namespace glfw
 		Error(ErrorCode error_, const char* description_);
 	};
 }
+
+#endif // ERROR_H

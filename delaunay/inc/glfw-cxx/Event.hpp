@@ -1,3 +1,5 @@
+#ifndef EVENT_H
+#define EVENT_H
 #pragma once
 #include <glfw-cxx/Vector2.hpp>
 #include <glfw-cxx/Input.hpp>
@@ -139,3 +141,4 @@ namespace glfw
 		Event() {}
 	};
 }
+#endif // EVENT_H

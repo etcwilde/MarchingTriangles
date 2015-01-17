@@ -1,3 +1,5 @@
+#ifndef GLFW_MONITOR_H
+#define GLFW_MONITOR_H
 #pragma once
 #include <GLFW/glfw3.h>
 #include <list>
@@ -132,3 +134,4 @@ namespace glfw
 
 	};
 }
+#endif
