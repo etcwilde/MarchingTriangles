@@ -1,12 +1,14 @@
 #ifndef OPENGLVIEW_H
 #define OPENGLVIEW_H
 
-#include <math.h>
-#include <list>
-#include "polygon.h"
 #include <glfw-cxx/glfw-cxx.hpp>
-#include <string>
 #include <iostream>
+#include <math.h>
+#include <string>
+
+#include "world.h"
+
+
 
 class OpenGLView : public glfw::Window
 {
@@ -15,10 +17,10 @@ class OpenGLView : public glfw::Window
 		~OpenGLView();
 		void GLPaint();
 		void Resize(int width, int height);
-	private:
-		std::list<Polygon> m_polygons;
-		glfw::FramebufferSize m_fb_size;
-		float m_aspect_ratio;
-};
 
+		World& get_world();
+	private:
+		float m_aspect_ratio;
+		World m_world;
+};
 #endif // OPENGLVIEW_H

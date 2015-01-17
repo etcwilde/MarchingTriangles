@@ -17,6 +17,7 @@ CC	= gcc
 CXX	= g++
 TAR	= tar
 MKDIR	= mkdir -p
+CP	= cp
 
 # Directories
 SRC	= src/
@@ -48,11 +49,14 @@ OBJS	= \
 	  $(patsubst $(SRC)%.cc, $(BUILD)%.o, \
 	  $(patsubst $(SRC)%.cpp, $(BUILD)%.o, $(SRCS)))))
 
-.PHONY: all rebuild clean
+.PHONY: all rebuild clean run
 
 all: $(BUILD) $(BIN) $(BIN)$(EXEC)
 
 rebuild: clean all
+
+run: all
+	./$(BIN)$(EXEC)
 
 clean:
 	$(RM) $(BUILD)*.o

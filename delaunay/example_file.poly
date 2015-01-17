@@ -1,0 +1,18 @@
+# Evan Wilde
+# January 16 2015
+# Polygon file
+
+p polygon
+c 255 0 0
+v 50 500
+c 0 255 0
+v 30 20
+c 0 0 255
+v 50 50
+c 255 0 255
+v 40 34
+c 255 255 0
+v 20 50
+c 40 300
+c 0 255 255
+
