@@ -10,11 +10,11 @@
 
 
 
-class OpenGLView : public glfw::Window
+class OpenGlView : public glfw::Window
 {
 	public:
-		OpenGLView(int width, int height, const std::string &title);
-		~OpenGLView();
+		OpenGlView(int width, int height, const std::string &title);
+		~OpenGlView();
 		void GLPaint();
 		void Resize(int width, int height);
 

@@ -3,6 +3,27 @@
 
 #include <ostream>
 #include <cmath>
+namespace container
+{
+	template<typename T>
+	class P2
+	{
+		public:
+			T x;
+			T y;
+	};
+
+	template <typename T>
+	class P3
+	{
+		public:
+			T x;
+			T y;
+			T z;
+	};
+
+};
+
 
 /*!\brief Two-dimensional vector class */
 template<typename T>
@@ -95,7 +116,7 @@ class Vector2
 		Vector2<T> operator-=(const Vector2<T> &right)
 		{
 			x -= right.x;
-		       	y -= right.y;
+			y -= right.y;
 		}
 
 		Vector2<T> operator-=(const T right)
@@ -116,13 +137,13 @@ class Vector2
 		Vector2<T> operator*=(const Vector2<T> &right)
 		{
 			x *= right.x;
-		       	y *= right.y;
+			y *= right.y;
 		}
 
 		Vector2<T> operator*=(const T right)
 		{
 			x *= right;
-		       	y *= right;
+			y *= right;
 		}
 
 		Vector2<T> operator/(const Vector2<T> &right)
@@ -138,13 +159,13 @@ class Vector2
 		Vector2<T> operator/=(const Vector2<T> &right)
 		{
 			x /= right.x;
-		       	y /= right.y;
+			y /= right.y;
 		}
 
 		Vector2<T> operator/=(const T right)
 		{
 			x /= right;
-		       	y /= right;
+			y /= right;
 		}
 
 		/*!\brief X coordinate
@@ -219,14 +240,14 @@ class Vector3
 		Vector3<T> operator+=(const Vector3<T> &right)
 		{
 			x += right.x;
-		       	y += right.y;
-		       	z += right.z;
+			y += right.y;
+			z += right.z;
 		}
 
 		Vector3<T> operator+=(const T right)
 		{
 			x += right;
-		       	y += right;
+			y += right;
 			z += right;
 		}
 
@@ -243,15 +264,15 @@ class Vector3
 		Vector3<T> operator-=(const Vector3<T> &right)
 		{
 			x -= right.x;
-		       	y -= right.y;
-		       	z -= right.z;
+			y -= right.y;
+			z -= right.z;
 		}
 
 		Vector3<T> operator-=(const T right)
 		{
 			x -= right;
-		       	y -= right;
-		       	z -= right;
+			y -= right;
+			z -= right;
 		}
 
 		Vector3<T> operator*(const Vector3<T> &right)
@@ -267,15 +288,15 @@ class Vector3
 		Vector3<T> operator*=(const Vector3<T> &right)
 		{
 			x *= right.x;
-		       	y *= right.y;
-		       	z *= right.z;
+			y *= right.y;
+			z *= right.z;
 		}
 
 		Vector3<T> operator*=(const T right)
 		{
 			x *= right;
-		       	y *= right;
-		       	z *= right;
+			y *= right;
+			z *= right;
 		}
 
 		Vector3<T> operator/(const Vector3<T> &right)
@@ -291,8 +312,8 @@ class Vector3
 		Vector3<T> operator/=(const Vector3<T> &right)
 		{
 			x /= right.x;
-		       	y /= right.y;
-		       	z /= right.z;
+			y /= right.y;
+			z /= right.z;
 		}
 		Vector3<T> operator/=(const T right)
 		{

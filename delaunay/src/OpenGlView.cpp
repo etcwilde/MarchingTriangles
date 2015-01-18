@@ -1,6 +1,6 @@
 #include "OpenGlView.h"
 
-OpenGLView::OpenGLView(int width, int height, const std::string &title)
+OpenGlView::OpenGlView(int width, int height, const std::string &title)
 	:glfw::Window()
 {
 	glfw::Window::Create(width, height, title);
@@ -34,11 +34,11 @@ OpenGLView::OpenGLView(int width, int height, const std::string &title)
 	}
 }
 
-OpenGLView::~OpenGLView()
+OpenGlView::~OpenGlView()
 {
 }
 
-void OpenGLView::Resize(int width, int height)
+void OpenGlView::Resize(int width, int height)
 {
 	glViewport(0, 0, width, height);
 	m_aspect_ratio = width / (float) height;
@@ -51,7 +51,7 @@ void OpenGLView::Resize(int width, int height)
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void OpenGLView::GLPaint()
+void OpenGlView::GLPaint()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glLoadIdentity();
@@ -69,7 +69,7 @@ void OpenGLView::GLPaint()
 	glfw::Window::SwapBuffers();
 }
 
-World& OpenGLView::get_world()
+World& OpenGlView::get_world()
 {
 	return m_world;
 }
