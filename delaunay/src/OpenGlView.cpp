@@ -73,3 +73,8 @@ World& OpenGLView::get_world()
 {
 	return m_world;
 }
+
+void OpenGLView::set_world(World& w)
+{
+	m_world = w;
+}

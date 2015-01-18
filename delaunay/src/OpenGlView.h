@@ -19,6 +19,7 @@ class OpenGLView : public glfw::Window
 		void Resize(int width, int height);
 
 		World& get_world();
+		void set_world(World& w);
 	private:
 		float m_aspect_ratio;
 		World m_world;

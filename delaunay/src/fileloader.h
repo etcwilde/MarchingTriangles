@@ -18,6 +18,7 @@ class FileLoader
 				const std::string& obj_filename);
 
 	private:
+		std::vector<Polygon> m_polygons;
 		std::vector<Vector3<int>> m_colors;
 		std::vector<Vector2<int>> m_vertices;
 };
