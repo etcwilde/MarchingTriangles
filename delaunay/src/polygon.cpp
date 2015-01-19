@@ -19,3 +19,8 @@ unsigned int Polygon::size()
 {
 	return m_points.size();
 }
+
+Vector2<int> Polygon::operator[](const int index)
+{
+	return m_points[index % m_points.size()];
+}

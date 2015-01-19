@@ -1,6 +1,6 @@
 #include "fileloader.h"
 
-bool FileLoader::LoadPolygons(World& world,
+bool FileLoader::LoadPolygons(World* world,
 		const std::string&  obj_filename)
 {
 	string line;
@@ -77,7 +77,6 @@ bool FileLoader::LoadPolygons(World& world,
 			current_poly.add_point(pt, strtoul(matches[2].c_str(),
 						NULL, 0) - 1);
 		}
-
 	}
 	if (poly_set)
 	{
@@ -95,8 +94,9 @@ bool FileLoader::LoadPolygons(World& world,
 			m_colors[i].y << ' ' << m_colors[i].z << '\n';
 
 	cerr << "Polygons: " << m_polygons.size() << '\n';
-	/*for (unsigned int i = 0; i < m_polygons.size(); ++i)
-	{
-	} */
+
+
+	world->set_polygons(m_polygons);
+	world->set_colors(m_colors);
 	return true;
 }

@@ -21,6 +21,8 @@ class Polygon
 
 		unsigned int size();
 
+		Vector2<int> operator[](const int index);
+
 	private:
 		std::vector<Vector2<int>> m_points;
 		std::vector<unsigned int> m_colors;

@@ -18,7 +18,7 @@ using namespace std;
 class FileLoader
 {
 	public:
-		bool LoadPolygons(World& world,
+		bool LoadPolygons(World* world,
 				const std::string& obj_filename);
 
 	private:
