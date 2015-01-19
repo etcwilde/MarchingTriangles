@@ -1,0 +1,11 @@
+Marching Triangles
+
+The algorithm describes a method of polygonizing an implicit surface by growing
+triangles across the surface. The algorithm begins with a single triangle
+placed on the surface, the picks an edge (two vertices on the triangle) and
+finds one more vertex on the surface that is not within the triangle. With the
+three vertices, it forms a new triangle. The selected edge is then removed from
+the pool of edges and the two new edges are placed into the edge pool, then the
+process repeats. Triangles are made as large as possible while keeping the
+error under some small epsilon.
+
