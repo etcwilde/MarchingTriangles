@@ -26,6 +26,9 @@ unsigned int stoi(char* s)
 
 int main(int argc, char** argv)
 {
+
+	FileLoader data_loader;
+	World w;
 	// Load  file
 	//
 	if (argc < 2)
@@ -35,9 +38,9 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 
-	OpenGlView window(640, 480, "Delaunay Triangulation");
-	FileLoader data_loader;
-	data_loader.LoadPolygons(window.get_world(),
-			argv[1]); 
+	data_loader.LoadPolygons(&w, argv[1]);
+	//OpenGlView window(640, 480, "Delaunay Triangulation");
+	//window.set_world(w);
+	//window.open();
 	return EXIT_SUCCESS;
 }

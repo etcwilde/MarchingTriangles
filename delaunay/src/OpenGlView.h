@@ -15,12 +15,21 @@ class OpenGlView : public glfw::Window
 	public:
 		OpenGlView(int width, int height, const std::string &title);
 		~OpenGlView();
+
+		void open();
 		void GLPaint();
 		void Resize(int width, int height);
 
 		World& get_world();
+		void set_world(World w);
 	private:
+		std::string m_title;
+		int m_initial_width, m_initial_height;
+		int m_width, m_height;
+
+		void run();
 		float m_aspect_ratio;
+
 		World m_world;
 };
 #endif // OPENGLVIEW_H

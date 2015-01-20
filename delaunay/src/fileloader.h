@@ -3,7 +3,11 @@
 
 #include <fstream>
 #include <iostream>
+#include <regex>
+#include <string>
 #include <vector>
+
+#include <stdlib.h>
 
 #include "polygon.h"
 #include "vector.h"
@@ -14,12 +18,13 @@ using namespace std;
 class FileLoader
 {
 	public:
-		bool LoadPolygons(World& world,
+		bool LoadPolygons(World* world,
 				const std::string& obj_filename);
 
 	private:
-		std::vector<Vector3<int>> m_colors;
-		std::vector<Vector2<int>> m_vertices;
+		std::vector<Polygon> m_polygons;
+		std::vector<Vector3<unsigned int>> m_colors;
+
 };
 
 #endif //LOADER_H

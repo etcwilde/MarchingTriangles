@@ -4,13 +4,11 @@
 #define PNTS_MAX 300
 #define PNTS_RAD 8
 
-
 #include <vector>
 
 #include <string.h>
 
 #include "vector.h"
-
 
 class Polygon
 {
@@ -18,13 +16,16 @@ class Polygon
 		Polygon();
 		~Polygon();
 
-		bool add_point(Vector2<int> pt);
-		bool add_point(int x, int y);
+		void add_point(Vector2<int> pt, unsigned int color_index=1);
+		void add_point(int x, int y, unsigned int color_index=1);
 
 		unsigned int size();
 
+		Vector2<int> operator[](const int index);
+
 	private:
-		unsigned int m_count;
+		std::vector<Vector2<int>> m_points;
+		std::vector<unsigned int> m_colors;
 };
 
 
