@@ -3,3 +3,6 @@
 *.swo
 .license.config
 *.template
+bin/
+build/
+.heading_templates

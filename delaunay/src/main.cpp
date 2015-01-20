@@ -39,6 +39,7 @@ int main(int argc, char** argv)
 	}
 
 	data_loader.LoadPolygons(&w, argv[1]);
+	OpenGlView window(640, 480, "Delaunay Triangulation", &w);
 	//OpenGlView window(640, 480, "Delaunay Triangulation");
 	//window.set_world(w);
 	//window.open();
