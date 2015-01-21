@@ -103,6 +103,8 @@ OpenGlView::~OpenGlView()
 void OpenGlView::Resize(int width, int height)
 {
 	glViewport(0, 0, width, height);
+
+	std::cout << "Here\n";
 	m_aspect_ratio = width / (float) height;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -137,11 +139,6 @@ void OpenGlView::set_world(const World& w)
 void OpenGlView::initialize()
 {
 	glfw::Window::Create(m_width, m_height, m_title);
-	glfw::Window::MakeContextCurrent();
-	glfw::FramebufferSize fb_size;
-	fb_size = glfw::Window::GetFramebufferSize();
-	Resize(fb_size.x, fb_size.y);
-
 	m_b_kill = false;
 
 	// Initialize rendering thread
@@ -160,10 +157,14 @@ void OpenGlView::terminate()
 void OpenGlView::t_redraw()
 {
 	// Only redraw if the redraw has been set
-	std::cout << "Redraw a" << '\n';
 	std::unique_lock<std::mutex> sleep_lock(m_redraw);
+	glfw::Window::MakeContextCurrent();
+	glfw::FramebufferSize fb_size;
+	fb_size = glfw::Window::GetFramebufferSize();
+	Resize(fb_size.x, fb_size.y);
 	while (!m_b_kill)
 	{
+
 		for(;;)
 		{
 			m_mb_redraw.lock();
@@ -173,18 +174,12 @@ void OpenGlView::t_redraw()
 			m_cv_redraw.wait(sleep_lock); // Otherwise sleep
 			if (m_b_kill) break;
 		}
-		std::cout << "Redraw b" << '\n';
-
 		if (m_b_kill) break; // If we need to die, leave now!
 		// Otherwise, we need to go ahead and redraw
-		//
-		//
-		std::cout << "Redraw c" << '\n';
+
 		glClear(GL_COLOR_BUFFER_BIT);
-		std::cout << "Redraw d" << '\n';
 		glLoadIdentity();
-		//m_world.draw();
-		//
+		m_world->draw();
 		glfw::Window::SwapBuffers();
 	}
 

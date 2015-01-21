@@ -10,6 +10,8 @@
 
 #include "vector.h"
 
+// TODO: extract color from vertex
+
 class Polygon
 {
 	public:
@@ -22,6 +24,9 @@ class Polygon
 		unsigned int size();
 
 		Vector2<int> operator[](const int index);
+
+		unsigned int color(unsigned int index);
+
 
 	private:
 		std::vector<Vector2<int>> m_points;

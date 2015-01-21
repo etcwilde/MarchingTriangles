@@ -23,26 +23,21 @@ void World::set_polygons(std::vector<Polygon> polygons)
 void World::draw()
 {
 
-	//std::cerr << m_polygons.size() << '\n';
+	//DrawLib::drawCircle(50, Vector2<int>(49, 90), true);
 	unsigned int poly_index;
 	for(poly_index = 0; poly_index < m_polygons.size(); ++poly_index)
 	{
-		DrawLib::drawCircle(5, m_polygons[poly_index][0], true);
-	}
+		//std::cerr << m_polygons[poly_index][0] << '\n';
+		for (unsigned int i = 0; i < m_polygons[poly_index].size();
+			++i)
+		{
+			unsigned int color = m_polygons[poly_index].color(i);
+			register Vector3<unsigned int> color_v = m_colors[color];
+			glColor3ub(color_v.x, color_v.y, color_v.z);
+			DrawLib::drawCircle(5, m_polygons[poly_index][i], true);
 
-	/*glBegin(GL_TRIANGLES);
-	{
-		glColor3ub(255, 0, 255);
-		glVertex2f(50, 0);
-		glColor3ub(0, 255, 0);
-		glVertex2f(-50, 0);
-		glColor3ub(0, 255, 255);
-		glVertex2f(50, 50);
+		}
 	}
-	glEnd();
-
-	glColor3ub(255, 255, 0);
-	DrawLib::drawCircle(50, Vector2<int>(40, 90), true); */
 }
 
 unsigned int World::polygons()

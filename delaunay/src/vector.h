@@ -322,6 +322,15 @@ class Vector3
 			z /= right;
 		}
 
+		friend std::ostream& operator<<(std::ostream& os,
+				const Vector3<T>& vec)
+		{
+			os << "[ " << vec.x << ", " << vec.y <<  ", " << vec.z 
+				<< " ]";
+			return os;
+		}
+
+
 
 		/* Data storage */
 		/*!\brief X coordinate
