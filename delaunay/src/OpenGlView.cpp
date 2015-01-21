@@ -3,7 +3,7 @@
 OpenGlView::OpenGlView(int width, int height, const std::string& title)
 	:glfw::Window()
 {
-	m_world = NULL;
+	/*m_world = NULL;
 	m_initial_width = m_width = width;
 	m_initial_height = m_height = height;
 	m_title = title;
@@ -36,13 +36,29 @@ OpenGlView::OpenGlView(int width, int height, const std::string& title)
 			}
 		}
 		GLPaint();
-	}
+	} */
 }
+
 
 OpenGlView::OpenGlView(int width, int height, const std::string& title, 
 		World* world)
 	:glfw::Window()
 {
+	m_world = world;
+	m_initial_width = m_width = width;
+	m_initial_height = m_height = height;
+	m_title = title;
+
+	initialize();
+	terminate();
+
+
+
+	/*while (1)
+	{
+	} */
+
+	/*
 	m_world = world;
 	m_initial_width = m_width = width;
 	m_initial_height = m_height = height;
@@ -76,7 +92,7 @@ OpenGlView::OpenGlView(int width, int height, const std::string& title,
 			}
 		}
 		GLPaint();
-	}
+	} */
 }
 
 OpenGlView::~OpenGlView()
@@ -99,10 +115,11 @@ void OpenGlView::Resize(int width, int height)
 
 void OpenGlView::GLPaint()
 {
-	glClear(GL_COLOR_BUFFER_BIT);
-	glLoadIdentity();
-	//m_world.draw();
-	glfw::Window::SwapBuffers();
+	m_mb_redraw.lock();
+	m_b_redraw = true;
+	m_mb_redraw.unlock();
+	m_cv_redraw.notify_one();
+
 }
 
 const World* OpenGlView::get_world() const
@@ -112,8 +129,64 @@ const World* OpenGlView::get_world() const
 
 void OpenGlView::set_world(const World& w)
 {
-	if (m_world) delete m_world;
-	//std::cerr << "World Polygons " << m_world.polygons() << '\n';
+//	if (m_world) delete m_world;
+// 	std::cerr << "World Polygons " << m_world.polygons() << '\n';
 }
 
 
+void OpenGlView::initialize()
+{
+	glfw::Window::Create(m_width, m_height, m_title);
+	glfw::Window::MakeContextCurrent();
+	glfw::FramebufferSize fb_size;
+	fb_size = glfw::Window::GetFramebufferSize();
+	Resize(fb_size.x, fb_size.y);
+
+	m_b_kill = false;
+
+	// Initialize rendering thread
+	thread_redraw = std::thread(&OpenGlView::t_redraw, this);
+}
+
+void OpenGlView::terminate()
+{
+	thread_redraw.join();
+}
+
+/*
+ * Threads
+ */
+/*!\brief Redraw Method */
+void OpenGlView::t_redraw()
+{
+	// Only redraw if the redraw has been set
+	std::cout << "Redraw a" << '\n';
+	std::unique_lock<std::mutex> sleep_lock(m_redraw);
+	while (!m_b_kill)
+	{
+		for(;;)
+		{
+			m_mb_redraw.lock();
+			bool redraw = m_b_redraw;
+			m_mb_redraw.unlock();
+			if (redraw) break; // If we need to redraw, break
+			m_cv_redraw.wait(sleep_lock); // Otherwise sleep
+			if (m_b_kill) break;
+		}
+		std::cout << "Redraw b" << '\n';
+
+		if (m_b_kill) break; // If we need to die, leave now!
+		// Otherwise, we need to go ahead and redraw
+		//
+		//
+		std::cout << "Redraw c" << '\n';
+		glClear(GL_COLOR_BUFFER_BIT);
+		std::cout << "Redraw d" << '\n';
+		glLoadIdentity();
+		//m_world.draw();
+		//
+		glfw::Window::SwapBuffers();
+	}
+
+
+}
