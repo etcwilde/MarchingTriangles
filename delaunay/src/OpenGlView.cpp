@@ -104,7 +104,6 @@ void OpenGlView::Resize(int width, int height)
 {
 	glViewport(0, 0, width, height);
 
-	std::cout << "Here\n";
 	m_aspect_ratio = width / (float) height;
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -162,6 +161,12 @@ void OpenGlView::t_redraw()
 	glfw::FramebufferSize fb_size;
 	fb_size = glfw::Window::GetFramebufferSize();
 	Resize(fb_size.x, fb_size.y);
+
+
+	if (m_world == NULL) return;
+
+	std::cout << *m_world << '\n';
+
 	while (!m_b_kill)
 	{
 
@@ -182,6 +187,4 @@ void OpenGlView::t_redraw()
 		m_world->draw();
 		glfw::Window::SwapBuffers();
 	}
-
-
 }

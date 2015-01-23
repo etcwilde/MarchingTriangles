@@ -5,6 +5,7 @@
 #define PNTS_RAD 8
 
 #include <vector>
+#include <iostream>
 
 #include <string.h>
 
@@ -27,6 +28,24 @@ class Polygon
 
 		unsigned int color(unsigned int index);
 
+		friend std::ostream& operator<<(std::ostream& os,
+				const Polygon& p)
+		{
+			os << '\n';
+			os << "Vertices: " << p.m_points.size();
+			for (register unsigned int v = 0; 
+					v < p.m_points.size(); ++v)
+			{
+				os << ' ' << p.m_points[v];
+			}
+			os << '\n';
+			os << "Colors: " << p.m_colors.size();
+			for (register unsigned int c = 0; 
+					c < p.m_colors.size(); ++c)
+			{
+				os << ' ' << p.m_colors[c];
+			}
+		}
 
 	private:
 		std::vector<Vector2<int>> m_points;

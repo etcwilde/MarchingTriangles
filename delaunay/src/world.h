@@ -25,8 +25,28 @@ class World
 
 		unsigned int polygons();
 
+		friend std::ostream& operator << (std::ostream& os,
+				const World& w)
+		{
+			os << "Colors: " << w.m_colors.size();
+			for (unsigned int c = 0; c < w.m_colors.size(); ++c)
+			{
+				os << ' ' << w.get_color(c+1);
+			}
+			os << '\n';
+			os << "Polygons: " << w.m_polygons.size();
+			for (unsigned int p = 0; p < w.m_polygons.size(); ++p)
+			{
+				os << ' ' << w.m_polygons[p];
+			}
+
+			return os;
+		}
+
+
+
 	private:
-		Vector3<unsigned int> get_color(unsigned int index);
+		Vector3<unsigned int> get_color(unsigned int index) const;
 		std::vector<Vector3<unsigned int>> m_colors;
 		std::vector<Polygon> m_polygons;
 };

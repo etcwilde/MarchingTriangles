@@ -29,3 +29,4 @@ Vector2<int> Polygon::operator[](const int index)
 {
 	return m_points[index % m_points.size()];
 }
+
