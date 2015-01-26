@@ -4,6 +4,7 @@
 #include <glfw-cxx/glfw-cxx.hpp>
 
 #include <math.h>
+#include <unistd.h>
 
 #include <iostream>
 #include <string>
@@ -45,7 +46,6 @@ class OpenGlView : public glfw::Window
 		World* m_world;
 
 		/* Threading stuff */
-
 		void t_redraw();
 		void t_event();
 		void t_main();
@@ -57,6 +57,8 @@ class OpenGlView : public glfw::Window
 		std::mutex m_mb_redraw; // Protects the redraw boolean
 		std::condition_variable m_cv_redraw;
 		bool m_b_redraw; 	// Do we need to redraw?
+
+		bool m_b_resize;
 
 		std::thread thread_redraw;
 		std::thread thread_event;

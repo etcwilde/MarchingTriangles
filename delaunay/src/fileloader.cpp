@@ -28,8 +28,8 @@ bool FileLoader::LoadPolygons(World* world,
 		else if (line.c_str()[0] == 'c' && line.c_str()[1] == ' ')
 		{
 			unsigned int tmpr, tmpg, tmpb;
-			sscanf(line.c_str(), "c %u %u %u", &tmpr, &tmpg, &tmpb);
-
+			sscanf(line.c_str(), "c %u %u %u",
+					&tmpr, &tmpg, &tmpb);
 			tmpr = tmpr > 255 ? 255 : tmpr;
 			tmpg = tmpg > 255 ? 255 : tmpg;
 			tmpb = tmpb > 255 ? 255 : tmpb;

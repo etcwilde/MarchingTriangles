@@ -1,6 +1,5 @@
 #ifndef DRAWLIB_H
-#define DRAWLIB_H
-
+#define DRAWLIB_H 
 #define CIRC_RES 16
 #define CRIC_RAD 8
 

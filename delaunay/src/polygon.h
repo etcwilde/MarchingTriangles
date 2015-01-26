@@ -11,7 +11,8 @@
 
 #include "vector.h"
 
-// TODO: extract color from vertex
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 class Polygon
 {
@@ -33,18 +34,14 @@ class Polygon
 		{
 			os << '\n';
 			os << "Vertices: " << p.m_points.size();
-			for (register unsigned int v = 0; 
+			for (register unsigned int v = 0;
 					v < p.m_points.size(); ++v)
-			{
 				os << ' ' << p.m_points[v];
-			}
 			os << '\n';
 			os << "Colors: " << p.m_colors.size();
-			for (register unsigned int c = 0; 
+			for (register unsigned int c = 0;
 					c < p.m_colors.size(); ++c)
-			{
 				os << ' ' << p.m_colors[c];
-			}
 		}
 
 	private:
@@ -52,5 +49,18 @@ class Polygon
 		std::vector<unsigned int> m_colors;
 };
 
+class Triangle
+{
+	public:
+		Triangle(Vector2<int> p1, Vector2<int> p2, Vector2<int>p3,
+				unsigned int color1, unsigned int color2,
+				unsigned int color3);
+
+		void draw();
+
+	private:
+		Vector2<int> m_points[3];
+		unsigned int m_colors[3];
+};
 
 #endif // POLYGON_H

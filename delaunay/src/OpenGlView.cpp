@@ -40,7 +40,7 @@ OpenGlView::OpenGlView(int width, int height, const std::string& title)
 }
 
 
-OpenGlView::OpenGlView(int width, int height, const std::string& title, 
+OpenGlView::OpenGlView(int width, int height, const std::string& title,
 		World* world)
 	:glfw::Window()
 {
@@ -102,6 +102,7 @@ OpenGlView::~OpenGlView()
 
 void OpenGlView::Resize(int width, int height)
 {
+	std::cerr << "Resize called\n";
 	glViewport(0, 0, width, height);
 
 	m_aspect_ratio = width / (float) height;
@@ -116,11 +117,8 @@ void OpenGlView::Resize(int width, int height)
 
 void OpenGlView::GLPaint()
 {
-	m_mb_redraw.lock();
 	m_b_redraw = true;
-	m_mb_redraw.unlock();
-	m_cv_redraw.notify_one();
-
+	m_cv_redraw.notify_all();
 }
 
 const World* OpenGlView::get_world() const
@@ -138,10 +136,39 @@ void OpenGlView::set_world(const World& w)
 void OpenGlView::initialize()
 {
 	glfw::Window::Create(m_width, m_height, m_title);
+	glfw::Event event;
 	m_b_kill = false;
 
 	// Initialize rendering thread
 	thread_redraw = std::thread(&OpenGlView::t_redraw, this);
+
+	for(;;)
+	{
+		GLPaint();
+		if (glfw::Window::ShouldClose())
+			break;
+
+		glfw::Window::PollEvents();
+		while (glfw::Window::GetEvents(event))
+		{
+			switch(event.type)
+			{
+				case glfw::Event::Type::Key:
+					if (event.key.action ==
+							glfw::KeyAction::Press)
+					{
+						if (event.key.key ==
+								glfw::Key::Escape)
+							glfw::Window::SetShouldClose(GL_TRUE);
+					}
+
+				case glfw::Event::Type::FramebufferSize:
+					m_b_resize = true;
+
+			}
+		}
+	}
+	m_b_kill = true;
 }
 
 void OpenGlView::terminate()
@@ -162,14 +189,17 @@ void OpenGlView::t_redraw()
 	fb_size = glfw::Window::GetFramebufferSize();
 	Resize(fb_size.x, fb_size.y);
 
-
 	if (m_world == NULL) return;
-
-	std::cout << *m_world << '\n';
-
 	while (!m_b_kill)
 	{
 
+		// Resize
+		if (m_b_resize)
+		{
+			fb_size = glfw::Window::GetFramebufferSize();
+			Resize(fb_size.x, fb_size.y);
+			m_b_resize = false;
+		}
 		for(;;)
 		{
 			m_mb_redraw.lock();
@@ -185,6 +215,12 @@ void OpenGlView::t_redraw()
 		glClear(GL_COLOR_BUFFER_BIT);
 		glLoadIdentity();
 		m_world->draw();
+
+
 		glfw::Window::SwapBuffers();
+
+		m_mb_redraw.lock();
+		m_b_redraw = false;
+		m_mb_redraw.unlock();
 	}
 }
