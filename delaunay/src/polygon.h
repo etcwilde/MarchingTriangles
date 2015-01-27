@@ -56,8 +56,9 @@ class Triangle
 				unsigned int color1, unsigned int color2,
 				unsigned int color3);
 
-		void draw();
+		Vector2<int> operator[](const int index);
 
+		unsigned int color(unsigned int index);
 	private:
 		Vector2<int> m_points[3];
 		unsigned int m_colors[3];

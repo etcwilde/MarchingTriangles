@@ -25,6 +25,9 @@ class World
 
 		unsigned int polygons();
 
+		void Triangulate();
+		void ClearTriangles();
+
 		friend std::ostream& operator << (std::ostream& os,
 				const World& w)
 		{
@@ -49,10 +52,15 @@ class World
 
 		void draw_points();
 		void draw_outline();
+		void draw_triangles();
+
+		void triangulate();
+
 
 		Vector3<unsigned int> get_color(unsigned int index) const;
 		std::vector<Vector3<unsigned int>> m_colors;
 		std::vector<Polygon> m_polygons;
+		std::vector<Triangle> m_triangles;
 };
 
 #endif //WORLD_H

@@ -48,6 +48,7 @@ OpenGlView::OpenGlView(int width, int height, const std::string& title,
 	m_initial_width = m_width = width;
 	m_initial_height = m_height = height;
 	m_title = title;
+	m_triangles_set = false;
 
 	initialize();
 	terminate();
@@ -160,6 +161,24 @@ void OpenGlView::initialize()
 						if (event.key.key ==
 								glfw::Key::Escape)
 							glfw::Window::SetShouldClose(GL_TRUE);
+						else if(event.key.key ==
+								glfw::Key::Space)
+						{
+							if (m_triangles_set)
+							{
+								std::cerr <<
+									"Clear Triangles\n";
+								m_triangles_set = false;
+								m_world->ClearTriangles();
+							}
+							else
+							{
+								std::cerr <<
+									"Generate Triangles\n";
+								m_triangles_set = true;
+								m_world->Triangulate();
+							}
+						}
 					}
 
 				case glfw::Event::Type::FramebufferSize:

@@ -47,13 +47,12 @@ Triangle::Triangle(Vector2<int>p1, Vector2<int>p2, Vector2<int>p3,
 	m_colors[2] = color3;
 }
 
-void Triangle::draw()
+Vector2<int> Triangle::operator[](const int index)
 {
+	return m_points[index % 3];
+}
 
-	GLint data[] =
-		{
-		m_points[0].x, m_points[0].y,
-		m_points[1].x, m_points[1].y,
-		m_points[2].x, m_points[2].y
-		};
+unsigned int Triangle::color(unsigned int index)
+{
+	return m_colors[index % 3];
 }

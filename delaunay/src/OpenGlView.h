@@ -43,6 +43,8 @@ class OpenGlView : public glfw::Window
 		void run();
 		float m_aspect_ratio;
 
+		bool m_triangles_set;
+
 		World* m_world;
 
 		/* Threading stuff */
@@ -59,6 +61,7 @@ class OpenGlView : public glfw::Window
 		bool m_b_redraw; 	// Do we need to redraw?
 
 		bool m_b_resize;
+
 
 		std::thread thread_redraw;
 		std::thread thread_event;
