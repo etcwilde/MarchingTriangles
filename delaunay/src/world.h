@@ -46,6 +46,10 @@ class World
 
 
 	private:
+
+		void draw_points();
+		void draw_outline();
+
 		Vector3<unsigned int> get_color(unsigned int index) const;
 		std::vector<Vector3<unsigned int>> m_colors;
 		std::vector<Polygon> m_polygons;
