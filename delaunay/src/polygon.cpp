@@ -56,3 +56,26 @@ unsigned int Triangle::color(unsigned int index)
 {
 	return m_colors[index % 3];
 }
+
+/*
+ * Edge
+ */
+Edge::Edge(Vector2<int> p1, Vector2<int> p2,
+		unsigned int color1, unsigned int color2)
+{
+	m_points[0] = p1;
+	m_points[1] = p2;
+
+	m_colors[0] = color1;
+	m_colors[1] = color2;
+}
+
+Vector2<int> Edge::operator[](const int index)
+{
+	return m_points[index % 2];
+}
+
+unsigned int Edge::color(unsigned int index)
+{
+	return m_colors[index % 2];
+}

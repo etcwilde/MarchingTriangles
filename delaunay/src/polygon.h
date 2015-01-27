@@ -64,4 +64,17 @@ class Triangle
 		unsigned int m_colors[3];
 };
 
+class Edge
+{
+	public:
+		Edge(Vector2<int> p1, Vector2<int> p2,
+				unsigned int color1, unsigned int color2);
+		Vector2<int> operator[](const int index);
+		unsigned int color(unsigned int index);
+
+	private:
+		Vector2<int> m_points[2];
+		unsigned int m_colors[2];
+};
+
 #endif // POLYGON_H

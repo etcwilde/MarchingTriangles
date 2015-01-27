@@ -93,7 +93,8 @@ OpenGlView::OpenGlView(int width, int height, const std::string& title,
 			}
 		}
 		GLPaint();
-	} */
+	}
+	*/
 }
 
 OpenGlView::~OpenGlView()
@@ -142,7 +143,6 @@ void OpenGlView::initialize()
 
 	// Initialize rendering thread
 	thread_redraw = std::thread(&OpenGlView::t_redraw, this);
-
 	for(;;)
 	{
 		GLPaint();
@@ -179,13 +179,25 @@ void OpenGlView::initialize()
 								m_world->Triangulate();
 							}
 						}
+
+						else if (event.key.key ==
+								glfw::Key::Z)
+							m_world->ToggleWireframe();
+						else if (event.key.key ==
+								glfw::Key::X)
+							m_world->ToggleLines();
+						else if (event.key.key ==
+								glfw::Key::C)
+							m_world->ToggleVerts();
 					}
 
-				case glfw::Event::Type::FramebufferSize:
+				case glfw::Event::Type::WindowSize:
 					m_b_resize = true;
 
 			}
 		}
+		// Keeps cpu down
+		usleep(1);
 	}
 	m_b_kill = true;
 }
