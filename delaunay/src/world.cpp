@@ -196,7 +196,7 @@ void World::triangulate()
 		// Are there enough verts for a triangle?
 		if (m_polygons[p].size() < 3) continue;
 
-		/*if (m_polygons[p].size() == 3)
+		if (m_polygons[p].size() == 3)
 		{
 			// One triangulation
 			Triangle T(m_polygons[p][0], m_polygons[p][1],
@@ -206,10 +206,8 @@ void World::triangulate()
 					m_polygons[p].color(2));
 			m_triangles.push_back(T);
 
-			std::cerr << "Triangle: " << T[0] << T[1] << T[2]  <<
-				T.color(0)<< T.color(1)<< T.color(2)<< '\n';
 			continue;
-		} */
+		}
 
 		// Okay, for each vertex in the polygon, we need to check if
 		// any of the others are within the circum-circle

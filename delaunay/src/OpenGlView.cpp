@@ -3,40 +3,6 @@
 OpenGlView::OpenGlView(int width, int height, const std::string& title)
 	:glfw::Window()
 {
-	/*m_world = NULL;
-	m_initial_width = m_width = width;
-	m_initial_height = m_height = height;
-	m_title = title;
-
-	glfw::Window::Create(width, height, title);
-	glfw::Window::MakeContextCurrent();
-	glfw::FramebufferSize fb_size;
-	fb_size = glfw::Window::GetFramebufferSize();
-	Resize(fb_size.x, fb_size.y);
-
-	while (!glfw::Window::ShouldClose())
-	{
-		glfw::Window::PollEvents();
-		glfw::Event event;
-		while (glfw::Window::GetEvents(event))
-		{
-			switch (event.type)
-			{
-				case glfw::Event::Type::Key:
-					if (event.key.action ==
-							glfw::KeyAction::Press)
-						if (event.key.key ==
-								glfw::Key::Escape)
-							glfw::Window::SetShouldClose(GL_TRUE);
-
-				case glfw::Event::Type::FramebufferSize:
-						fb_size =
-							glfw::Window::GetFramebufferSize();
-						Resize(fb_size.x, fb_size.y);
-			}
-		}
-		GLPaint();
-	} */
 }
 
 
@@ -52,49 +18,6 @@ OpenGlView::OpenGlView(int width, int height, const std::string& title,
 
 	initialize();
 	terminate();
-
-
-
-	/*while (1)
-	{
-	} */
-
-	/*
-	m_world = world;
-	m_initial_width = m_width = width;
-	m_initial_height = m_height = height;
-	m_title = title;
-
-	glfw::Window::Create(width, height, title);
-	glfw::Window::MakeContextCurrent();
-	glfw::FramebufferSize fb_size;
-	fb_size = glfw::Window::GetFramebufferSize();
-	Resize(fb_size.x, fb_size.y);
-
-	while (!glfw::Window::ShouldClose())
-	{
-		glfw::Window::PollEvents();
-		glfw::Event event;
-		while (glfw::Window::GetEvents(event))
-		{
-			switch (event.type)
-			{
-				case glfw::Event::Type::Key:
-					if (event.key.action ==
-							glfw::KeyAction::Press)
-						if (event.key.key ==
-								glfw::Key::Escape)
-							glfw::Window::SetShouldClose(GL_TRUE);
-
-				case glfw::Event::Type::FramebufferSize:
-						fb_size =
-							glfw::Window::GetFramebufferSize();
-						Resize(fb_size.x, fb_size.y);
-			}
-		}
-		GLPaint();
-	}
-	*/
 }
 
 OpenGlView::~OpenGlView()
@@ -104,7 +27,6 @@ OpenGlView::~OpenGlView()
 
 void OpenGlView::Resize(int width, int height)
 {
-	std::cerr << "Resize called\n";
 	glViewport(0, 0, width, height);
 
 	m_aspect_ratio = width / (float) height;
@@ -166,15 +88,11 @@ void OpenGlView::initialize()
 						{
 							if (m_triangles_set)
 							{
-								std::cerr <<
-									"Clear Triangles\n";
 								m_triangles_set = false;
 								m_world->ClearTriangles();
 							}
 							else
 							{
-								std::cerr <<
-									"Generate Triangles\n";
 								m_triangles_set = true;
 								m_world->Triangulate();
 							}
