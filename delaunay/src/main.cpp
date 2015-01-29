@@ -38,8 +38,7 @@ int main(int argc, char** argv)
 		return EXIT_FAILURE;
 	}
 
-	data_loader.LoadPolygons(w, argv[1]);
-	OpenGLView window(640, 480, "Delaunay Triangulation");
-	window.set_world(w);
+	data_loader.LoadPolygons(&w, argv[1]);
+	OpenGlView window(640, 480, "Delaunay Triangulation", &w);
 	return EXIT_SUCCESS;
 }

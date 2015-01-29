@@ -2,17 +2,42 @@
 # January 16 2015
 # Polygon file
 
-p polygon
+# Define colors
+# Red
 c 255 0 0
-v 50 500
+# Green
 c 0 255 0
-v 30 20
+# Blue
 c 0 0 255
-v 50 50
+# Magenta
 c 255 0 255
-v 40 34
-c 255 255 0
-v 20 50
-v 40 300
+# Cyan
 c 0 255 255
+# Yellow
+c 255 255 0
 
+p Polygon 1
+v -190 0 1
+v -150 -10 3
+v -165 40 2
+
+p polygon 2
+v -50 100 2
+v -25 80 2
+v -50 60 2
+v -10 60 2
+v -10 100 2
+
+p polygon 3
+v 0 -50 5
+v -20 -70 6
+v 0 -100 3
+v -50 -80 1
+v -20 -110 2
+v 10 -80 4
+
+p polygon 4
+v 100 100 1
+v 100 0 1
+v 0 100 4
+v 0 10 5
