@@ -2,7 +2,7 @@
 
 World::World()
 	: m_wireframe(false),
-	m_lines(true),
+	m_lines(false),
 	m_verts(true)
 
 {
@@ -92,7 +92,6 @@ void World::draw_outline()
 	for (poly_index = 0; poly_index < m_polygons.size(); ++poly_index)
 	{
 		Polygon &current_polygon = m_polygons[poly_index];
-
 		if (current_polygon.size() < 2) continue;
 		glBegin(GL_LINES);
 		{
@@ -301,5 +300,7 @@ bool World::circum_circle_intersect(Vector2<int> test_point, Vector2<int> p1,
 	dx = test_point.x - centre_point.x;
 	dy = test_point.y - centre_point.y;
 	drsqr = dx * dx + dy * dy;
+	/*std::cerr << "Centre to p2: " << rsqr << '\t'
+		<< "Centre to test point: " << drsqr << '\n'; */
 	return (drsqr <= rsqr);
 }
