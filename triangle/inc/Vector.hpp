@@ -94,22 +94,15 @@ class Vector2D
 		Vector2D<T> operator +(const Vector2D<T>& vec) const;
 		Vector2D<T> operator -(const Vector2D<T>& vec) const;
 
-		template <typename T1>
-		friend Vector2D<T1> operator * (const Vector2D<T1>& vec, T1 s)
+		Vector2D<T> operator * (T s)
 		{
-			return Vector2D<T>(vec.x * s, vec.y * s);
+			return Vector2D<T>(x * s, y * s);
 		}
 
-		template <typename T2>
-		friend Vector2D<T2> operator * (T2 s, const Vector2D<T2>& vec)
-		{
-			return Vector2D<T2>(vec.x * s, vec.y * s);
-		}
 
-		template <typename D>
-		friend Vector2D<D> operator / (const Vector2D<D>& vec, D s)
+		Vector2D<T> operator / (T s)
 		{
-			return Vector2D<T>(vec.x / s, vec.y / s);
+			return Vector2D<T>(x / s, y / s);
 		}
 
 		/* Comparisons */
@@ -127,9 +120,7 @@ class Vector2D
 
 		T operator[] (unsigned int index);
 
-		template <typename L>
-		friend std::ostream& operator <<(std::ostream& os,
-				const Vector2D<L>& v)
+		friend std::ostream& operator <<(std::ostream& os, Vector2D<T>& v)
 		{
 			os << "[ " << v.x << ", " << v.y << " ]";
 			return os;

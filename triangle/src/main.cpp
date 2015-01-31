@@ -30,7 +30,9 @@ int main()
 	std::cout << a << '\n'; */
 
 	Vector2D<int> a(1, 2);
-	Vector2D<float> b(1, 2);
+	Vector2D<float> b(1.0, 2.4);
+
+	std::cout << a << b << '\n';
 
 	return 0;
 }
