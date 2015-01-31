@@ -22,7 +22,8 @@ D_BUILD	= build/
 D_BIN	= bin/
 D_LIB	= libs/
 D_INC	= inc/
-D_TEST	= test/
+D_TEST	= tests/
+D_DOCS	= docs/
 
 # Flags
 CFLAGS	= -c -iquote $(D_INC)
@@ -54,10 +55,10 @@ TEST_OBJS	= \
 	  $(patsubst $(D_TEST)%.C, $(D_BUILD)%.o, \
 	  $(patsubst $(D_TEST)%.cc, $(D_BUILD)%.o, $(TEST_SRCS)))))
 
-$(warning( $(SRCS))
-$(warning( $(OBJS))
+# $(warning( $(SRCS))
+# $(warning( $(OBJS))
 
-.PHONY:	all release debug test clean rebuild
+.PHONY:	all release debug test clean rebuild docs
 # No optimizations
 all: $(D_BIN)$(EXEC)
 
@@ -77,9 +78,12 @@ test: clean  $(TEST_OBJS) all
 clean:
 	$(RM) $(D_BUILD)*.o
 	$(RM) $(D_BIN)$(EXEC)
+	$(RMD) $(D_DOCS)html
 
 rebuild: clean all
 
+docs:
+	doxygen $(D_DOCS)Doxyfile
 # Create directories
 $(D_TEST):
 	$(MKDIR) $(D_TEST)

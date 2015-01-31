@@ -1,10 +1,14 @@
 #include <iostream>
-
-#include "tmp.h"
+#include "Vector.hpp"
 
 int main()
 {
-	std::cerr << "Hello world!\n";
-	std::cerr << add_two(1) << '\n';
+	Vector3D<int> a(5, 6, 7);
+	Vector3D<int> b(1, 2, 3);
+	Vector3D<int> c;
+	std::cout << 'a' << a << '\n';
+	std::cout << 'b' << b << '\n';
+	std::cout << "a + b " << a + b << '\n';
+	std::cout << "a + b - b " << a + (b - b) << '\n';
 	return 0;
 }
