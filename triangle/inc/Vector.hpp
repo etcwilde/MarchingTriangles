@@ -20,9 +20,14 @@ class Point2D
 		Point2D() : x(), y() {}
 		Point2D(T _x, T _y) : x(_x), y(_y) {}
 
+		inline T operator[] (unsigned int index);
+
 	private:
-		T x;
-		T y;
+		union
+		{
+			struct {T x; T y;};
+			T m_vals[2];
+		};
 };
 
 template <typename T>
@@ -32,10 +37,33 @@ class Point3D
 		Point3D() : x(), y(), z() {}
 		Point3D(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {}
 
+
+		inline T operator[] (unsigned int index);
+
 	private:
-		T x;
-		T y;
-		T z;
+		union
+		{
+			struct {T x; T y; T z;};
+			T m_vals[3];
+		};
+};
+
+template <typename T>
+class Point4D
+{
+	public:
+		Point4D(): w(), x(), y(), z() {}
+		Point4D(T _w, T _x, T _y, T _z):
+			w(_w), x(_x), y(_y), z(_z){}
+
+		inline T operator[] (unsigned int index);
+
+	private:
+		union
+		{
+			struct {T w; T x; T y; T z;};
+			T m_vals[4];
+		};
 };
 
 template <typename T>
@@ -210,17 +238,118 @@ class Vector3D
 
 };
 
+template <typename T>
+class Vector4D
+{
+	Vector4D() : w(), x(), y(), z(){}
+	Vector4D(T _w, T _x, T _y, T _z) : w(_w), x(_x), y(_y), z(_z){}
 
+	void Set(T _w, T _x, T _y, T _z);
+
+	void Normalize();
+	Vector4D<T> Normalized();
+	Vector4D<T> Normalized() const;
+
+	float Length();
+	float Length() const;
+
+	T Dot(const Vector4D<T>& vec) const;
+
+	/* Operators */
+	void operator += (const Vector4D<T>& vec);
+	void operator -= (const Vector4D<T>& vec);
+	void operator *= (T s);
+	void operator /= (T s);
+
+	Vector4D<T> operator -() const;
+	Vector4D<T> operator +(const Vector4D<T>& vec) const;
+	Vector4D<T> operator -(const Vector4D<T>& vec) const;
+
+	template <typename L>
+	friend Vector4D<L> operator * (const Vector4D<L> & vec, L s)
+	{
+		return Vector4D<T>(vec.w * s, vec.x * s, vec.y * s, vec.z * s);
+	}
+
+	template <typename L>
+	friend Vector4D<L> operator * (L s,const Vector4D<L> & vec)
+	{
+		return Vector4D<T>(vec.w * s, vec.x * s, vec.y * s, vec.z * s);
+	}
+
+	template <typename L>
+	friend Vector4D<L> operator / (const Vector4D<L>& vec, L s)
+	{
+		return Vector4D<T>(vec.w / s, vec.x / s, vec.y / s, vec.z / s);
+	}
+
+	/* Comparisons */
+	bool operator == (const Vector4D<T>& vec) const;
+	bool operator != (const Vector4D<T>& vec) const;
+	bool operator <  (const Vector4D<T>& vec) const;
+	bool operator <  (const Vector4D<T>& vec);
+	bool operator <= (const Vector4D<T>& vec) const;
+	bool operator <= (const Vector4D<T>& vec);
+	bool operator >  (const Vector4D<T>& vec) const;
+	bool operator >  (const Vector4D<T>& vec);
+	bool operator >= (const Vector4D<T>& vec) const;
+	bool operator >= (const Vector4D<T>& vec);
+
+	inline T operator[] (unsigned int index);
+
+	template<typename L>
+	friend std::ostream& operator <<(std::ostream& os,
+			const Vector4D<L>& v)
+	{
+		os << "[ " << v.w << ", " << v.x << ", " << v.y << ", " << v.z << " ]";
+		return os;
+	}
+
+
+	private:
+		union
+		{
+			struct {T w; T x; T y; T z;};
+			T m_vals[4];
+		};
+
+		bool m_good_len_cache;
+		float m_cached_length;
+};
 
 // Implementations
 
-// Vector2D
 
+// Point2D
+template <typename T>
+inline T Point2D<T>::operator[](unsigned int index)
+{
+	return m_vals[index % 2];
+};
+
+// Point3D
+template <typename T>
+inline T Point3D<T>::operator[](unsigned int index)
+{
+	return m_vals[index % 3];
+};
+
+// Point4D
+template <typename T>
+inline T Point4D<T>::operator[](unsigned int index)
+{
+	return m_vals[index % 4];
+};
+
+
+// Vector2D
 template <typename T>
 void Vector2D<T>::Set(T x, T y)
 {
 	m_vals[0] = x;
 	m_vals[1] = y;
+	m_good_len_cache = false;
+	Length(); // Compute length
 }
 
 template <typename T>
@@ -230,6 +359,7 @@ void Vector2D<T>::Normalize()
 	m_vals[0] = (T)m_vals[0] * l;
 	m_vals[1] = (T)m_vals[1] * l;
 	m_vals[2] = (T)m_vals[2] * l;
+	m_good_len_cache = false; // Should be one, but just to be sure
 }
 
 template <typename T>
@@ -272,6 +402,7 @@ T Vector2D<T>::Dot(const Vector2D<T>& vec) const
 template <typename T>
 void Vector2D<T>::operator += (const Vector2D<T>& vec)
 {
+	m_good_len_cache = false;
 	x += vec.x;
 	y += vec.y;
 }
@@ -279,6 +410,7 @@ void Vector2D<T>::operator += (const Vector2D<T>& vec)
 template <typename T>
 void Vector2D<T>::operator -= (const Vector2D<T>& vec)
 {
+	m_good_len_cache = false;
 	x -= vec.x;
 	y -= vec.y;
 }
@@ -286,6 +418,7 @@ void Vector2D<T>::operator -= (const Vector2D<T>& vec)
 template <typename T>
 void Vector2D<T>::operator *= (T s)
 {
+	m_good_len_cache = false;
 	x *= s;
 	y *= s;
 }
@@ -293,6 +426,7 @@ void Vector2D<T>::operator *= (T s)
 template <typename T>
 void Vector2D<T>::operator /=(T s)
 {
+	m_good_len_cache = false;
 	x /= s;
 	y /= s;
 }
@@ -392,6 +526,8 @@ void Vector3D<T>::Set(T x, T y, T z)
 	m_vals[0] = x;
 	m_vals[1] = y;
 	m_vals[2] = z;
+	m_good_len_cache = false;
+	Length();
 }
 
 template<typename T>
@@ -401,6 +537,7 @@ void Vector3D<T>::Normalize()
 	m_vals[0] = (T)m_vals[0] * l;
 	m_vals[1] = (T)m_vals[1] * l;
 	m_vals[2] = (T)m_vals[2] * l;
+	m_good_len_cache = false;
 }
 
 template<typename T>
@@ -457,6 +594,7 @@ Vector3D<T> Vector3D<T>::Cross(const Vector3D<T>& vec) const
 template <typename T>
 void Vector3D<T>::operator += (const Vector3D<T>& vec)
 {
+	m_good_len_cache = false;
 	x += vec.x;
 	y += vec.y;
 	z += vec.z;
@@ -465,6 +603,7 @@ void Vector3D<T>::operator += (const Vector3D<T>& vec)
 template <typename T>
 void Vector3D<T>::operator -= (const Vector3D<T>& vec)
 {
+	m_good_len_cache = false;
 	x -= vec.x;
 	y -= vec.y;
 	z -= vec.z;
@@ -473,6 +612,7 @@ void Vector3D<T>::operator -= (const Vector3D<T>& vec)
 template <typename T>
 void Vector3D<T>::operator *= (T s)
 {
+	m_good_len_cache = false;
 	x *= s;
 	y *= s;
 	z *= s;
@@ -481,6 +621,7 @@ void Vector3D<T>::operator *= (T s)
 template <typename T>
 void Vector3D<T>::operator /= (T s)
 {
+	m_good_len_cache = false;
 	x /= s;
 	y /= s;
 	z /= s;
@@ -580,4 +721,196 @@ inline T Vector3D<T>::operator [] (unsigned int index)
 	return m_vals[index % 3];
 }
 
+
+// Vector4D
+template <typename T>
+void Vector4D<T>::Set(T _w, T _x, T _y, T _z)
+{
+	w = _w;
+	x = _x;
+	y = _y;
+	z = _z;
+}
+
+template <typename T>
+void Vector4D<T>::Normalize()
+{
+	float l = 1.0f / Length();
+	w = (T)w * l;
+	x = (T)x * l;
+	y = (T)y * l;
+	z = (T)z * l;
+	m_good_len_cache = false;
+}
+
+template <typename T>
+Vector4D<T> Vector4D<T>::Normalized()
+{
+	float l = 1.0f / Length();
+	Vector4D<T> ret_vec(
+			w * l,
+			x * l,
+			y * l,
+			z * l);
+	return ret_vec;
+}
+
+template <typename T>
+Vector4D<T> Vector4D<T>::Normalized() const
+{
+	float l = 1.0f / Length();
+	Vector4D<T> ret_vec(
+			w * l,
+			x * l,
+			y * l,
+			z * l);
+	return ret_vec;
+}
+
+template <typename T>
+float Vector4D<T>::Length()
+{
+	if (!m_good_len_cache)
+		m_cached_length = (float)sqrt(w * w + x * x + y * y + z * z);
+	return m_cached_length;
+}
+
+template <typename T>
+float Vector4D<T>::Length() const
+{
+	if (m_good_len_cache) return m_cached_length;
+	return (float)sqrt(w * w + x * x + y * y + z * z);
+}
+
+template <typename T>
+T Vector4D<T>::Dot(const Vector4D<T>& vec) const
+{
+	return (w * vec.w + x * vec.x + y * vec.y + z * vec.z);
+}
+
+template <typename T>
+void Vector4D<T>::operator += (const Vector4D<T>& vec)
+{
+	m_good_len_cache = false;
+	w += vec.w;
+	x += vec.x;
+	y += vec.y;
+	z += vec.z;
+}
+
+template <typename T>
+void Vector4D<T>::operator -= (const Vector4D<T>& vec)
+{
+	m_good_len_cache = false;
+	w -= vec.w;
+	x -= vec.x;
+	y -= vec.y;
+	z -= vec.z;
+}
+
+template <typename T>
+void Vector4D<T>::operator *= (T s)
+{
+	m_good_len_cache = false;
+	w *= s;
+	x *= s;
+	y *= s;
+	z *= s;
+}
+
+template <typename T>
+void Vector4D<T>::operator /= (T s)
+{
+	m_good_len_cache = false;
+	w /= s;
+	x /= s;
+	y /= s;
+	z /= s;
+}
+
+template <typename T>
+Vector4D<T> Vector4D<T>::operator -() const
+{
+	return Vector4D<T>(-w, -x, -y, -z);
+}
+
+template <typename T>
+Vector4D<T> Vector4D<T>::operator +(const Vector4D<T>& vec) const
+{
+	return Vector4D<T>(w + vec.w, x + vec.x, y + vec.y, z + vec.z);
+}
+
+template <typename T>
+Vector4D<T> Vector4D<T>::operator -(const Vector4D<T>& vec) const
+{
+	return Vector4D<T>(w - vec.w, x - vec.x, y - vec.y, z - vec.z);
+}
+
+template <typename T>
+bool Vector4D<T>::operator == (const Vector4D<T>& vec) const
+{
+	return (w == vec.w && x == vec.x && y == vec.y && z == vec.z);
+}
+
+template <typename T>
+bool Vector4D<T>::operator != (const Vector4D<T>& vec) const
+{
+	return (w != vec.w || x != vec.x || y != vec.y || z != vec.z);
+}
+
+template <typename T>
+bool Vector4D<T>::operator < (const Vector4D<T>& vec) const
+{
+	if (*this == vec) return false;
+	return (Length() < vec.Length());
+}
+
+template <typename T>
+bool Vector4D<T>::operator < (const Vector4D<T>& vec)
+{
+	if (*this == vec) return false;
+	return (Length() < vec.Length());
+}
+
+template <typename T>
+bool Vector4D<T>::operator <= (const Vector4D<T>& vec) const
+{
+	if (*this == vec) return true;
+	return (Length() <= vec.Length());
+}
+
+template <typename T>
+bool Vector4D<T>::operator <= (const Vector4D<T>& vec)
+{
+	if (*this == vec) return true;
+	return (Length() <= vec.Length());
+}
+
+template <typename T>
+bool Vector4D<T>::operator > (const Vector4D<T>& vec) const
+{
+	if (*this == vec) return false;
+	return (Length() > vec.Length());
+}
+
+template <typename T>
+bool Vector4D<T>::operator > (const Vector4D<T>& vec)
+{
+	if (*this == vec) return false;
+	return (Length() > vec.Length());
+}
+
+template <typename T>
+bool Vector4D<T>::operator >= (const Vector4D<T>& vec) const
+{
+	if (*this == vec) return true;
+	return (Length() >= vec.Length());
+}
+
+template <typename T>
+bool Vector4D<T>::operator >= (const Vector4D<T>& vec)
+{
+	if (*this == vec) return true;
+	return (Length() >= vec.Length());
+}
 #endif // VEC_H
