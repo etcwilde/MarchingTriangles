@@ -94,20 +94,20 @@ class Vector2D
 		Vector2D<T> operator +(const Vector2D<T>& vec) const;
 		Vector2D<T> operator -(const Vector2D<T>& vec) const;
 
-		template <typename L>
-		friend Vector2D<L> operator * (const Vector2D<L>& vec, L s)
+		template <typename T1>
+		friend Vector2D<T1> operator * (const Vector2D<T1>& vec, T1 s)
 		{
 			return Vector2D<T>(vec.x * s, vec.y * s);
 		}
 
-		template <typename L>
-		friend Vector2D<L> operator * (L s, const Vector2D<L>& vec)
+		template <typename T2>
+		friend Vector2D<T2> operator * (T2 s, const Vector2D<T2>& vec)
 		{
-			return Vector2D<T>(vec.x * s, vec.y * s);
+			return Vector2D<T2>(vec.x * s, vec.y * s);
 		}
 
-		template <typename L>
-		friend Vector2D<L> operator / (const Vector2D<L>& vec, L s)
+		template <typename D>
+		friend Vector2D<D> operator / (const Vector2D<D>& vec, D s)
 		{
 			return Vector2D<T>(vec.x / s, vec.y / s);
 		}
@@ -125,7 +125,7 @@ class Vector2D
 		bool operator >= (const Vector2D<T>& vec) const;
 		bool operator >= (const Vector2D<T>& vec);
 
-		inline T operator[] (unsigned int index);
+		T operator[] (unsigned int index);
 
 		template <typename L>
 		friend std::ostream& operator <<(std::ostream& os,
@@ -491,7 +491,6 @@ bool Vector2D<T>::operator <= (const Vector2D<T>& vec)
 	return(Length() <= vec.Length());
 }
 
-
 template <typename T>
 bool Vector2D<T>::operator > (const Vector2D<T>& vec) const
 {
@@ -519,25 +518,32 @@ bool Vector2D<T>::operator >= (const Vector2D<T>& vec)
 	if (*this == vec) return true;
 	return(Length() >= vec.Length());
 }
+
+template <typename T>
+T Vector2D<T>::operator[] (unsigned int index)
+{
+	return m_vals[index %2];
+}
+
+
 // Vector3D
 template <typename T>
 void Vector3D<T>::Set(T x, T y, T z)
 {
+	m_good_len_cache = false;
 	m_vals[0] = x;
 	m_vals[1] = y;
 	m_vals[2] = z;
-	m_good_len_cache = false;
-	Length();
 }
 
 template<typename T>
 void Vector3D<T>::Normalize()
 {
+	m_good_len_cache = false;
 	float l = 1.0f / Length();
 	m_vals[0] = (T)m_vals[0] * l;
 	m_vals[1] = (T)m_vals[1] * l;
 	m_vals[2] = (T)m_vals[2] * l;
-	m_good_len_cache = false;
 }
 
 template<typename T>

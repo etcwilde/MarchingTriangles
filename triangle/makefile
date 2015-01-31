@@ -71,7 +71,7 @@ debug: CFLAGS += -g -DDEBUG -Wall
 debug: all
 
 # Unit testing enabled
-test: CFLAGS += -Wall
+test: CFLAGS += -Wall -DTEST
 test: LIBS += -lcppunit -ldl
 test: clean  $(TEST_OBJS) all
 
