@@ -93,17 +93,8 @@ class Vector2D
 		Vector2D<T> operator -() const;
 		Vector2D<T> operator +(const Vector2D<T>& vec) const;
 		Vector2D<T> operator -(const Vector2D<T>& vec) const;
-
-		Vector2D<T> operator * (T s)
-		{
-			return Vector2D<T>(x * s, y * s);
-		}
-
-
-		Vector2D<T> operator / (T s)
-		{
-			return Vector2D<T>(x / s, y / s);
-		}
+		Vector2D<T> operator * (T s) const;
+		Vector2D<T> operator / (T s) const;
 
 		/* Comparisons */
 
@@ -118,9 +109,10 @@ class Vector2D
 		bool operator >= (const Vector2D<T>& vec) const;
 		bool operator >= (const Vector2D<T>& vec);
 
-		T operator[] (unsigned int index);
+		inline T operator[] (unsigned int index);
 
-		friend std::ostream& operator <<(std::ostream& os, Vector2D<T>& v)
+		friend std::ostream& operator <<(std::ostream& os,
+				Vector2D<T>& v)
 		{
 			os << "[ " << v.x << ", " << v.y << " ]";
 			return os;
@@ -174,24 +166,8 @@ class Vector3D
 
 		Vector3D<T> operator +(const Vector3D<T>& vec) const;
 		Vector3D<T> operator -(const Vector3D<T>& vec) const;
-
-		template<typename L>
-		friend Vector3D<L> operator*(const Vector3D<L>& vec, L s)
-		{
-			return Vector3D<T>(vec.x * s, vec.y * s, vec.z * s);
-		}
-
-		template<typename L>
-		friend Vector3D<L> operator*(L s, const Vector3D<L>&vec)
-		{
-			return Vector3D<T>(vec.x * s, vec.y * s, vec.z * s);
-		}
-
-		template<typename L>
-		friend Vector3D<L> operator/(const Vector3D<L>& vec, L s)
-		{
-			return Vector3D<T>(vec.x / s, vec.y / s, vec.z / s);
-		}
+		Vector3D<T> operator*(T s) const;
+		Vector3D<T> operator/(T s) const;
 
 		/* Comparisons */
 
@@ -208,11 +184,11 @@ class Vector3D
 
 		inline T operator[] (unsigned int index);
 
-		template<typename L>
 		friend std::ostream& operator <<(std::ostream& os,
-				const Vector3D<L>& v)
+				const Vector3D<T>& v)
 		{
-			os << "[ " << v.x << ", " << v.y << ", " << v.z << " ]";
+			os << "[ " << v.x << ", " << v.y << ", "
+				<< v.z << " ]";
 			return os;
 		}
 
@@ -232,6 +208,7 @@ class Vector3D
 template <typename T>
 class Vector4D
 {
+	public:
 	Vector4D() : w(), x(), y(), z(){}
 	Vector4D(T _w, T _x, T _y, T _z) : w(_w), x(_x), y(_y), z(_z){}
 
@@ -253,26 +230,10 @@ class Vector4D
 	void operator /= (T s);
 
 	Vector4D<T> operator -() const;
-	Vector4D<T> operator +(const Vector4D<T>& vec) const;
-	Vector4D<T> operator -(const Vector4D<T>& vec) const;
-
-	template <typename L>
-	friend Vector4D<L> operator * (const Vector4D<L> & vec, L s)
-	{
-		return Vector4D<T>(vec.w * s, vec.x * s, vec.y * s, vec.z * s);
-	}
-
-	template <typename L>
-	friend Vector4D<L> operator * (L s,const Vector4D<L> & vec)
-	{
-		return Vector4D<T>(vec.w * s, vec.x * s, vec.y * s, vec.z * s);
-	}
-
-	template <typename L>
-	friend Vector4D<L> operator / (const Vector4D<L>& vec, L s)
-	{
-		return Vector4D<T>(vec.w / s, vec.x / s, vec.y / s, vec.z / s);
-	}
+	Vector4D<T> operator + (const Vector4D<T>& vec) const;
+	Vector4D<T> operator - (const Vector4D<T>& vec) const;
+	Vector4D<T> operator * (T s) const;
+	Vector4D<T> operator / (T s) const;
 
 	/* Comparisons */
 	bool operator == (const Vector4D<T>& vec) const;
@@ -286,13 +247,13 @@ class Vector4D
 	bool operator >= (const Vector4D<T>& vec) const;
 	bool operator >= (const Vector4D<T>& vec);
 
-	inline T operator[] (unsigned int index);
+	T operator[] (unsigned int index);
 
-	template<typename L>
 	friend std::ostream& operator <<(std::ostream& os,
-			const Vector4D<L>& v)
+			const Vector4D<T>& v)
 	{
-		os << "[ " << v.w << ", " << v.x << ", " << v.y << ", " << v.z << " ]";
+		os << "[ " << v.w << ", " << v.x << ", " << v.y << ", "
+			<< v.z << " ]";
 		return os;
 	}
 
@@ -384,8 +345,7 @@ float Vector2D<T>::Length() const
 }
 
 template <typename T>
-T Vector2D<T>::Dot(const Vector2D<T>& vec) const
-{
+T Vector2D<T>::Dot(const Vector2D<T>& vec) const {
 	return (x * vec.x + y * vec.y);
 }
 
@@ -439,6 +399,19 @@ Vector2D<T> Vector2D<T>::operator -(const Vector2D<T>& vec) const
 {
 	return Vector2D<T>(x - vec.x, y - vec.y);
 }
+
+template <typename T>
+Vector2D<T> Vector2D<T>::operator *(T s) const
+{
+	return Vector2D<T>(x * s, y * s);
+}
+
+template <typename T>
+Vector2D<T> Vector2D<T>::operator / (T s) const
+{
+	return Vector2D<T>(x / s, y / s);
+}
+
 
 // Comparisons
 
@@ -643,6 +616,19 @@ Vector3D<T> Vector3D<T>::operator - (const Vector3D<T>& vec) const
 }
 
 template <typename T>
+Vector3D<T> Vector3D<T>::operator *(T s) const
+{
+	return Vector3D<T>(x * s, y * s, z * s);
+}
+
+template <typename T>
+Vector3D<T> Vector3D<T>::operator / (T s) const
+{
+	return Vector3D<T>(x / s, y / s, z / s);
+}
+
+/* Comparisons */
+template <typename T>
 bool Vector3D<T>::operator == (const Vector3D<T>& vec) const
 {
 	// same values
@@ -844,6 +830,18 @@ Vector4D<T> Vector4D<T>::operator -(const Vector4D<T>& vec) const
 }
 
 template <typename T>
+Vector4D<T> Vector4D<T>::operator *( T s) const
+{
+	return Vector4D<T>(w * s, x * s, y * s, z * s);
+}
+
+template <typename T>
+Vector4D<T> Vector4D<T>::operator /(T s) const
+{
+	return Vector4D<T>(w / s, x / s, y / s, z / s);
+}
+
+template <typename T>
 bool Vector4D<T>::operator == (const Vector4D<T>& vec) const
 {
 	return (w == vec.w && x == vec.x && y == vec.y && z == vec.z);
@@ -909,5 +907,11 @@ bool Vector4D<T>::operator >= (const Vector4D<T>& vec)
 {
 	if (*this == vec) return true;
 	return (Length() >= vec.Length());
+}
+
+template <typename T>
+T Vector4D<T>::operator[](unsigned int index)
+{
+	return m_vals[index % 4];
 }
 #endif // VEC_H

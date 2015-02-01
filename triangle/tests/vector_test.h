@@ -13,6 +13,7 @@
 #include <string>
 
 #include "Vector.hpp"
+#include "floatlibs.hpp"
 
 // TODO
 //
@@ -294,9 +295,109 @@ class Vector3DTest: public TestFixture
 		Vector3D<float> float_test(1, 1, 0);
 		CPPUNIT_ASSERT(float_test.Length() != 1);
 		float_test.Normalize();
-		CPPUNIT_ASSERT(float_test.Length() == 1);
+		CPPUNIT_ASSERT(f_equ(1.f, float_test.Length()));
 	}
 
 };
 
+class Vector4DTest: public TestFixture
+{
+	public:
+	static Test *suite()
+	{
+		TestSuite* suiteOfTests = new TestSuite("Vector4D Test");
+		suiteOfTests->addTest(
+				new TestCaller<Vector4DTest>(
+					"Vector4D -- Construction and Index",
+					&Vector4DTest::TestConstruct)
+				);
+
+		suiteOfTests->addTest(
+				new TestCaller<Vector4DTest>(
+					"Vector4D -- Set",
+					&Vector4DTest::TestSet)
+				);
+
+		suiteOfTests->addTest(
+				new TestCaller<Vector4DTest>(
+					"Vector4D -- Comparisons",
+					&Vector4DTest::TestComparisons)
+				);
+
+		suiteOfTests->addTest(
+				new TestCaller<Vector4DTest>(
+					"Vector4D -- Operators",
+					&Vector4DTest::TestOperators)
+				);
+
+		suiteOfTests->addTest(
+				new TestCaller<Vector4DTest>(
+					"Vector4D -- Length",
+					&Vector4DTest::TestLength)
+				);
+
+		suiteOfTests->addTest(
+				new TestCaller<Vector4DTest>(
+					"Vector4D -- Normalize",
+					&Vector4DTest::TestNormalize)
+				);
+		return suiteOfTests;
+	}
+
+	protected:
+	void TestConstruct()
+	{
+		Vector4D<int> def_vec;
+		CPPUNIT_ASSERT(def_vec[0] == 0);
+		CPPUNIT_ASSERT(def_vec[1] == 0);
+		CPPUNIT_ASSERT(def_vec[2] == 0);
+		CPPUNIT_ASSERT(def_vec[3] == 0);
+
+		Vector4D<int> a(0, 1, 2, 3);
+		CPPUNIT_ASSERT(a[0] == 0);
+		CPPUNIT_ASSERT(a[1] == 1);
+		CPPUNIT_ASSERT(a[2] == 2);
+		CPPUNIT_ASSERT(a[3] == 3);
+		CPPUNIT_ASSERT(a[4] == 0);
+
+		Vector4D<long> b(10000, 50000, 1000000, 100000000000);
+		CPPUNIT_ASSERT(b[0] == 10000);
+		CPPUNIT_ASSERT(b[1] == 50000);
+		CPPUNIT_ASSERT(b[2] == 1000000);
+		CPPUNIT_ASSERT(b[3] == 100000000000);
+		CPPUNIT_ASSERT(b[4] == 10000);
+	}
+
+	void TestSet()
+	{
+		Vector4D<int> a();
+		CPPUNIT_ASSERT(a == Vector4D<int> vec);
+		a.Set(1, 2, 3, 4);
+		CPPUNIT_ASSERT(a[0] == 1);
+		CPPUNIT_ASSERT(a[1] == 2);
+		CPPUNIT_ASSERT(a[2] == 3);
+		CPPUNIT_ASSERT(a[3] == 4);
+	}
+
+	void TestLength()
+	{
+		Vector4D<int> a(0, 0, 0, 1);
+		CPPUNIT_ASSERT(a.Length() == 1);
+		a.Set(0, 0, 2, 0);
+		CPPUNIT_ASSERT(a.Length() == 2);
+	}
+
+	void TestComparisons()
+	{
+	}
+
+	void TestOperators()
+	{
+	}
+
+	void TestNormalize()
+	{
+	}
+
+};
 #endif //VECTOR_UNIT_TEST_H

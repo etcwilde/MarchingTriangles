@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Vector.hpp"
+#include "floatlibs.hpp"
 
 #ifdef TEST
 
@@ -13,10 +14,11 @@
 int main()
 {
 #ifdef TEST
-	CppUnit::TextUi::TestRunner unit_tests;
-	unit_tests.addTest(Vector2DTest::suite());
-	unit_tests.addTest(Vector3DTest::suite());
-	unit_tests.run();
+	CppUnit::TextUi::TestRunner vector_tests;
+	vector_tests.addTest(Vector2DTest::suite());
+	vector_tests.addTest(Vector3DTest::suite());
+	vector_tests.addTest(Vector4DTest::suite());
+	vector_tests.run();
 #endif //TEST
 
 	/*Vector3D<int> a(5, 6, 7);
@@ -31,8 +33,5 @@ int main()
 
 	Vector2D<int> a(1, 2);
 	Vector2D<float> b(1.0, 2.4);
-
-	std::cout << a << b << '\n';
-
 	return 0;
 }
