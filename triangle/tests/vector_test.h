@@ -64,6 +64,13 @@ class Vector2DTest: public TestFixture
 					"Vector2D -- Normalize",
 					&Vector2DTest::TestNormalize)
 				);
+
+		suiteOfTests->addTest(
+				new TestCaller<Vector2DTest>(
+					"vector2D -- Products",
+					&Vector2DTest::TestProducts)
+				);
+
 		return suiteOfTests;
 	}
 
@@ -167,6 +174,20 @@ class Vector2DTest: public TestFixture
 		CPPUNIT_ASSERT(a.Length() == 1);
 		CPPUNIT_ASSERT(b.Length() == 1);
 	}
+
+	void TestProducts()
+	{
+		Vector2D<int> a(2, 3);
+		Vector2D<int> b(4, 5);
+		Vector2D<int> c(0, 1);
+		Vector2D<int> d(1, 0);
+
+		int dot = a.Dot(b);
+		int perp = c.Dot(d);
+		CPPUNIT_ASSERT(dot == 23);
+		CPPUNIT_ASSERT(perp == 0);
+
+	}
 };
 
 class Vector3DTest: public TestFixture
@@ -209,6 +230,12 @@ class Vector3DTest: public TestFixture
 				new TestCaller<Vector3DTest>(
 					"Vector3D -- Normalize",
 					&Vector3DTest::TestNormalize)
+				);
+
+		suiteOfTests->addTest(
+				new TestCaller<Vector3DTest>(
+					"Vector3D -- Products",
+					&Vector3DTest::TestProducts)
 				);
 		return suiteOfTests;
 
@@ -285,9 +312,6 @@ class Vector3DTest: public TestFixture
 		CPPUNIT_ASSERT(a + b == b + a);
 		CPPUNIT_ASSERT(c == a + b);
 		CPPUNIT_ASSERT(d == a);
-
-		// Increment
-		// (0, 1) + (0, 2)
 	}
 
 	void TestNormalize()
@@ -298,6 +322,23 @@ class Vector3DTest: public TestFixture
 		CPPUNIT_ASSERT(f_equ(1.f, float_test.Length()));
 	}
 
+	void TestProducts()
+	{
+		Vector3D<int> a(1, 2, 3);
+		Vector3D<int> b(4, 5, 6);
+
+		Vector3D<int> c(1, 0, 0);
+		Vector3D<int> d(0, 1, 0);
+
+		int dot = a.Dot(b);
+		int perp = c.Dot(d);
+		CPPUNIT_ASSERT(dot == 32);
+		CPPUNIT_ASSERT(perp == 0);
+
+		Vector3D<int> cross = a.Cross(b);
+		Vector3D<int> cross_correct(-3, 6, -3);
+		CPPUNIT_ASSERT(cross == cross_correct);
+	}
 };
 
 class Vector4DTest: public TestFixture
@@ -341,10 +382,16 @@ class Vector4DTest: public TestFixture
 					"Vector4D -- Normalize",
 					&Vector4DTest::TestNormalize)
 				);
+		suiteOfTests->addTest(
+				new TestCaller<Vector4DTest>(
+					"Vector4D -- Products",
+					&Vector4DTest::TestProducts)
+				);
 		return suiteOfTests;
 	}
 
 	protected:
+
 	void TestConstruct()
 	{
 		Vector4D<int> def_vec;
@@ -370,8 +417,7 @@ class Vector4DTest: public TestFixture
 
 	void TestSet()
 	{
-		Vector4D<int> a();
-		CPPUNIT_ASSERT(a == Vector4D<int> vec);
+		Vector4D<int> a;
 		a.Set(1, 2, 3, 4);
 		CPPUNIT_ASSERT(a[0] == 1);
 		CPPUNIT_ASSERT(a[1] == 2);
@@ -385,19 +431,85 @@ class Vector4DTest: public TestFixture
 		CPPUNIT_ASSERT(a.Length() == 1);
 		a.Set(0, 0, 2, 0);
 		CPPUNIT_ASSERT(a.Length() == 2);
+		Vector4D<int> b(1, 0, 0, 0);
+		CPPUNIT_ASSERT(b.Length() == 1);
 	}
 
 	void TestComparisons()
 	{
+		Vector4D<int> a(0, 0, 0, 1);
+		Vector4D<int> b(0, 0, 0, 1);
+		Vector4D<int> c(1, 0, 0, 0);
+		Vector4D<int> d(0, 0, 0, 2);
+
+		CPPUNIT_ASSERT(a == b);
+		CPPUNIT_ASSERT(a != c);
+
+		CPPUNIT_ASSERT(a >= b);
+		CPPUNIT_ASSERT(a <= b);
+
+		// While they are not equal, they are not greater nor less
+		// Equal magnitude, maybe equal direction
+		CPPUNIT_ASSERT(a >= c);
+		CPPUNIT_ASSERT(a <= c);
+
+		// Only information on magnitude.
+		CPPUNIT_ASSERT(!(a < c));
+		CPPUNIT_ASSERT(!(a > c));
+		CPPUNIT_ASSERT(!(c < a));
+		CPPUNIT_ASSERT(!(c > a));
+
+		a.Set(1, 2, 3, 4);
+		b.Set(1, 2, 3, 4);
+		CPPUNIT_ASSERT(a == b);
+
+
 	}
 
 	void TestOperators()
 	{
+		Vector4D<int> a(1, 2, 3, 4);
+		Vector4D<int> b(5, 6, 7, 8);
+		Vector4D<int> c = a + b;
+		Vector4D<int> d = b - a;
+		Vector4D<int> e = c / 2;
+		Vector4D<int> f = d * 2;
+
+		CPPUNIT_ASSERT(a != b);
+		CPPUNIT_ASSERT(a != c);
+		CPPUNIT_ASSERT(a != d);
+		CPPUNIT_ASSERT(b != c);
+		CPPUNIT_ASSERT(b != d);
+
+		Vector4D<int> c_correct(6, 8, 10, 12);
+		Vector4D<int> d_correct(4, 4, 4, 4);
+		CPPUNIT_ASSERT(c == c_correct);
+		CPPUNIT_ASSERT(d == d_correct);
+
+		Vector4D<int> e_correct(3, 4, 5, 6);
+		Vector4D<int> f_correct(8, 8, 8, 8);
+
+		CPPUNIT_ASSERT(e == e_correct);
+		CPPUNIT_ASSERT(f == f_correct);
 	}
 
 	void TestNormalize()
 	{
+		Vector4D<float> a(2, 2, 3, 4);
+		Vector4D<float> b = a.Normalized();
+
+		CPPUNIT_ASSERT(!f_equ(a.Length(), 1));
+		CPPUNIT_ASSERT(f_equ(b.Length(), 1));
+		a.Normalize();
+		CPPUNIT_ASSERT(f_equ(a.Length(), 1));
 	}
 
+	void TestProducts()
+	{
+		Vector4D<int> a(1, 2, 3, 4);
+		Vector4D<int> b(5, 6, 7, 8);
+
+		CPPUNIT_ASSERT(a.Dot(b) == 70);
+	}
 };
 #endif //VECTOR_UNIT_TEST_H

@@ -3,6 +3,9 @@
 
 #include <cmath>
 
+#include "floatlibs.hpp"
+
+
 /*
  * TODO
  * Update cached length on:
@@ -70,8 +73,14 @@ template <typename T>
 class Vector2D
 {
 	public:
-		Vector2D() : x(), y() {}
-		Vector2D(T _x, T _y) : x(_x), y(_y) {}
+		Vector2D() : x(), y() 
+		{
+			m_good_len_cache = false;
+		}
+		Vector2D(T _x, T _y) : x(_x), y(_y) 
+		{
+			m_good_len_cache = false;
+		}
 
 		void Set(T _x, T _y);
 
@@ -109,7 +118,7 @@ class Vector2D
 		bool operator >= (const Vector2D<T>& vec) const;
 		bool operator >= (const Vector2D<T>& vec);
 
-		inline T operator[] (unsigned int index);
+		inline T operator[] (unsigned int index) const;
 
 		friend std::ostream& operator <<(std::ostream& os,
 				Vector2D<T>& v)
@@ -133,8 +142,14 @@ template <typename T>
 class Vector3D
 {
 	public:
-		Vector3D() : x(), y(), z() {}
-		Vector3D(T _x, T _y, T _z) : x(_x), y(_y), z(_z) {}
+		Vector3D() : x(), y(), z()
+		{
+			m_good_len_cache = false;
+		}
+		Vector3D(T _x, T _y, T _z) : x(_x), y(_y), z(_z)
+		{
+			m_good_len_cache = false;
+		}
 
 		void Set(T x, T y, T z);
 		void Normalize();
@@ -182,7 +197,7 @@ class Vector3D
 		bool operator >= (const Vector3D<T>& vec) const;
 		bool operator >= (const Vector3D<T>& vec);
 
-		inline T operator[] (unsigned int index);
+		inline T operator[] (unsigned int index) const;
 
 		friend std::ostream& operator <<(std::ostream& os,
 				const Vector3D<T>& v)
@@ -209,8 +224,14 @@ template <typename T>
 class Vector4D
 {
 	public:
-	Vector4D() : w(), x(), y(), z(){}
-	Vector4D(T _w, T _x, T _y, T _z) : w(_w), x(_x), y(_y), z(_z){}
+	Vector4D() : w(), x(), y(), z()
+	{
+		m_good_len_cache = false;
+	}
+	Vector4D(T _w, T _x, T _y, T _z) : w(_w), x(_x), y(_y), z(_z)
+	{
+		m_good_len_cache = false;
+	}
 
 	void Set(T _w, T _x, T _y, T _z);
 
@@ -247,7 +268,7 @@ class Vector4D
 	bool operator >= (const Vector4D<T>& vec) const;
 	bool operator >= (const Vector4D<T>& vec);
 
-	T operator[] (unsigned int index);
+	T operator[] (unsigned int index) const;
 
 	friend std::ostream& operator <<(std::ostream& os,
 			const Vector4D<T>& v)
@@ -484,7 +505,7 @@ bool Vector2D<T>::operator >= (const Vector2D<T>& vec)
 }
 
 template <typename T>
-T Vector2D<T>::operator[] (unsigned int index)
+T Vector2D<T>::operator[] (unsigned int index) const 
 {
 	return m_vals[index %2];
 }
@@ -699,7 +720,7 @@ bool Vector3D<T>::operator >= (const Vector3D<T>& vec)
 }
 
 template <typename T>
-inline T Vector3D<T>::operator [] (unsigned int index)
+inline T Vector3D<T>::operator [] (unsigned int index) const
 {
 	return m_vals[index % 3];
 }
@@ -709,6 +730,7 @@ inline T Vector3D<T>::operator [] (unsigned int index)
 template <typename T>
 void Vector4D<T>::Set(T _w, T _x, T _y, T _z)
 {
+	m_good_len_cache = false;
 	w = _w;
 	x = _x;
 	y = _y;
@@ -718,12 +740,13 @@ void Vector4D<T>::Set(T _w, T _x, T _y, T _z)
 template <typename T>
 void Vector4D<T>::Normalize()
 {
+
 	float l = 1.0f / Length();
+	m_good_len_cache = false;
 	w = (T)w * l;
 	x = (T)x * l;
 	y = (T)y * l;
 	z = (T)z * l;
-	m_good_len_cache = false;
 }
 
 template <typename T>
@@ -871,14 +894,14 @@ template <typename T>
 bool Vector4D<T>::operator <= (const Vector4D<T>& vec) const
 {
 	if (*this == vec) return true;
-	return (Length() <= vec.Length());
+	return (f_le(Length(), vec.Length()));
 }
 
 template <typename T>
 bool Vector4D<T>::operator <= (const Vector4D<T>& vec)
 {
 	if (*this == vec) return true;
-	return (Length() <= vec.Length());
+	return (f_le(Length(), vec.Length()));
 }
 
 template <typename T>
@@ -899,18 +922,18 @@ template <typename T>
 bool Vector4D<T>::operator >= (const Vector4D<T>& vec) const
 {
 	if (*this == vec) return true;
-	return (Length() >= vec.Length());
+	return (f_ge(Length(), vec.Length()));
 }
 
 template <typename T>
 bool Vector4D<T>::operator >= (const Vector4D<T>& vec)
 {
 	if (*this == vec) return true;
-	return (Length() >= vec.Length());
+	return (f_ge(Length(), vec.Length()));
 }
 
 template <typename T>
-T Vector4D<T>::operator[](unsigned int index)
+T Vector4D<T>::operator[](unsigned int index) const
 {
 	return m_vals[index % 4];
 }
