@@ -1,0 +1,3 @@
+Look into 
+simd -- CPU power
+cuda -- GPU power
