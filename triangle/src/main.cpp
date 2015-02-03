@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Vector.hpp"
+#include "Matrix.hpp"
 #include "floatlibs.hpp"
 
 #ifdef TEST
@@ -21,17 +22,14 @@ int main()
 	vector_tests.run();
 #endif //TEST
 
-	/*Vector3D<int> a(5, 6, 7);
-	Vector3D<int> b(1, 2, 3);
-	Vector3D<int> c;
-	std::cout << 'a' << a << '\n';
-	std::cout << 'b' << b << '\n';
-	std::cout << "a + b " << a + b << '\n';
-	std::cout << "a + b - b " << a + (b - b) << '\n'; */
-	/*Vector3D<double> a(1, 2, 3);
-	std::cout << a << '\n'; */
+	Matrix2x2<double> ident;
+	Matrix2x2<double> other(1, 2, 3, 4);
+	Matrix2x2<double> double_mat(2, 0, 0, 2);
+	std::cout << ident << '\n';
+	other *= ident;
+	std::cout << other << '\n';
+	other *= double_mat;
+	std::cout << other << '\n';
 
-	Vector2D<int> a(1, 2);
-	Vector2D<float> b(1.0, 2.4);
 	return 0;
 }

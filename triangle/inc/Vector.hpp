@@ -5,17 +5,6 @@
 
 #include "floatlibs.hpp"
 
-
-/*
- * TODO
- * Update cached length on:
- * 	Scalar multiplication
- * 	Scalar division
- * 	vector addition
- * 	vector subtraction
- * 	normalization
- */
-
 template <typename T>
 class Point2D
 {
@@ -73,11 +62,12 @@ template <typename T>
 class Vector2D
 {
 	public:
-		Vector2D() : x(), y() 
+		Vector2D() : x(), y()
 		{
 			m_good_len_cache = false;
 		}
-		Vector2D(T _x, T _y) : x(_x), y(_y) 
+
+		Vector2D(T _x, T _y) : x(_x), y(_y)
 		{
 			m_good_len_cache = false;
 		}
