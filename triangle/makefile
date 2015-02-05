@@ -26,7 +26,8 @@ D_TEST	= tests/
 D_DOCS	= docs/
 
 # Flags
-CFLAGS	= -c -iquote $(D_INC)
+CFLAGS	= -c -iquote $(D_INC) -march=native -mfpmath=sse
+# CFLAGS 	= -c -iquote $(D_INC)
 LIBS	= -pthread -lGL -lGLU
 CXFLAGS = $(CFLAGS) -std=c++11
 
