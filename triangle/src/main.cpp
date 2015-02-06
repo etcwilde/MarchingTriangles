@@ -3,6 +3,7 @@
 
 #include <glm/glm.hpp>
 #include "Rectangle.hpp"
+#include "Window.hpp"
 
 
 #include <ctime>
@@ -12,7 +13,6 @@
 #include <cppunit/ui/text/TestRunner.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestResult.h>
-#include "../tests/vector_test.h"
 
 #endif //TEST
 
@@ -30,5 +30,9 @@ int main()
 	std::cout << rect.area() << '\t' << rect.perimeter() << '\n';
 	std::cout << "Rectangle: " << rect.width() << 'x' << rect.height() << '\n';
 
-	return 0;
+	Window w(1024, 640, "GLFW test", NULL, NULL);
+	//Window w(1024, 768, "GLFW test", NULL, NULL);
+	w.mainloop();
+	w.destroyWindow();
+	return EXIT_SUCCESS;
 }
