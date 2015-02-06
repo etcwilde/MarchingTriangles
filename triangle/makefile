@@ -28,7 +28,7 @@ D_DOCS	= docs/
 # Flags
 CFLAGS	= -c -iquote $(D_INC) -march=native -mfpmath=sse
 # CFLAGS 	= -c -iquote $(D_INC)
-LIBS	= -pthread -lGL -lGLU
+LIBS	= -pthread -lGL -lGLU -lglfw
 CXFLAGS = $(CFLAGS) -std=c++11
 
 # Generate Object file names
@@ -73,7 +73,7 @@ debug: all
 
 # Unit testing enabled
 test: CFLAGS += -Wall -DTEST
-test: LIBS += -lcppunit -ldl
+test: LIBS += -lcppunit -ldl 
 test: clean  $(TEST_OBJS) all
 
 clean:

@@ -1,23 +1,24 @@
 #include "Window.hpp"
 #include <iostream>
 
-Window::Window()
+BaseWindow::BaseWindow()
 {
 	init(640, 480, "GL Window", NULL, NULL);
 }
 
-Window::Window(int width, int height, std::string title, GLFWmonitor* monitor, GLFWwindow* share)
+BaseWindow::BaseWindow(int width, int height, std::string title, GLFWmonitor* monitor, GLFWwindow* share)
 {
 	init(width, height, title, monitor, share);
 }
 
-Window::~Window()
+BaseWindow::~BaseWindow()
 {
+	destroy();
 }
 
-void Window::init(int width, int height, std::string title, GLFWmonitor* monitor, GLFWwindow* share)
+void BaseWindow::init(int width, int height, std::string title, GLFWmonitor* monitor, GLFWwindow* share)
 {
-	glfwSetErrorCallback(Window::ErrorCallback);
+	//glfwSetErrorCallback(BaseWindow::ErrorCallback);
 	if(!glfwInit()) exit(EXIT_FAILURE);
 	m_window = glfwCreateWindow(width, height, title.c_str(), monitor, share);
 	if (!m_window)
@@ -29,28 +30,66 @@ void Window::init(int width, int height, std::string title, GLFWmonitor* monitor
 	glfwMakeContextCurrent(m_window);
 
 	// Set input callbacks
+	/*glfwSetKeyCallback(m_window, KeyCallback); // Keyboard
+	glfwSetMouseButtonCallback(m_window, MouseCallback);
 
 	// Set output callbacks
-
+	glfwSetWindowSizeCallback(m_window, ResizeCallback); // Resize
+	glfwSetWindowRefreshCallback(m_window, RefreshCallback); */
 }
 
-void Window::ErrorCallback(int code, const char* description)
+void BaseWindow::destroy()
 {
-	//std::cerr << "[Error: " << code << "] " << description << '\n';
-	ErrorEvent(code, std::string(description));
+	glfwDestroyWindow(m_window);
+	glfwTerminate();
 }
 
-void Window::ResizeCallback(GLFWwindow* w, int width, int height)
+void BaseWindow::ErrorCallback(int code, const char* description)
 {
-	if (m_window != w) break;
-	ResizeEvent(width, height);
+#ifdef DEBUG
+	std::cerr << "[Error: " << code << "] " << description << '\n';
+#endif // DEBUG
+	//ErrorEvent(code, std::string(description));
 }
 
-void Window::RefreshCallback(GLFWwindow* w)
+void BaseWindow::ResizeCallback(GLFWwindow* w, int width, int height)
 {
-	if(m_window != w) break;
-	// Otherwise this is our window
-	// Call our callback function
-	RedrawEvent();
+	/*if (m_window != w) return;
+#ifdef DEBUG
+	std::cout << "Resize: " << width << 'x' << height << '\n';
+#endif // DEBUG
+	ResizeEvent(width, height); */
 }
 
+void BaseWindow::RefreshCallback(GLFWwindow* w)
+{
+	/*if(m_window != w) return;
+#ifdef DEBUG
+	std::cout << "Redraw\n";
+#endif // DEBUG */
+}
+
+void BaseWindow::MouseCallback(GLFWwindow* w, int button, int action, int mod)
+{
+	//if (m_window != w) return;
+	/*
+#ifdef DEBUG
+	std::cout << "Mouse active\n";
+#endif
+	if (action == GLFW_PRESS) MousePressEvent(button, mod);
+	else if (action == GLFW_RELEASE) w->MouseReleaseEvent(button, mod);
+#ifdef DEBUG
+	else std::cerr << "Unknown Mouse State: " << action << '\n';
+#endif */
+}
+
+void BaseWindow::ScrollCallback(GLFWwindow* w, double xoff, double yoff)
+{
+	//if (m_window != w) return;
+	/*
+#ifdef DEBUG
+	std::cout << "Mouse Scroll: " << xoff << 'x' << yoff << '\n';
+#endif
+	*/
+
+}

@@ -7,18 +7,54 @@
 
 using namespace glm;
 
+/**
+ * \class Rectangle
+ * \brief Defines a 2D rectangle
+ */
+
 class Rectangle
 {
 	public:
-		// 1 x 1
+		/**
+		 * \brief Creates a 1x1 rectangle
+		 */
 		Rectangle();
+
+		/**
+		 * \brief creates a rectangle
+		 *
+		 * @param top_left Upper left-hand corner coordinate
+		 * @param bottom_right Lower right-hand corner coordinate
+		 */
 		Rectangle(vec2 top_left, vec2 bottom_right);
-		// x, y -- bottom left corner
+		/**
+		 * \brief Creates a rectangle
+		 *
+		 * @param x Bottom left corner x coordinate
+		 * @param y bottom left corner y coordinate
+		 * @param w Width of the rectangle
+		 * @param h Height of the rectangle
+		 */
 		Rectangle(float x, float y, float w, float h);
 
+		/**
+		 * \brief Returns the area of the rectangle
+		 */
 		float area();
+
+		/**
+		 * \brief Returns the perimeter of the rectangle
+		 */
 		float perimeter();
+
+		/**
+		 * \brief Returns the height of the rectangle
+		 */
 		float height();
+
+		/**
+		 * \brief Returns the width of the rectangle
+		 */
 		float width();
 
 	private:
