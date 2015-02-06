@@ -1,8 +1,10 @@
 #include "Window.hpp"
 
+#include <GLFW/glfw3.h>
+
 Window::Window()
 {
-	init(640, 480, "", NULL, NULL);
+	init(1024, 640, "", NULL, NULL);
 }
 
 Window::Window(int width, int height, std::string title, GLFWmonitor* monitor, GLFWwindow* share)
@@ -44,13 +46,14 @@ void Window::init(int width, int height, const char* title, GLFWmonitor* monitor
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_LINE_SMOOTH);
 
-	glClearColor(0.4f, 0.4f, 0.4f, 1.0f);
+	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glShadeModel(GL_FLAT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glPointSize(5.0f);
 
 	redrawEvent(m_window);
+
 }
 
 void Window::mainloop()
@@ -93,15 +96,24 @@ void Window::resizeEvent(GLFWwindow *w, int width, int height)
 	//redrawEvent(w);
 }
 
-#include <GLFW/glfw3.h>
 void Window::mouseButtonEvent(GLFWwindow* w, int button, int action, int mods)
 {
+	/*
 	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
 		std::cout << "Left Button pressed\n";
 	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
 		std::cout << "Right Button pressed\n";
 	if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
 		std::cout << "Middle Button pressed\n";
+	*/
+
+	if (action == GLFW_PRESS) World::getWorldInstance().mousePressEvent(w,
+			button, mods);
+	else if (action == GLFW_RELEASE)
+		World::getWorldInstance().mouseReleaseEvent(w, button, mods);
+
+
+
 }
 
 void Window::mouseMoveEvent(GLFWwindow* w, double x, double y)
@@ -117,18 +129,33 @@ void Window::scrollEvent(GLFWwindow* w, double x, double y)
 void Window::keyboardEvent(GLFWwindow* w, int key, int scancode, int action, int mods)
 {
 	if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+	{
 		glfwSetWindowShouldClose(w, GL_TRUE);
-	if (key == GLFW_KEY_KP_0 && action == GLFW_PRESS)
-		std::cout << "Keypad 0 pressed\n";
-	if (key == GLFW_KEY_KP_0 && action == GLFW_REPEAT)
-		std::cout << "keypad 0 held down\n";
+		return;
+	}
+
+	switch (action)
+	{
+		case GLFW_PRESS:
+			World::getWorldInstance().keyPressEvent(w, key,
+					scancode, mods);
+			break;
+		case GLFW_RELEASE:
+			World::getWorldInstance().keyReleaseEvent(w, key,
+					scancode, mods);
+			break;
+		case GLFW_REPEAT:
+			World::getWorldInstance().keyHoldEvent(w, key,
+					scancode, mods);
+	}
 }
 
 void Window::redrawEvent(GLFWwindow* w)
 {
-	std::cout << "Redraw\n";
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	// World
+	World::getWorldInstance().Draw();
 }
 
 

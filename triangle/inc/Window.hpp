@@ -2,11 +2,13 @@
 #define WINDOW_H
 
 #include <GL/gl.h>
-#include <GL/glu.h> 
+#include <GL/glu.h>
 #include <GLFW/glfw3.h>
 
 #include <string>
 #include <iostream>
+
+#include "World.hpp"
 
 /**
  * \class Window
@@ -18,7 +20,7 @@ class Window
 public:
 	/**
 	 * \brief Default Window constructor
-	 * Generates a 640x480 window without a title, a designated monitor,
+	 * Generates a 1024x640 window without a title, a designated monitor,
 	 * and no shared contexts
 	 */
 	Window();
@@ -33,12 +35,14 @@ public:
 	 * @param monitor monitor of the widow, default is NULL
 	 * @param share Shared window context, default is NULL
 	 */
-	Window(int width, int height, std::string title, GLFWmonitor* monitor=NULL, GLFWwindow* share=NULL);
+	Window(int width, int height, std::string title,
+			GLFWmonitor* monitor=NULL, GLFWwindow* share=NULL);
 	~Window();
 
 	void mainloop();
 
 	void destroyWindow();
+
 protected:
 	/**
 	 * \brief Error handler
@@ -71,12 +75,13 @@ protected:
 	 * @param mods Modifying keys being held, is one of: GLFW_MOD_ALT,
 	 * GLFW_MOD_SHIFT, GLFW_MOD_CONTROL, GLFW_MOD_SUPER
 	 */
-	static void mouseButtonEvent(GLFWwindow* w, int button, int action, int mods);
+	static void mouseButtonEvent(GLFWwindow* w, int button, int action,
+			int mods);
 
 	/**
 	 * \brief handles mouse movements
 	 *
-	 * @param w window where event is occuring
+	 * @param w window where event is occurring
 	 * @param x the x coordinate on the window where the click is occurring
 	 * @param y the y coordinate on the window where the click is occurring
 	 */
@@ -101,13 +106,21 @@ protected:
 	 * @param action The action the key is making, is one of GLFW_PRESS,
 	 * GLFW_RELEASE, GLFW_REPEAT
 	 */
-	static void keyboardEvent(GLFWwindow* w, int key, int scancode, int action, int mods);
+	static void keyboardEvent(GLFWwindow* w, int key, int scancode,
+			int action, int mods);
 
+	/**
+	 * \brief handles redrawing the window
+	 *
+	 * @param w the window being redrawn
+	 */
 	static void redrawEvent(GLFWwindow* w);
 private:
-	void init(int width, int height, const char* d, GLFWmonitor* monitor, GLFWwindow* share);
+	void init(int width, int height, const char* d, GLFWmonitor* monitor,
+			GLFWwindow* share);
 
 	GLFWwindow * m_window;
+	World * m_world;
 
 };
 

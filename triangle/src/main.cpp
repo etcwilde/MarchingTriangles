@@ -16,6 +16,18 @@
 
 #endif //TEST
 
+/**
+ * \mainpage Marching Triangles Documentation
+ *
+ *
+ * The marching triangles algorithm is a polygonization algorithm, like the
+ * marching cubes algorithm. Given an implicit surface, it will generate a
+ * triangle mesh. It works by creating a seed triangle at some point on the
+ * surface, then begins to grow like a mold until the surface is covered.
+ *
+ * \author Evan Wilde <etcwilde@uvic.ca>
+ */
+
 int main()
 {
 #ifdef TEST
@@ -26,12 +38,7 @@ int main()
 	vector_tests.run(); */
 #endif //TEST
 
-	Rectangle rect(0, 0, 1, 2);
-	std::cout << rect.area() << '\t' << rect.perimeter() << '\n';
-	std::cout << "Rectangle: " << rect.width() << 'x' << rect.height() << '\n';
-
 	Window w(1024, 640, "GLFW test", NULL, NULL);
-	//Window w(1024, 768, "GLFW test", NULL, NULL);
 	w.mainloop();
 	w.destroyWindow();
 	return EXIT_SUCCESS;
