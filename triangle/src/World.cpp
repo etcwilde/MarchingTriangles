@@ -46,6 +46,78 @@ void World::mouseReleaseEvent(GLFWwindow* w, int button, int mods)
 	}
 }
 
+void World::mouseClickEvent(GLFWwindow* w, int button, int action, int mods)
+{
+	if (button == GLFW_MOUSE_BUTTON_MIDDLE && mods == GLFW_MOD_ALT)
+	{
+		if (action == GLFW_PRESS)
+		{
+			double x, y;
+			glfwGetCursorPos(w, &x, &y);
+			m_mouseDrag = true;
+			m_lastRotation = m_currentRotation;
+			m_camera.mouseDown(glm::vec2(x, y), Camera::CameraMovement::ARC);
+		}
+		else m_mouseDrag = false;
+		return;
+	}
+
+	if (button == GLFW_MOUSE_BUTTON_MIDDLE && mods == GLFW_MOD_SHIFT)
+	{
+		if (action == GLFW_PRESS)
+		{
+			double x, y;
+			glfwGetCursorPos(w, &x, &y);
+			m_mouseDrag = true;
+			m_lastTranslate = m_currentTranslate;
+			m_camera.mouseDown(glm::vec2(x, y), Camera::CameraMovement::TRACK);
+		}
+		else m_mouseDrag = false;
+		return;
+	}
+
+	if (button == GLFW_MOUSE_BUTTON_MIDDLE && mods == GLFW_MOD_CONTROL)
+	{
+		if (action == GLFW_PRESS)
+		{
+			double x, y;
+			glfwGetCursorPos(w, &x, &y);
+			m_mouseDrag = true;
+			m_lastScale = m_currentScale;
+			m_camera.mouseDown(glm::vec2(x, y), Camera::CameraMovement::DOLLY);
+		}
+		else m_mouseDrag = false;
+		return;
+	}
+}
+
+void World::mouseMoveEvent(GLFWwindow* w, double x, double y)
+{
+
+	if (m_mouseDrag)
+	{
+		glm::mat4 transform = m_camera.drag(glm::vec2(x, y));
+		switch(m_camera.getCameraMovement())
+		{
+			case Camera::CameraMovement::ARC:
+				m_currentRotation = transform * m_lastRotation;
+				break;
+			case Camera::CameraMovement::TRACK:
+				m_currentTranslate = transform * m_lastTranslate;
+				break;
+			case Camera::CameraMovement::DOLLY:
+				m_currentScale = transform * m_lastScale;
+				break;
+		}
+	}
+}
+
+void World::scrollEvent(GLFWwindow* w, double delta_x, double deta_y)
+{
+	// Nothing yet
+	std::cout << "scroll\n";
+}
+
 void World::keyPressEvent(GLFWwindow* w, int key, int scancode, int mods)
 {
 	std::cout << "Key press: " << key << ", " << scancode << '\n';
@@ -62,15 +134,38 @@ void World::keyReleaseEvent(GLFWwindow* w, int key, int scancode, int mods)
 	std::cout << "Key release: " << key << ", " << scancode << '\n';
 }
 
+void World::resizeEvent(GLFWwindow *w, int width, int height)
+{
+	m_camera.setBounds((float)width, (float)height);
+}
+
 void World::Draw()
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glPushMatrix();
+	glMultMatrixf(&m_currentTranslate[0][0]);
+	glMultMatrixf(&m_currentRotation[0][0]);
+	glMultMatrixf(&m_currentScale[0][0]);
 	draw_coordinates();
+	glPopMatrix();
 }
 
 void World::draw_coordinates()
 {
 
-	if (m_drawGrid)
+	glBegin(GL_LINES);
+	for (int i = 0; i < 25; ++i)
+	{
+		glVertex3f((-12.0f + i), 0.0f, -12.0f);
+		glVertex3f((-12.0f + i), 0.0f, 12.0f);
+
+		glVertex3f(-12.0f, 0.0f, (-12.0f + i));
+		glVertex3f(12.0f, 0.0f, (-12.0f, + i));
+	}
+	glEnd();
+
+
+	/*if (m_drawGrid)
 	{
 		// Build vertex buffer
 		GLint the_grid[] =
@@ -136,5 +231,7 @@ void World::draw_coordinates()
 		glVertexPointer(3, GL_INT, 0, the_grid);
 		glDrawElements(GL_LINES, 18, GL_UNSIGNED_BYTE, grid_index);
 		glDisableClientState(GL_VERTEX_ARRAY);
-	}
+	} */
+
+
 }

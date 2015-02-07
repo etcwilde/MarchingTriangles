@@ -7,6 +7,8 @@
 
 #include <iostream>
 
+#include "Camera.hpp"
+
 /**
  * \class World
  * \brief Container for all things happening in the universe
@@ -53,6 +55,23 @@ public:
 	 * GLFW_MOD_SHIFT, GLFW_MOD_CONTROL, GLFW_MOD_SUPER
 	 */
 	void mouseReleaseEvent(GLFWwindow* w, int button, int mods);
+	/**
+	 * \brief handles mouse button actions
+	 *
+	 * @param w window being clicked
+	 * @param button The button being pressed, is one of:
+	 * GLFW_MOUSE_BUTTON_1 ... GLFW_MOUSE_BUTTON_8, or
+	 * GLFW_MOUSE_BUTTON_LEFT, GLFW_MOUSE_BUTTON_MIDDLE,
+	 * GLFW_MOUSE_BUTTON_RIGHT
+	 *
+	 * @param action Whether the button is being pressed or released, is
+	 * one of: GLFW_PRESS or GLFW_RELEASE
+	 * @param mods Modifying keys being held, is one of: GLFW_MOD_ALT,
+	 * GLFW_MOD_SHIFT, GLFW_MOD_CONTROL, GLFW_MOD_SUPER
+	 */
+	void mouseClickEvent(GLFWwindow*w, int button, int action, int mods);
+
+	void mouseMoveEvent(GLFWwindow* w, double x, double y);
 
 	/**
 	 * \brief handles scroll events
@@ -64,7 +83,7 @@ public:
 	void scrollEvent(GLFWwindow* w, double delta_x, double deta_y);
 
 	/**
-	 * \brief handles keys being pressed 
+	 * \brief handles keys being pressed
 	 *
 	 * @param w selected window when key press event occurred
 	 * @param key GLFW key enum
@@ -74,7 +93,6 @@ public:
 	 * GLFW_MOD_SUPER
 	 */
 	void keyPressEvent(GLFWwindow* w, int key, int scancode, int mods);
-
 
 	/**
 	 * \brief handles keys being held
@@ -99,12 +117,15 @@ public:
 	 * GLFW_MOD_SUPER
 	 */
 	void keyReleaseEvent(GLFWwindow* w, int key, int scancode, int mods);
+	void resizeEvent(GLFWwindow* w, int width, int height);
 protected:
 
 private:
 	World();
 
 	void draw_coordinates();
+
+	Camera m_camera;
 
 	glm::mat4 m_lastRotation;
 	glm::mat4 m_currentRotation;

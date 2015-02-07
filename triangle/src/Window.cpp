@@ -54,6 +54,9 @@ void Window::init(int width, int height, const char* title, GLFWmonitor* monitor
 
 	redrawEvent(m_window);
 
+	m_world = &World::getWorldInstance();
+
+
 }
 
 void Window::mainloop()
@@ -62,12 +65,14 @@ void Window::mainloop()
 	glfwGetWindowSize(m_window, &width, &height);
 	resizeEvent(m_window, width, height);
 
-
 	glfwSetTime(0.0f);
 	double current_time;
 	while (!glfwWindowShouldClose(m_window))
 	{
 		current_time = glfwGetTime();
+
+		m_world->Draw();
+
 		glfwSwapBuffers(m_window);
 		glfwPollEvents();
 	}
@@ -93,37 +98,28 @@ void Window::resizeEvent(GLFWwindow *w, int width, int height)
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	gluPerspective(70, (double)width/height, 1.0, 1024.0);
-	//redrawEvent(w);
+
+	World::getWorldInstance().resizeEvent(w, width, height);
 }
 
 void Window::mouseButtonEvent(GLFWwindow* w, int button, int action, int mods)
 {
-	/*
-	if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-		std::cout << "Left Button pressed\n";
-	if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
-		std::cout << "Right Button pressed\n";
-	if (button == GLFW_MOUSE_BUTTON_MIDDLE && action == GLFW_PRESS)
-		std::cout << "Middle Button pressed\n";
-	*/
-
 	if (action == GLFW_PRESS) World::getWorldInstance().mousePressEvent(w,
 			button, mods);
 	else if (action == GLFW_RELEASE)
 		World::getWorldInstance().mouseReleaseEvent(w, button, mods);
 
-
-
+	World::getWorldInstance().mouseClickEvent(w, button, action, mods);
 }
 
 void Window::mouseMoveEvent(GLFWwindow* w, double x, double y)
 {
+	World::getWorldInstance().mouseMoveEvent(w, x, y);
 }
 
 void Window::scrollEvent(GLFWwindow* w, double x, double y)
 {
-	std::cout << "X scroll: " << x << '\n';
-	std::cout << "Y scroll: " << y << '\n';
+	World::getWorldInstance().scrollEvent(w, x, y);
 }
 
 void Window::keyboardEvent(GLFWwindow* w, int key, int scancode, int action, int mods)
