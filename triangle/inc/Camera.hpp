@@ -1,57 +1,195 @@
 #ifndef CAMERA_H
 #define CAMERA_H
 
-#include <glm/vec2.hpp>
-#include <glm/vec3.hpp>
-#include <glm/gtc/quaternion.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/mat4x4.hpp>
+
+#include <glm/glm.hpp>
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 #include <cmath>
-#include <cfloat>
+
+#include "vecops.hpp"
+
+#define CX	0
+#define CY	1
+#define CZ	2
+
+#define M_PI180 0.017453292519943295
 
 /**
  * \class Camera
- * \brief Controls viewing of the world
- * Provides three motion types
- * arc, track, and dolly
+ * \brief A basic camera
  *
- * The arcball used in the camera arc motion utilizes quaternions, which
- * means the camera is not bound to a given axis, and therefore is not
- * susceptible to gimbal lock.
+ * Three movement types for the camera, dolly, strafe, and rotate
  */
+using namespace glm;
 
 class Camera
 {
 public:
+	/**
+	 * \brief Default Camera constructor
+	 *
+	 * Creates the camera at position 1, 0, 0 looking at 0, 0, 0
+	 */
 	Camera();
-	Camera(float w, float h);
-	~Camera();
 
-	enum class CameraMovement
-	{
-		IDLE=0, // Not moving
-		ARC,  // orbit on the arcball
-		TRACK, // Move along the plane
-		DOLLY // Move camera in or out -- not zoom
-	};
+	/**
+	 * \brief Applies the current camera position to the viewer
+	 */
+	void Render();
 
-	void setBounds(float w, float h);
+	/**
+	 * \brief Move Camera
+	 * \param direction The direction and magnitude to move camera
+	 *
+	 * Moves the camera relative to the current position in the given
+	 * direction. The distance is defined by the magnitude of the direction
+	 * vector.
+	 */
+	void move_camera(vec3 direction);
 
-	CameraMovement getCameraMovement();
+	/**
+	 * \brief Place Camera
+	 * \param position x, y, z coordinate to set camera
+	 *
+	 * Places the camera at the position defined by position. The direction
+	 * the camera is looking should remain the same.
+	 */
+	void place_camera(vec3 position);
 
-	void mouseDown(const glm::vec2 point, CameraMovement movement);
-	glm::mat4 drag(const glm::vec2 point);
+	/**
+	 * \brief Change where the camera is looking
+	 * \param position The coordinates where the camera is looking
+	 *
+	 * Changes the camera lookat position to the new position.
+	 */
+	void set_view(vec3 position);
 
-protected:
-	glm::vec3 mapToSphere(const glm::vec2 point);
+	/**
+	 * \brief rotate X
+	 * \param angle How much to rotate the camera
+	 *
+	 * Rotates the camera around the x axis by a given angle
+	 */
+	void rotate_x(GLfloat angle);
+
+	/**
+	 * \brief rotate Y
+	 * \param angle How much to rotate the camera
+	 *
+	 * Rotates the camera around the Y axis by a given angle
+	 */
+	void rotate_y(GLfloat angle);
+
+	/**
+	 * \brief rotate Z
+	 * \param angle How much to rotate the camera
+	 *
+	 * Rotates the camera around the z axis by a given angle
+	 */
+	void rotate_z(GLfloat angle);
+
+	/**
+	 * \brief Dollies camera
+	 * \param distance Amount to dolly camera
+	 *
+	 * Moves camera along the view vector a given distance. Negative
+	 * distance will result in the camera getting further from the lookat
+	 * position.
+	 */
+	void move_forward(GLfloat distance);
+
+	/**
+	 * \brief Allows the camera to pan right and left
+	 * \param distance Amount to move right
+	 *
+	 * Moves the camera along the right vector a given distance. Positive
+	 * distance will result in the camera moving right, negative distance
+	 * will result in the camera moving left.
+	 */
+	void strafe_right(GLfloat distance);
+
+	/**
+	 * \brief Moves the camera up
+	 * \param distance Amount to move up
+	 *
+	 * Move the camera along the up-vector Positive distance will result in
+	 * the camera moving up, negative distance will result in the camera
+	 * moving down.
+	 */
+	void strafe_up(GLfloat distance);
+
+	/**
+	 * \brief set the camera field of view
+	 */
+	void set_fov(GLfloat fov);
+
+	/**
+	 * \brief adjust the field of view on the camera
+	 */
+	void adjust_fov(GLfloat delta);
+
+
+	/**
+	 * \brief Current position
+	 *
+	 * Returns the current position of the camera
+	 */
+	inline vec3 Position() const { return m_position; }
+
+	/**
+	 * \brief View to vector
+	 *
+	 * Returns the direction the camera is currently looking
+	 */
+	inline vec3 View() const { return m_direction; }
+
+	/**
+	 * \brief Returns if the camera is orthographic
+	 *
+	 */
+	inline bool is_ortho() const { return m_ortho; }
+
+
+	/**
+	 * \brief Returns the camera field of view
+	 */
+	inline GLfloat Fov() const { return m_fov; }
+
 
 private:
-	glm::vec3 m_startVector; // Starting point for transformations
-	glm::vec3 m_releaseVector; // Distance dragged for transformations
-	CameraMovement m_movement; // Type of motion
-	float m_width; // Width of screen
-	float m_height; // Height of screen
+
+	/* Raw Camera Control Definitions
+	 *
+	 * This is for simple camera movements, use other names for more
+	 * advanced movements
+	 */
+	void raw_render();
+
+	void raw_move_camera(vec3 direction);
+
+	void raw_place_camera(vec3 position);
+
+	void raw_rotateX(GLfloat angle);
+	void raw_rotateY(GLfloat angle);
+	void raw_rotateZ(GLfloat angle);
+
+	void raw_move_forward(GLfloat distance);
+
+	void raw_strafe_right(GLfloat distance);
+
+	void raw_strafe_up(GLfloat distance);
+
+	vec3 m_position;
+	vec3 m_direction;
+	vec3 m_right;
+	vec3 m_updir;
+
+	GLfloat m_fov;
+	GLfloat m_rotateX, m_rotateY, m_rotateZ;
+
+	bool m_ortho;
 };
 
 #endif

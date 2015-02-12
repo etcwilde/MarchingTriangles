@@ -48,6 +48,7 @@ void World::mouseReleaseEvent(GLFWwindow* w, int button, int mods)
 
 void World::mouseClickEvent(GLFWwindow* w, int button, int action, int mods)
 {
+	/*
 	if (button == GLFW_MOUSE_BUTTON_MIDDLE && mods == GLFW_MOD_ALT)
 	{
 		if (action == GLFW_PRESS)
@@ -56,7 +57,7 @@ void World::mouseClickEvent(GLFWwindow* w, int button, int action, int mods)
 			glfwGetCursorPos(w, &x, &y);
 			m_mouseDrag = true;
 			m_lastRotation = m_currentRotation;
-			m_camera.mouseDown(glm::vec2(x, y), Camera::CameraMovement::ARC);
+			m_camera.mouseDown(glm::vec2(x, y), Camera::CameraMovements::TUMBLE);
 		}
 		else m_mouseDrag = false;
 		return;
@@ -70,7 +71,7 @@ void World::mouseClickEvent(GLFWwindow* w, int button, int action, int mods)
 			glfwGetCursorPos(w, &x, &y);
 			m_mouseDrag = true;
 			m_lastTranslate = m_currentTranslate;
-			m_camera.mouseDown(glm::vec2(x, y), Camera::CameraMovement::TRACK);
+			m_camera.mouseDown(glm::vec2(x, y), Camera::CameraMovements::TRACK);
 		}
 		else m_mouseDrag = false;
 		return;
@@ -84,32 +85,32 @@ void World::mouseClickEvent(GLFWwindow* w, int button, int action, int mods)
 			glfwGetCursorPos(w, &x, &y);
 			m_mouseDrag = true;
 			m_lastScale = m_currentScale;
-			m_camera.mouseDown(glm::vec2(x, y), Camera::CameraMovement::DOLLY);
+			m_camera.mouseDown(glm::vec2(x, y), Camera::CameraMovements::DOLLY);
 		}
 		else m_mouseDrag = false;
 		return;
-	}
+	} */
 }
 
 void World::mouseMoveEvent(GLFWwindow* w, double x, double y)
 {
 
-	if (m_mouseDrag)
+	/*if (m_mouseDrag)
 	{
 		glm::mat4 transform = m_camera.drag(glm::vec2(x, y));
 		switch(m_camera.getCameraMovement())
 		{
-			case Camera::CameraMovement::ARC:
+			case Camera::CameraMovements::TUMBLE:
 				m_currentRotation = transform * m_lastRotation;
 				break;
-			case Camera::CameraMovement::TRACK:
+			case Camera::CameraMovements::TRACK:
 				m_currentTranslate = transform * m_lastTranslate;
 				break;
-			case Camera::CameraMovement::DOLLY:
+			case Camera::CameraMovements::DOLLY:
 				m_currentScale = transform * m_lastScale;
 				break;
 		}
-	}
+	} */
 }
 
 void World::scrollEvent(GLFWwindow* w, double delta_x, double deta_y)
@@ -120,7 +121,14 @@ void World::scrollEvent(GLFWwindow* w, double delta_x, double deta_y)
 
 void World::keyPressEvent(GLFWwindow* w, int key, int scancode, int mods)
 {
-	std::cout << "Key press: " << key << ", " << scancode << '\n';
+	//std::cout << "Key press: " << key << ", " << scancode << '\n';
+	glm::vec3 cam_pos = m_camera.Position();
+	std::cout << "Camera position: " << cam_pos[0] << ", " << cam_pos[1]
+		<< ", "<< cam_pos[2] <<'\n';
+	cam_pos = m_camera.View();
+	std::cout << "Camera Direction: " << cam_pos[0] << ", " << cam_pos[1]
+		<< ", "<< cam_pos[2] <<'\n';
+
 }
 
 void World::keyHoldEvent(GLFWwindow* w, int key, int scancode, int mods)
@@ -136,7 +144,7 @@ void World::keyReleaseEvent(GLFWwindow* w, int key, int scancode, int mods)
 
 void World::resizeEvent(GLFWwindow *w, int width, int height)
 {
-	m_camera.setBounds((float)width, (float)height);
+	//m_camera.setBounds((float)width, (float)height);
 }
 
 void World::Draw()
