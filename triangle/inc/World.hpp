@@ -9,6 +9,8 @@
 
 #include "Camera.hpp"
 
+using namespace glm;
+
 /**
  * \class World
  * \brief Container for all things happening in the universe
@@ -23,6 +25,16 @@ public:
 	~World();
 
 	static World& getWorldInstance();
+
+	/**
+	 * \brief Initializes GL settings
+	 *
+	 * Sets the background color
+	 * Enable the z-buffer
+	 * Enables antialiasing on lines
+	 * Sets the shade model to GL_FLAT
+	 */
+	void initGL();
 
 	// Draws the world
 	void Draw();
@@ -117,6 +129,8 @@ public:
 	 * GLFW_MOD_SUPER
 	 */
 	void keyReleaseEvent(GLFWwindow* w, int key, int scancode, int mods);
+
+	//
 	void resizeEvent(GLFWwindow* w, int width, int height);
 protected:
 
@@ -127,15 +141,9 @@ private:
 
 	Camera m_camera;
 
-	glm::mat4 m_lastRotation;
-	glm::mat4 m_currentRotation;
-	glm::mat4 m_lastScale;
-	glm::mat4 m_currentScale;
-	glm::mat4 m_lastTranslate;
-	glm::mat4 m_currentTranslate;
 
-	glm::vec3 m_background_color;
-	glm::vec3 m_grid_color;
+	vec3 m_background_color;
+	vec3 m_grid_color;
 
 	bool m_mouseDrag;
 	bool m_drawGrid;

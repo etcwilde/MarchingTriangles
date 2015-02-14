@@ -19,7 +19,6 @@ Window::~Window()
 void Window::init(int width, int height, const char* title, GLFWmonitor* monitor, GLFWwindow* share)
 {
 	glfwSetErrorCallback(errorEvent);
-
 	if (!glfwInit()) exit(EXIT_FAILURE);
 
 	m_window = glfwCreateWindow(width, height, title, monitor, share);
@@ -28,9 +27,7 @@ void Window::init(int width, int height, const char* title, GLFWmonitor* monitor
 		glfwTerminate();
 		exit(EXIT_FAILURE);
 	}
-
 	glfwMakeContextCurrent(m_window);
-
 	// Set callbacks
 	glfwSetWindowSizeCallback(m_window, resizeEvent);
 	glfwSetMouseButtonCallback(m_window, mouseButtonEvent);
@@ -39,20 +36,12 @@ void Window::init(int width, int height, const char* title, GLFWmonitor* monitor
 	glfwSetKeyCallback(m_window, keyboardEvent);
 	glfwSetWindowRefreshCallback(m_window, redrawEvent);
 
-	// Setup opengl
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LESS);
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_LINE_SMOOTH);
-
-	glShadeModel(GL_FLAT);
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-	glPointSize(5.0f);
-
+	// Set hints
+	glfwWindowHint(GLFW_SAMPLES, 4); // 4x antialiasing
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3); // Opengl versin 330
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	redrawEvent(m_window);
-
 	m_world = &World::getWorldInstance();
 }
 
@@ -62,15 +51,23 @@ void Window::mainloop()
 	glfwGetWindowSize(m_window, &width, &height);
 	resizeEvent(m_window, width, height);
 	glfwSetTime(0.0f);
-	double current_time;
+	double last_time = glfwGetTime();
+	double current_time = 0;
+	int frames = 0;
 	while (!glfwWindowShouldClose(m_window))
 	{
 		current_time = glfwGetTime();
 		m_world->Draw();
 		glfwSwapBuffers(m_window);
 		glfwPollEvents();
+		frames++;
+		if (current_time - last_time >= 1.0)
+		{
+			std::cout << "fps: " << frames  << '\r' << std::flush;
+			frames = 0;
+			last_time = current_time;
+		}
 	}
-
 }
 
 
@@ -88,11 +85,6 @@ void Window::errorEvent(int error, const char* description)
 
 void Window::resizeEvent(GLFWwindow *w, int width, int height)
 {
-	/*glViewport(0, 0, width, height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(70, (double)width/height, 1.0, 1024.0); */
-
 	World::getWorldInstance().resizeEvent(w, width, height);
 }
 
@@ -102,7 +94,6 @@ void Window::mouseButtonEvent(GLFWwindow* w, int button, int action, int mods)
 			button, mods);
 	else if (action == GLFW_RELEASE)
 		World::getWorldInstance().mouseReleaseEvent(w, button, mods);
-
 	World::getWorldInstance().mouseClickEvent(w, button, action, mods);
 }
 

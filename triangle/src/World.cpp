@@ -5,12 +5,26 @@
 World::World()
 	: m_drawGrid(true)
 {
-	m_background_color = glm::vec3(0, 0, 5);
+	m_background_color = glm::vec3(.0, .1, .1);
 	m_grid_color = glm::vec3(1, 1, 1);
+	initGL();
+}
 
-	// Initialize gl
+void World::initGL()
+{
 	glClearColor(m_background_color[0], m_background_color[1],
 			m_background_color[2], 1.f);
+	glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LESS);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_LINE_SMOOTH);
+
+	glShadeModel(GL_FLAT);
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+	glPointSize(5.0f);
+
 }
 
 World::~World()
@@ -164,15 +178,18 @@ void World::Draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glMatrixMode(GL_VIEWPORT);
+	//glLoadIdentity();
+	//m_camera.Render();
+	//glMatrixMode(GL_MODELVIEW);
+	glPushMatrix();
 	glLoadIdentity();
 	m_camera.Render();
-	glMatrixMode(GL_MODELVIEW);
 	draw_coordinates();
+	glPopMatrix();
 }
 
 void World::draw_coordinates()
 {
-
 	glColor3f(m_grid_color[0], m_grid_color[1], m_grid_color[2]);
 	glBegin(GL_LINES);
 	for (int i = 0; i < 25; ++i)

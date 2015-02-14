@@ -5,10 +5,11 @@
 #include <GL/glu.h>
 #include <GLFW/glfw3.h>
 
-#include <string>
 #include <iostream>
+#include <string>
 
 #include "World.hpp"
+
 
 /**
  * \class Window
@@ -115,9 +116,12 @@ protected:
 	 * @param w the window being redrawn
 	 */
 	static void redrawEvent(GLFWwindow* w);
+
+
 private:
 	void init(int width, int height, const char* d, GLFWmonitor* monitor,
 			GLFWwindow* share);
+
 
 	GLFWwindow * m_window;
 	World * m_world;

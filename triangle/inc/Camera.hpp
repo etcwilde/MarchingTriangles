@@ -1,4 +1,5 @@
-#ifndef CAMERA_H #define CAMERA_H
+#ifndef CAMERA_H
+#define CAMERA_H
 
 
 #include <glm/glm.hpp>
@@ -154,16 +155,11 @@ public:
 	 */
 	inline GLfloat Fov() const { return m_fov; }
 
-
 private:
-	// Current position
-	vec3 m_position;
-	// Lookat direction
-	vec3 m_direction;
-	// Right vector
-	vec3 m_right;
-	// Up vector
-	vec3 m_updir;
+	vec3 m_position; // Current position
+	vec3 m_direction; // Lookat direction
+	vec3 m_right; // Right vector
+	vec3 m_updir; // Up vector
 
 	GLfloat m_fov;
 	GLfloat m_rotateX, m_rotateY, m_rotateZ;

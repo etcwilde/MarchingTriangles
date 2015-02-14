@@ -3,12 +3,28 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+
+#include <iostream>
+
 Camera::Camera()
 {
 }
 
+
+// Must be called in a matrix
 void Camera::Render()
 {
+
+	mat4 Projection = perspective(45.f, 16.f/9.f, 0.1f, 1024.f);
+	mat4 View = glm::lookAt(vec3(2, 0.5, 1), vec3(0.0, 1.1, 0.0), vec3(0, 1, 0));
+	//mat4 View = View * Projection;
+	//mat4 VP = View * Projection;
+	mat4 VP = Projection * View;
+
+	glMultMatrixf(&VP[0][0]);
+
 }
 
 void Camera::move_camera(vec3 direction)
