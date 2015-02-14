@@ -134,6 +134,9 @@ private:
 	glm::mat4 m_lastTranslate;
 	glm::mat4 m_currentTranslate;
 
+	glm::vec3 m_background_color;
+	glm::vec3 m_grid_color;
+
 	bool m_mouseDrag;
 	bool m_drawGrid;
 

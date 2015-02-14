@@ -1,5 +1,4 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef CAMERA_H #define CAMERA_H
 
 
 #include <glm/glm.hpp>
@@ -7,8 +6,6 @@
 #include <GL/glu.h>
 
 #include <cmath>
-
-#include "vecops.hpp"
 
 #define CX	0
 #define CY	1
@@ -159,31 +156,13 @@ public:
 
 
 private:
-
-	/* Raw Camera Control Definitions
-	 *
-	 * This is for simple camera movements, use other names for more
-	 * advanced movements
-	 */
-	void raw_render();
-
-	void raw_move_camera(vec3 direction);
-
-	void raw_place_camera(vec3 position);
-
-	void raw_rotateX(GLfloat angle);
-	void raw_rotateY(GLfloat angle);
-	void raw_rotateZ(GLfloat angle);
-
-	void raw_move_forward(GLfloat distance);
-
-	void raw_strafe_right(GLfloat distance);
-
-	void raw_strafe_up(GLfloat distance);
-
+	// Current position
 	vec3 m_position;
+	// Lookat direction
 	vec3 m_direction;
+	// Right vector
 	vec3 m_right;
+	// Up vector
 	vec3 m_updir;
 
 	GLfloat m_fov;

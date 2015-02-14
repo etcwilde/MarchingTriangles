@@ -1,8 +1,17 @@
 #include "World.hpp"
 
+#include <GL/gl.h>
+
 World::World()
 	: m_drawGrid(true)
-{}
+{
+	m_background_color = glm::vec3(0, 0, 5);
+	m_grid_color = glm::vec3(1, 1, 1);
+
+	// Initialize gl
+	glClearColor(m_background_color[0], m_background_color[1],
+			m_background_color[2], 1.f);
+}
 
 World::~World()
 {
@@ -144,23 +153,27 @@ void World::keyReleaseEvent(GLFWwindow* w, int key, int scancode, int mods)
 
 void World::resizeEvent(GLFWwindow *w, int width, int height)
 {
+	glViewport(0, 0, width, height);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluPerspective(70, (double)width/height, 1.0f, 1024.0f);
 	//m_camera.setBounds((float)width, (float)height);
 }
 
 void World::Draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glPushMatrix();
-	glMultMatrixf(&m_currentTranslate[0][0]);
-	glMultMatrixf(&m_currentRotation[0][0]);
-	glMultMatrixf(&m_currentScale[0][0]);
+	glMatrixMode(GL_VIEWPORT);
+	glLoadIdentity();
+	m_camera.Render();
+	glMatrixMode(GL_MODELVIEW);
 	draw_coordinates();
-	glPopMatrix();
 }
 
 void World::draw_coordinates()
 {
 
+	glColor3f(m_grid_color[0], m_grid_color[1], m_grid_color[2]);
 	glBegin(GL_LINES);
 	for (int i = 0; i < 25; ++i)
 	{
@@ -168,10 +181,27 @@ void World::draw_coordinates()
 		glVertex3f((-12.0f + i), 0.0f, 12.0f);
 
 		glVertex3f(-12.0f, 0.0f, (-12.0f + i));
-		glVertex3f(12.0f, 0.0f, (-12.0f, + i));
+		glVertex3f(12.0f, 0.0f, (-12.0f + i));
 	}
 	glEnd();
 
+	glColor3ub(0, 255, 0);
+	glBegin(GL_LINES);
+	glVertex3f(0, 100, 0);
+	glVertex3f(0, -100, 0);
+	glEnd();
+
+	glColor3ub(0, 0, 255);
+	glBegin(GL_LINES);
+	glVertex3f(0, 0, 100);
+	glVertex3f(0, 0, -100);
+	glEnd();
+
+	glColor3ub(255, 0, 0);
+	glBegin(GL_LINES);
+	glVertex3f(100, 0, 0);
+	glVertex3f(-100, 0, 0);
+	glEnd();
 
 	/*if (m_drawGrid)
 	{

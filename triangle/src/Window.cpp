@@ -46,7 +46,6 @@ void Window::init(int width, int height, const char* title, GLFWmonitor* monitor
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_LINE_SMOOTH);
 
-	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
 	glShadeModel(GL_FLAT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -55,8 +54,6 @@ void Window::init(int width, int height, const char* title, GLFWmonitor* monitor
 	redrawEvent(m_window);
 
 	m_world = &World::getWorldInstance();
-
-
 }
 
 void Window::mainloop()
@@ -64,15 +61,12 @@ void Window::mainloop()
 	int width, height;
 	glfwGetWindowSize(m_window, &width, &height);
 	resizeEvent(m_window, width, height);
-
 	glfwSetTime(0.0f);
 	double current_time;
 	while (!glfwWindowShouldClose(m_window))
 	{
 		current_time = glfwGetTime();
-
 		m_world->Draw();
-
 		glfwSwapBuffers(m_window);
 		glfwPollEvents();
 	}
@@ -94,10 +88,10 @@ void Window::errorEvent(int error, const char* description)
 
 void Window::resizeEvent(GLFWwindow *w, int width, int height)
 {
-	glViewport(0, 0, width, height);
+	/*glViewport(0, 0, width, height);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(70, (double)width/height, 1.0, 1024.0);
+	gluPerspective(70, (double)width/height, 1.0, 1024.0); */
 
 	World::getWorldInstance().resizeEvent(w, width, height);
 }
@@ -148,8 +142,6 @@ void Window::keyboardEvent(GLFWwindow* w, int key, int scancode, int action, int
 
 void Window::redrawEvent(GLFWwindow* w)
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	// World
 	World::getWorldInstance().Draw();
 }
