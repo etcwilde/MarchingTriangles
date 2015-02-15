@@ -24,7 +24,7 @@ void World::initGL()
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
 	glPointSize(5.0f);
-
+	m_camera.set_bounds(1, 1);
 }
 
 World::~World()
@@ -144,43 +144,85 @@ void World::scrollEvent(GLFWwindow* w, double delta_x, double deta_y)
 
 void World::keyPressEvent(GLFWwindow* w, int key, int scancode, int mods)
 {
-	//std::cout << "Key press: " << key << ", " << scancode << '\n';
-	glm::vec3 cam_pos = m_camera.Position();
-	std::cout << "Camera position: " << cam_pos[0] << ", " << cam_pos[1]
-		<< ", "<< cam_pos[2] <<'\n';
-	cam_pos = m_camera.View();
-	std::cout << "Camera Direction: " << cam_pos[0] << ", " << cam_pos[1]
-		<< ", "<< cam_pos[2] <<'\n';
+	// Increment or decrement fov
+	if (key == GLFW_KEY_I)
+	{
+		m_camera.adjust_fov(.1);
+	}
+	else if (key == GLFW_KEY_J)
+	{
+		m_camera.adjust_fov(-.1);
+	}
+
+	else if (key == GLFW_KEY_W)
+	{
+		glm::vec3 direction = m_camera.View() - m_camera.Position();
+		auto len = glm::length(direction);
+		direction = glm::normalize(direction);
+		direction = glm::vec3(direction[0] * len / 15.f,
+				direction[1] * len / 15.f,
+				direction[2] * len / 15.f);
+		m_camera.move_camera(direction);
+	}
+	else if (key == GLFW_KEY_S)
+	{
+		glm::vec3 direction = m_camera.View() - m_camera.Position();
+		auto len = glm::length(direction);
+		direction = normalize(direction);
+		direction = glm::vec3(direction[0] * len / 15.f,
+				direction[1] * len / 15.f,
+				direction[2] * len / 15.f);
+		m_camera.move_camera(-direction);
+	}
 
 }
 
 void World::keyHoldEvent(GLFWwindow* w, int key, int scancode, int mods)
 {
-	// nothing
-	std::cout << "Key hold: " << key << ", " << scancode << '\n';
+	// Increment or decrement fov
+	if (key == GLFW_KEY_I)
+	{
+		m_camera.adjust_fov(.1);
+	}
+	else if (key == GLFW_KEY_J)
+	{
+		m_camera.adjust_fov(-.1);
+	}
+	else if (key == GLFW_KEY_W)
+	{
+		glm::vec3 direction = m_camera.View() - m_camera.Position();
+		auto len = glm::length(direction);
+		direction = glm::normalize(direction);
+		direction = glm::vec3(direction[0] * len / 15.f,
+				direction[1] * len / 15.f,
+				direction[2] * len / 15.f);
+		m_camera.move_camera(direction);
+	}
+	else if (key == GLFW_KEY_S)
+	{
+		glm::vec3 direction = m_camera.View() - m_camera.Position();
+		auto len = glm::length(direction);
+		direction = normalize(direction);
+		direction = glm::vec3(direction[0] * len / 15.f,
+				direction[1] * len / 15.f,
+				direction[2] * len / 15.f);
+		m_camera.move_camera(-direction);
+	}
 }
 
 void World::keyReleaseEvent(GLFWwindow* w, int key, int scancode, int mods)
 {
-	std::cout << "Key release: " << key << ", " << scancode << '\n';
+	//std::cout << "Key release: " << key << ", " << scancode << '\n';
 }
 
 void World::resizeEvent(GLFWwindow *w, int width, int height)
 {
-	glViewport(0, 0, width, height);
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluPerspective(70, (double)width/height, 1.0f, 1024.0f);
-	//m_camera.setBounds((float)width, (float)height);
+	m_camera.set_bounds(width, height);
 }
 
 void World::Draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glMatrixMode(GL_VIEWPORT);
-	//glLoadIdentity();
-	//m_camera.Render();
-	//glMatrixMode(GL_MODELVIEW);
 	glPushMatrix();
 	glLoadIdentity();
 	m_camera.Render();
@@ -282,11 +324,11 @@ void World::draw_coordinates()
 		};
 
 		glEnableClientState(GL_VERTEX_ARRAY);
-		glColor3ub(48, 48, 48);
+		glColor3ub(m_grid_color[0], m_grid_color[1], m_grid_color[2]);
 		glVertexPointer(3, GL_INT, 0, the_grid);
 		glDrawElements(GL_LINES, 18, GL_UNSIGNED_BYTE, grid_index);
 		glDisableClientState(GL_VERTEX_ARRAY);
-	} */
+	}*/
 
 
 }

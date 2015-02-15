@@ -25,6 +25,15 @@
  * triangle mesh. It works by creating a seed triangle at some point on the
  * surface, then begins to grow like a mold until the surface is covered.
  *
+ * Basic Layout:
+ * The Window contains a World
+ * The World contains all of the objects in the scene, and the Camera.
+ * The Camera handles user movement through the scene and handles most of the
+ * OpenGL calls for processing the viewport matrices including the View matrix
+ * and the Perspective matrix.
+ *
+ * This program makes use of the glm matrix libraries.
+ *
  * \author Evan Wilde <etcwilde@uvic.ca>
  */
 
@@ -38,7 +47,7 @@ int main()
 	vector_tests.run(); */
 #endif //TEST
 
-	Window w(1024, 640, "GLFW test", NULL, NULL);
+	Window w(1024, 640, "Marching Triangles", NULL, NULL);
 	w.mainloop();
 	w.destroyWindow();
 	return EXIT_SUCCESS;

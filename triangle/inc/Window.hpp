@@ -54,8 +54,7 @@ protected:
 	static void errorEvent(int error, const char* description);
 
 	/**
-	 * \brief handles window resizes
-	 *
+	 * \brief handles window resizes *
 	 * @param w window being resized
 	 * @param width new window width
 	 * @param height new window height

@@ -7,12 +7,10 @@
 #include <GL/glu.h>
 
 #include <cmath>
-
-#define CX	0
-#define CY	1
-#define CZ	2
-
 #define M_PI180 0.017453292519943295
+
+#define C_MAX_FOV 46.6f
+#define C_MIN_FOV 44.f
 
 /**
  * \class Camera
@@ -128,6 +126,8 @@ public:
 	 */
 	void adjust_fov(GLfloat delta);
 
+	void set_bounds(GLint width, GLint height);
+
 
 	/**
 	 * \brief Current position
@@ -157,12 +157,22 @@ public:
 
 private:
 	vec3 m_position; // Current position
-	vec3 m_direction; // Lookat direction
-	vec3 m_right; // Right vector
+	vec3 m_direction; // Lookat position
 	vec3 m_updir; // Up vector
+
+	mat4 m_VP; // View Perspective Matrix
+	mat4 m_View; // View matrix
+	mat4 m_Persp; // Perspective Matrix;
+
+	// Are the cached matrices good
+	bool m_VP_good;
+	bool m_View_good;
+	bool m_Persp_good;
 
 	GLfloat m_fov;
 	GLfloat m_rotateX, m_rotateY, m_rotateZ;
+
+	GLint m_width, m_height;
 
 	bool m_ortho;
 };
