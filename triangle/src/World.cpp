@@ -136,10 +136,10 @@ void World::mouseMoveEvent(GLFWwindow* w, double x, double y)
 	} */
 }
 
-void World::scrollEvent(GLFWwindow* w, double delta_x, double deta_y)
+void World::scrollEvent(GLFWwindow* w, double delta_x, double delta_y)
 {
 	// Nothing yet
-	std::cout << "scroll\n";
+	camera_dolly(delta_x, delta_y);
 }
 
 void World::keyPressEvent(GLFWwindow* w, int key, int scancode, int mods)
@@ -329,6 +329,12 @@ void World::draw_coordinates()
 		glDrawElements(GL_LINES, 18, GL_UNSIGNED_BYTE, grid_index);
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}*/
+}
 
-
+void World::camera_dolly(double x, double y)
+{
+	glm::vec3 direction = m_camera.View() - m_camera.Position();
+	direction = glm::normalize(direction);
+	m_camera.move_camera(direction * (GLfloat)y);
+	m_camera.set_view(m_camera.View() +(direction * (GLfloat)y));
 }

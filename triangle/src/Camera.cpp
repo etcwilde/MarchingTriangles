@@ -56,6 +56,7 @@ void Camera::move_camera(vec3 direction)
 void Camera::set_view(vec3 position)
 {
 	m_View_good = false;
+	m_direction = position;
 }
 
 void Camera::place_camera(vec3 position)

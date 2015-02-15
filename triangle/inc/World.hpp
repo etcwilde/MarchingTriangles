@@ -134,6 +134,10 @@ public:
 	void resizeEvent(GLFWwindow* w, int width, int height);
 protected:
 
+	void camera_dolly(double x, double y);
+	void camera_strafe(vec2 mouse_point);
+	void camera_rotate(vec2 mouse_point);
+
 private:
 	World();
 
@@ -144,6 +148,8 @@ private:
 
 	vec3 m_background_color;
 	vec3 m_grid_color;
+
+	vec2 m_old_mouse;
 
 	bool m_mouseDrag;
 	bool m_drawGrid;
