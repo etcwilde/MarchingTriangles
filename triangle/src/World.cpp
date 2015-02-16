@@ -142,27 +142,6 @@ void World::keyPressEvent(GLFWwindow* w, int key, int scancode, int mods)
 	{
 		m_camera.adjust_fov(-.1);
 	}
-
-	else if (key == GLFW_KEY_W)
-	{
-		glm::vec3 direction = m_camera.View() - m_camera.Position();
-		auto len = glm::length(direction);
-		direction = glm::normalize(direction);
-		direction = glm::vec3(direction[0] * len / 15.f,
-				direction[1] * len / 15.f,
-				direction[2] * len / 15.f);
-		m_camera.move_camera(direction);
-	}
-	else if (key == GLFW_KEY_S)
-	{
-		glm::vec3 direction = m_camera.View() - m_camera.Position();
-		auto len = glm::length(direction);
-		direction = normalize(direction);
-		direction = glm::vec3(direction[0] * len / 15.f,
-				direction[1] * len / 15.f,
-				direction[2] * len / 15.f);
-		m_camera.move_camera(-direction);
-	}
 	if (key == GLFW_KEY_LEFT_SHIFT) m_small_increments = true;
 }
 
@@ -177,14 +156,7 @@ void World::keyHoldEvent(GLFWwindow* w, int key, int scancode, int mods)
 	{
 		m_camera.adjust_fov(-.1);
 	}
-	else if (key == GLFW_KEY_W)
-	{
-		camera_dolly(0, .5);
-	}
-	else if (key == GLFW_KEY_S)
-	{
-		camera_dolly(0, -.5);
-	}
+
 }
 
 void World::keyReleaseEvent(GLFWwindow* w, int key, int scancode, int mods)
@@ -239,73 +211,74 @@ void World::draw_coordinates()
 	glVertex3f(-100, 0, 0);
 	glEnd();
 
-	/*if (m_drawGrid)
+
+	/*
+	// Build vertex buffer
+	GLint the_grid[] =
 	{
-		// Build vertex buffer
-		GLint the_grid[] =
-		{
-			20,  	0,	20,	//0
-			-20, 	0, 	20, 	//1
-			20,  	0,	-20,	//2
-			-20, 	0, 	-20,	//3
-			20,  	0,	15,	//4
-			-20, 	0, 	15, 	//5
-			20,  	0,	10, 	//6
-			-20, 	0, 	10,	//7
-			20,  	0,	5, 	//8
-			-20, 	0, 	5, 	//9
-			20,  	0,	0,	//10
-			-20, 	0, 	0,  	//11
-			20,  	0,	-5,	//12
-			-20, 	0, 	-5,	//13
-			20,  	0,	-10,	//14
-			-20, 	0, 	-10,	//15
-			20,  	0,	-15,	//16
-			-20, 	0, 	-15,	//17
+		20,  	0,	20,	//0
+		-20, 	0, 	20, 	//1
+		20,  	0,	-20,	//2
+		-20, 	0, 	-20,	//3
+		20,  	0,	15,	//4
+		-20, 	0, 	15, 	//5
+		20,  	0,	10, 	//6
+		-20, 	0, 	10,	//7
+		20,  	0,	5, 	//8
+		-20, 	0, 	5, 	//9
+		20,  	0,	0,	//10
+		-20, 	0, 	0,  	//11
+		20,  	0,	-5,	//12
+		-20, 	0, 	-5,	//13
+		20,  	0,	-10,	//14
+		-20, 	0, 	-10,	//15
+		20,  	0,	-15,	//16
+		-20, 	0, 	-15,	//17
 
-			15, 	0,	20,	//18
-			15, 	0,	-20,	//19
-			10, 	0,	20,	//20
-			10,	0,	-20,	//21
-			5,  	0,	20,	//22
-			5,  	0,	-20,	//23
-			0,  	0,	20,	//24
-			0,  	0,	-20,	//25
-			-5, 	0,	20,	//26
-			-5, 	0,	-20,	//27
-			-10,	0,	20,	//28
-			-10,	0,	-20,	//29
-			-15,	0,	20,	//30
-			-15,	0,	-20	//31
-		};
-		GLubyte grid_index[]
-		{
-			0,	1,
-			4,	5,
-			6,	7,
-			8,	9,
-			10,	11,
-			12,	13,
-			14,	15,
-			16,	17,
-			2,	3,
-			18,	19,
-			20,	21,
-			22,	23,
-			24,	25,
-			26,	27,
-			28,	29,
-			30,	31,
-			1,	3,
-			0,	2
-		};
+		15, 	0,	20,	//18
+		15, 	0,	-20,	//19
+		10, 	0,	20,	//20
+		10,	0,	-20,	//21
+		5,  	0,	20,	//22
+		5,  	0,	-20,	//23
+		0,  	0,	20,	//24
+		0,  	0,	-20,	//25
+		-5, 	0,	20,	//26
+		-5, 	0,	-20,	//27
+		-10,	0,	20,	//28
+		-10,	0,	-20,	//29
+		-15,	0,	20,	//30
+		-15,	0,	-20	//31
+	};
+	GLubyte grid_index[]
+	{
+		0,	1,
+		4,	5,
+		6,	7,
+		8,	9,
+		10,	11,
+		12,	13,
+		14,	15,
+		16,	17,
+		2,	3,
+		18,	19,
+		20,	21,
+		22,	23,
+		24,	25,
+		26,	27,
+		28,	29,
+		30,	31,
+		1,	3,
+		0,	2
+	};
 
-		glEnableClientState(GL_VERTEX_ARRAY);
-		glColor3ub(m_grid_color[0], m_grid_color[1], m_grid_color[2]);
-		glVertexPointer(3, GL_INT, 0, the_grid);
-		glDrawElements(GL_LINES, 18, GL_UNSIGNED_BYTE, grid_index);
-		glDisableClientState(GL_VERTEX_ARRAY);
-	}*/
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glColor3ub(m_grid_color[0], m_grid_color[1], m_grid_color[2]);
+	glVertexPointer(3, GL_INT, 0, the_grid);
+	glDrawElements(GL_LINES, 18, GL_UNSIGNED_BYTE, grid_index);
+	glDisableClientState(GL_VERTEX_ARRAY);
+
+	*/
 }
 
 void World::camera_dolly(double x, double y)
