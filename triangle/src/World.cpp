@@ -49,9 +49,6 @@ void World::mousePressEvent(GLFWwindow* w, int button, int mods)
 		case GLFW_MOUSE_BUTTON_MIDDLE:
 			if ((mods & GLFW_MOD_CONTROL) == GLFW_MOD_CONTROL)
 				m_cam_mode = CAM_STRAFE;
-			if ((mods & GLFW_MOD_SHIFT) == GLFW_MOD_SHIFT)
-				m_small_increments = true;
-			else m_small_increments = false;
 			break;
 	}
 }
@@ -166,7 +163,7 @@ void World::keyPressEvent(GLFWwindow* w, int key, int scancode, int mods)
 				direction[2] * len / 15.f);
 		m_camera.move_camera(-direction);
 	}
-
+	if (key == GLFW_KEY_LEFT_SHIFT) m_small_increments = true;
 }
 
 void World::keyHoldEvent(GLFWwindow* w, int key, int scancode, int mods)
@@ -192,7 +189,7 @@ void World::keyHoldEvent(GLFWwindow* w, int key, int scancode, int mods)
 
 void World::keyReleaseEvent(GLFWwindow* w, int key, int scancode, int mods)
 {
-	//std::cout << "Key release: " << key << ", " << scancode << '\n';
+	if (key == GLFW_KEY_LEFT_SHIFT) m_small_increments = false;
 }
 
 void World::resizeEvent(GLFWwindow *w, int width, int height)
@@ -313,6 +310,11 @@ void World::draw_coordinates()
 
 void World::camera_dolly(double x, double y)
 {
+	if (m_small_increments)
+	{
+		x /= 10;
+		y /= 10;
+	}
 	glm::vec3 direction = m_camera.View() - m_camera.Position();
 	direction = glm::normalize(direction);
 	m_camera.move_camera(direction * (GLfloat)y);

@@ -26,11 +26,9 @@ Camera::Camera()
 	m_Persp_good = false;
 	m_VP_good = false;
 	m_fov = 45.f;
-
 	m_position = vec3(2.f, 2.f, 1.f);
 	m_direction= vec3(0.f, 0.f, 0.f);
 	m_updir = vec3(0.f, 1.f, 0.f);
-
 	m_rotate_distance = length(m_direction - m_position);
 }
 
@@ -38,9 +36,10 @@ Camera::Camera()
 // Must be called in a matrix
 void Camera::Render()
 {
+
 	if (!m_View_good)
 	{
-		m_View = glm::lookAt(m_position, m_direction, m_updir);
+		m_View = lookAt(m_position, m_direction, m_updir);
 		m_VP_good = false;
 		m_View_good = true;
 	}
@@ -58,7 +57,6 @@ void Camera::Render()
 		m_VP = m_Persp * m_View;
 		m_VP_good = true;
 	}
-
 	glMultMatrixf(&m_VP[0][0]);
 }
 
@@ -66,17 +64,20 @@ void Camera::move_camera(vec3 direction)
 {
 	m_View_good = false;
 	m_position += direction;
+	m_rotate_distance = length(m_direction - m_position);
 }
 
 void Camera::set_view(vec3 position)
 {
 	m_View_good = false;
 	m_direction = position;
+	m_rotate_distance = length(m_direction - m_position);
 }
 
 void Camera::place_camera(vec3 position)
 {
 	m_View_good = false;
+	m_position = position;
 
 }
 
@@ -123,18 +124,19 @@ void Camera::rotate_horizontal(GLfloat distance)
 {
 	m_View_good = false;
 	vec3 direction = normalize(m_direction - m_position);
-	vec3 right_vec = cross(direction, m_updir) * -distance;
+	vec3 right_vec = cross(direction, m_updir) * distance;
 	m_position += right_vec;
 	m_direction = normalize(m_direction - m_position) * m_rotate_distance + m_position;
 }
 
 void Camera::rotate_vertical(GLfloat distance)
 {
-	// m_View_good = false;
-	// vec3 direction = normalize(m_direction - m_position);
-	// vec3 right_vec = cross(direction, m_updir) * distance;
-	// m_updir += right_vec;
-
+	m_View_good = false;
+	vec3 direction = normalize(m_direction - m_position);
+	vec3 right_vec = normalize(cross(direction, m_updir));
+	vec3 up = normalize(cross(direction, right_vec));
+	m_position += normalize(up) * distance;
+	m_position = normalize(m_position - m_direction) * m_rotate_distance + m_direction;
 }
 
 void Camera::set_fov(GLfloat fov)
