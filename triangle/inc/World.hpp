@@ -9,6 +9,12 @@
 
 #include "Camera.hpp"
 
+// Camera movements
+#define CAM_ROTATE	0b0001
+#define CAM_STRAFE	0b0010
+#define CAM_DOLLY	0b0100
+#define CAM_NONE	0b1000
+
 using namespace glm;
 
 /**
@@ -134,16 +140,23 @@ public:
 	void resizeEvent(GLFWwindow* w, int width, int height);
 protected:
 
+	void camera_dolly(double x, double y);
+	void camera_strafe(vec2 mouse_point);
+	void camera_rotate(vec2 mouse_point);
+
 private:
 	World();
 
 	void draw_coordinates();
 
 	Camera m_camera;
-
+	unsigned short m_cam_mode;
+	bool m_small_increments;
 
 	vec3 m_background_color;
 	vec3 m_grid_color;
+
+	vec2 m_old_mouse;
 
 	bool m_mouseDrag;
 	bool m_drawGrid;
