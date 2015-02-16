@@ -8,6 +8,18 @@
 
 #include <iostream>
 
+std::ostream& operator<< (std::ostream& o, const vec3 &v)
+{
+	o << '[' << v.x << ", " << v.y << ", " << v.z << ']';
+	return o;
+}
+
+std::ostream& operator<< (std::ostream& o, const vec4 &v)
+{
+	o << '[' << v[0] << ", " << v[1] << ", " << v[2] << ", " << v[3] << ']';
+	return o;
+}
+
 Camera::Camera()
 {
 	m_View_good = false;
@@ -16,8 +28,10 @@ Camera::Camera()
 	m_fov = 45.f;
 
 	m_position = vec3(2.f, 2.f, 1.f);
-	m_direction= vec3(0.f, 1.1f, 0.f);
+	m_direction= vec3(0.f, 0.f, 0.f);
 	m_updir = vec3(0.f, 1.f, 0.f);
+
+	m_rotate_distance = length(m_direction - m_position);
 }
 
 
@@ -33,7 +47,8 @@ void Camera::Render()
 
 	if (!m_Persp_good)
 	{
-		m_Persp = perspective(m_fov, (float)m_width/m_height, 0.1f, 1024.f);
+		m_Persp = perspective(m_fov, (float)m_width/m_height,
+			       	0.1f, 1024.f);
 		m_VP_good = false;
 		m_Persp_good = true;
 	}
@@ -88,11 +103,38 @@ void Camera::move_forward(GLfloat distance)
 void Camera::strafe_right(GLfloat distance)
 {
 	m_View_good = false;
+	vec3 direction = normalize(m_direction - m_position);
+	vec3 right_vec = cross(direction, m_updir) * distance;
+	m_position += right_vec; m_direction += right_vec;
+	m_direction = normalize(m_direction - m_position) * m_rotate_distance + m_position;
 }
 
 void Camera::strafe_up(GLfloat distance)
 {
 	m_View_good = false;
+	vec3 direction = normalize(m_direction - m_position);
+	vec3 right_vec = normalize(cross(m_updir, direction));
+	vec3 up = cross(direction, right_vec) * distance;
+	m_position += up; m_direction += up;
+	m_direction = normalize(m_direction - m_position) * m_rotate_distance + m_position;
+}
+
+void Camera::rotate_horizontal(GLfloat distance)
+{
+	m_View_good = false;
+	vec3 direction = normalize(m_direction - m_position);
+	vec3 right_vec = cross(direction, m_updir) * -distance;
+	m_position += right_vec;
+	m_direction = normalize(m_direction - m_position) * m_rotate_distance + m_position;
+}
+
+void Camera::rotate_vertical(GLfloat distance)
+{
+	// m_View_good = false;
+	// vec3 direction = normalize(m_direction - m_position);
+	// vec3 right_vec = cross(direction, m_updir) * distance;
+	// m_updir += right_vec;
+
 }
 
 void Camera::set_fov(GLfloat fov)
@@ -100,7 +142,6 @@ void Camera::set_fov(GLfloat fov)
 	m_Persp_good = false;
 	m_fov = fov;
 }
-
 
 void Camera::adjust_fov(GLfloat delta)
 {
@@ -118,10 +159,6 @@ void Camera::set_bounds(GLint width, GLint height)
 	m_width = width;
 	m_height = height;
 }
-
-/**
- * Private Method Definitions
- */
 
 
 

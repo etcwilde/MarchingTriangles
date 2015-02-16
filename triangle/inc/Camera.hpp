@@ -116,6 +116,12 @@ public:
 	 */
 	void strafe_up(GLfloat distance);
 
+
+	void rotate_horizontal(GLfloat distance);
+
+	void rotate_vertical(GLfloat distance);
+
+
 	/**
 	 * \brief set the camera field of view
 	 */
@@ -159,6 +165,8 @@ private:
 	vec3 m_position; // Current position
 	vec3 m_direction; // Lookat position
 	vec3 m_updir; // Up vector
+
+	float m_rotate_distance; // Distance at which we rotate
 
 	mat4 m_VP; // View Perspective Matrix
 	mat4 m_View; // View matrix

@@ -9,6 +9,12 @@
 
 #include "Camera.hpp"
 
+// Camera movements
+#define CAM_ROTATE	0b0001
+#define CAM_STRAFE	0b0010
+#define CAM_DOLLY	0b0100
+#define CAM_NONE	0b1000
+
 using namespace glm;
 
 /**
@@ -144,7 +150,8 @@ private:
 	void draw_coordinates();
 
 	Camera m_camera;
-
+	unsigned short m_cam_mode;
+	bool m_small_increments;
 
 	vec3 m_background_color;
 	vec3 m_grid_color;

@@ -39,32 +39,35 @@ World& World::getWorldInstance()
 
 void World::mousePressEvent(GLFWwindow* w, int button, int mods)
 {
+	m_mouseDrag = true;
 	switch(button)
 	{
 		case GLFW_MOUSE_BUTTON_LEFT:
-			std::cout << "Left pressed\n";
 			break;
 		case GLFW_MOUSE_BUTTON_RIGHT:
-			std::cout << "Right pressed\n";
 			break;
 		case GLFW_MOUSE_BUTTON_MIDDLE:
-			std::cout << "Middle pressed\n";
+			if ((mods & GLFW_MOD_CONTROL) == GLFW_MOD_CONTROL)
+				m_cam_mode = CAM_STRAFE;
+			if ((mods & GLFW_MOD_SHIFT) == GLFW_MOD_SHIFT)
+				m_small_increments = true;
+			else m_small_increments = false;
 			break;
 	}
 }
 
 void World::mouseReleaseEvent(GLFWwindow* w, int button, int mods)
 {
+	m_mouseDrag = false;
 	switch(button)
 	{
 		case GLFW_MOUSE_BUTTON_LEFT:
-			std::cout << "Left released\n";
 			break;
 		case GLFW_MOUSE_BUTTON_RIGHT:
-			std::cout << "Right released\n";
 			break;
 		case GLFW_MOUSE_BUTTON_MIDDLE:
-			std::cout << "Middle released\n";
+			// release camera mode
+			m_cam_mode = CAM_ROTATE;
 			break;
 	}
 }
@@ -117,23 +120,12 @@ void World::mouseClickEvent(GLFWwindow* w, int button, int action, int mods)
 
 void World::mouseMoveEvent(GLFWwindow* w, double x, double y)
 {
-
-	/*if (m_mouseDrag)
+	if (!m_mouseDrag) m_old_mouse = vec2(x, y); // Expensive
+	if (m_mouseDrag)
 	{
-		glm::mat4 transform = m_camera.drag(glm::vec2(x, y));
-		switch(m_camera.getCameraMovement())
-		{
-			case Camera::CameraMovements::TUMBLE:
-				m_currentRotation = transform * m_lastRotation;
-				break;
-			case Camera::CameraMovements::TRACK:
-				m_currentTranslate = transform * m_lastTranslate;
-				break;
-			case Camera::CameraMovements::DOLLY:
-				m_currentScale = transform * m_lastScale;
-				break;
-		}
-	} */
+		if (m_cam_mode ==  CAM_STRAFE) camera_strafe(vec2(x, y));
+		else camera_rotate(vec2(x, y));
+	}
 }
 
 void World::scrollEvent(GLFWwindow* w, double delta_x, double delta_y)
@@ -325,4 +317,34 @@ void World::camera_dolly(double x, double y)
 	direction = glm::normalize(direction);
 	m_camera.move_camera(direction * (GLfloat)y);
 	m_camera.set_view(m_camera.View() +(direction * (GLfloat)y));
+}
+
+void World::camera_strafe(vec2 mouse_point)
+{
+	float x_strafe = mouse_point.x - m_old_mouse.x;
+	float y_strafe = mouse_point.y - m_old_mouse.y;
+
+	if (m_small_increments)
+	{
+		x_strafe /= 10;
+		y_strafe /= 10;
+	}
+	m_camera.strafe_right(-x_strafe / m_camera.Fov());
+	m_camera.strafe_up(y_strafe / m_camera.Fov());
+	m_old_mouse = mouse_point;
+
+}
+
+void World::camera_rotate(vec2 mouse_point)
+{
+	float x_rotate = (mouse_point.x - m_old_mouse.x) / 10;
+	float y_rotate = (mouse_point.y - m_old_mouse.y) / 10;
+	if (m_small_increments)
+	{
+		x_rotate /= 10;
+		y_rotate /= 10;
+	}
+	m_camera.rotate_horizontal(x_rotate);
+	m_camera.rotate_vertical(y_rotate);
+	m_old_mouse = mouse_point;
 }
