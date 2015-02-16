@@ -190,23 +190,11 @@ void World::keyHoldEvent(GLFWwindow* w, int key, int scancode, int mods)
 	}
 	else if (key == GLFW_KEY_W)
 	{
-		glm::vec3 direction = m_camera.View() - m_camera.Position();
-		auto len = glm::length(direction);
-		direction = glm::normalize(direction);
-		direction = glm::vec3(direction[0] * len / 15.f,
-				direction[1] * len / 15.f,
-				direction[2] * len / 15.f);
-		m_camera.move_camera(direction);
+		camera_dolly(0, .5);
 	}
 	else if (key == GLFW_KEY_S)
 	{
-		glm::vec3 direction = m_camera.View() - m_camera.Position();
-		auto len = glm::length(direction);
-		direction = normalize(direction);
-		direction = glm::vec3(direction[0] * len / 15.f,
-				direction[1] * len / 15.f,
-				direction[2] * len / 15.f);
-		m_camera.move_camera(-direction);
+		camera_dolly(0, -.5);
 	}
 }
 
