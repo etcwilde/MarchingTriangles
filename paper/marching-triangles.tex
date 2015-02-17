@@ -1,0 +1,173 @@
+% vim: set fenc=utf-8 ft=latex encoding=utf-8
+% -*- mode: latex; coding: UTF-8; -*-
+
+\newif\ifdraft
+
+%%% Marching Triangles.tex
+
+%%%
+%%% - ``review'' for content submitted for review
+%%% - ``preprint'' for accepted content making available.
+%%% - ``tog'' for technical papers accepted to the TOG joirnal and
+%%%	for presentation at the SIGGRAPH or SIGGRAPH Asia conference.
+%%% - ``conference'' for final content accepted to a sponsored event
+%%% 	(hint: if unsure, use ``conference'') %%% \documentclass[review]{acmsiggraph}
+
+\ifdraft
+	\documentclass[conference]{acmsiggraph}
+	\def\baselinestrech{1}
+	\setlength{\marginparwidth}{2cm}
+\else
+	\documentclass[conference]{acmsiggraph}
+\fi
+
+
+\newcommand{\Title}{An Implementation of Marching Triangles}
+\newcommand{\Author}{Evan T. C. Wilde}
+\newcommand{\Email}{etcwilde@uvic.ca}
+\newcommand{\Subject}{Investigating the marching traingles algorithm}
+\newcommand{\Keywords}{iso-surface, polygonization, marching-triangles}
+
+\synctex=1
+
+
+
+%% \usepackage[unicode=true,
+%% 	bookmarks=false,breaklinks=flase,pdfborder={0 0 0},
+%% 	backref=none,colorlinks=false]{hyperref}
+
+\hypersetup{pdftitle={\Title},
+	pdfauthor={\Author},
+	pdfkeywords={\Keywords},
+	pdfsubject={\Subject},
+	urlcolor=blue,citecolor=red}
+
+\def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
+    T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
+
+\TOGonlineid{V00775033}
+\TOGvolume{0}
+\TOGnumber{0}
+
+\input{macros}
+
+\title{An implementation of Marching Triangles}
+\author{
+	\Author \\
+	University of Victoria\\
+	\Email}
+\pdfauthor{\Author}
+\keywords{\Keywords}
+
+\begin{document}
+%%% This is the ``teaser'' command, which puts an figure, centered, below 
+%%% the title and author information, and above the body of the content.
+
+\teaser{
+	\includegraphics[height=1.5in] {images/Heading.png}
+	\caption{Delaunay Triangulation}
+}
+
+\maketitle
+
+\begin{abstract}
+	In this paper, I describe a method of implementing the marching
+	triangles algorithm. The marching triangles algorithm provides a
+	technique of generating more-optimal triangulations of a surface, while eliminating some of the ambiguous cases seen in other algorithms.
+	The marching triangle algorithm begins with a seed triangle and grows
+	the mesh over an implicit surface in an iterative process. This allows
+	the algorithm to generate a mesh that more closely represents the
+	topology of the surface while minimizing polygons.
+\end{abstract}
+
+\keywordlist
+
+\copyrightspace
+
+
+\section{Introduction}
+Implicit surfaces (iso-surface) provide a method to store complex geometry or
+geometry that cannot be generated in an explicit manner. Iso-surfaces are used
+to specify arbitrary objects and geometry, which is useful for many
+applications in physical simulations. It is also useful in the games industry
+to show large amounts of detail, in a landscape for example, without storing
+large amounts of data.
+
+While iso-surfaces contain data accurately, computers have difficulty
+representing them in a visual manner. An iso-surface is rendered in one of two
+ways, ray-tracing, or polygonization followed by some rasterizer.
+
+Even with current hardware and raytracing algorithms, raytracers are unable to
+produce images quickly enough for interactive or real-time rendering of
+implicit surfaces.
+
+Currently, a very popular polygonization algorithm is the Marching Cubes, which
+fills the universe with voxels, determines how the surface intersects each
+voxel, and results in a plane within the voxel. This results in triangles which
+are non-optimal to the topology of the surface, furthermore, there are
+ambiguous cases where geometry is lost or cracks emerge.
+
+An ideal polygonization would meet the following criteria:
+it would produce a mesh that does not distort triangles, that is there are no
+triangles that are long and narrow; it would produce triangles small enough
+that no features of the surface are lost; smooth, flat, surfaces would not be
+broken into more triangles than necessary; the mesh should not have holes or
+disconnected vertices.
+
+The Marching Triangles (MT) algorithm has the potential to create such a
+polygonization. The marching triangles is an incremental algorithm that uses
+the curvature of the surface to determine where new vertices are placed, either
+creating larger triangles where the curvature is small, or creating smaller
+triangles where the curvature is large.
+
+In this paper, I investigate the implementation of the marching triangles
+algorithm presented by Samir Akkouche and Eric Galin in \textit{Adaptive
+Implicit Surface Polygonization using Marching Triangles} to see if the
+marching traingles is a viable algorithm in practice.
+
+
+\section{Related Work}
+
+Samir Akkouche and Eric Galin present an implementation of the marching
+triangles algorithm that is generalized for closed implicit surface manifolds.
+It provides a topologically correct and geometrically accurate triangle mesh.
+
+Their results suggest that the marching triangles algorithm runs in comparable
+time to the marching cubes polygonization algorithm, and that the resulting
+triangle mesh has higher visual appeal and better overall quality due to the
+triangle size adapting to the curvature of the surface.
+
+\section{Marching Triangles Algorithm}
+The marching triangles algorithm creates a seed triangle and adds the three
+edges to an edge pool. Then it selects one of the edges at random then
+generates a new vertex in the direction of the gradient. If the curvature is
+too great, the vertex will be brought closer to the selected edge, otherwise it
+will push the vertex away. Once the vertex is placed, two new edges are added
+between the vertices of the selected edge and the new vertex to generate a new
+triangle. Then the selected edge is removed from the edge pool. The process of
+selecting an edge and new vertex continues until the surface is covered.
+
+\section {Implementation}
+
+\subsection{Delaunay Triangulation}
+I began with an implementation of the Delaunay triangulation to look at
+possible methods of triangulation. Because the triangulation runs on a
+point-cloud it won't be useful in the generation of triangles in the mesh. It
+may be useful to create a circumsphere that bounds the size of the triangle so
+that a triangle will never be too long in relation to the width.
+\includegraphics[height=1.5in]{images/Triangulated.png}
+
+\section{Results}
+No results yet\ldots.
+
+\section{Conclusion}
+No conclusive information yet\ldots.
+
+\bibliographystyle{acmsiggraph}
+\nocite{*}
+\bibliography{references}
+
+
+
+\end{document}
+

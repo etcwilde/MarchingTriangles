@@ -1,0 +1,76 @@
+@article{Akkouche2001,
+abstract = {This paper presents serveral improvments to the marching triangles algorithm for general implicit surfaces. The original method generates equilateral triangles of constant size almost everywhere on the surface. We present serveral modifications to adapt the size of the triangles to the curvature of the surface. As cracks may arise in the resulting poligonization, we propose a specific crack-closing method invoked at the end of the mesh growing step. Eventually, we show that the marching triangles can be used as an incremental meshing technique in an interactive modeling environment. In contrast to existing incremental techniques based on spatial subdivision, no extra data-structure is needed to incrementally edit skeletal implicit surfaces, which saves both memory and computation time.},
+author = {Akkouche, Samir and Galin, Eric and Claude, Universit\'{e} and Lyon, Bernard and Cedex, Villeurbanne},
+file = {:home/evan/Documents/csc\_499/papers/Akkouche S., Adaptive implicit surface polygonization using marching triangles.pdf:pdf},
+keywords = {implicit surfaces,incremental meshing,marching triangles,polygonization},
+number = {2},
+pages = {13},
+title = {{Adaptive Implicit Surface Polygonization using Marching Triangles}},
+volume = {20},
+year = {2001}
+}
+@article{Bernardini1999,
+author = {Bernardini, Fausto and Mittleman, Joshua and Rushmeier, Holly and Silva, Claudio and Taubin, Gabriel and Member, Senior},
+file = {:home/evan/Documents/csc\_499/papers/The Ball Pivoting.pdf:pdf},
+number = {4},
+pages = {349--359},
+title = {{The Bal I- Pivoting Algorithm for Surface Reconstruction}},
+volume = {5},
+year = {1999}
+}
+@article{Boissonnat1984,
+author = {Boissonnat, Jean-Daniel},
+doi = {10.1145/357346.357349},
+file = {:home/evan/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Boissonnat - 1984 - Geometric structures for three-dimensional shape representation.pdf:pdf},
+issn = {07300301},
+journal = {ACM Transactions on Graphics},
+month = oct,
+number = {4},
+pages = {266--286},
+title = {{Geometric structures for three-dimensional shape representation}},
+url = {http://portal.acm.org/citation.cfm?doid=357346.357349},
+volume = {3},
+year = {1984}
+}
+@article{Galin2000,
+abstract = {This paper describes an incremental polygonization technique for implicit surfaces built from skeletal elements. Our method is dedicated to fast previewing in an interactive modeling system environment. We rely on an octree decomposition of space combined with Lipschitz conditions to recursively subdivide cells until a given level of precision is reached and converge to the implicit surface. We use a trilinear interpolation approximation of the field function to create a topologically consistent tessellation characterized by an adjacency graph. Our algorithm aims at updating the mesh locally in regions of space where changes in the potential field occurred. Therefore, we propose an octree inflating and deflating strategy to preserve the octree structure as much as possible and to avoid useless or redundant computations. Timings show that our incremental algorithm dramatically speeds up the overall polygonization process for complex objects.},
+author = {Galin, E.a and Akkouche, S.b},
+doi = {10.1006/gmod.1999.0514},
+file = {:home/evan/Documents/csc\_499/papers/Incremental\_Polygonization.pdf:pdf},
+issn = {15240703},
+journal = {Graphical Models},
+keywords = {Marching Cubes,adjacency graph,gonization,implicit surfaces,interactive modeling,octree,poly-,topology},
+mendeley-tags = {Marching Cubes},
+month = jan,
+number = {1},
+pages = {19--39},
+title = {{Incremental polygonization of implicit surfaces}},
+url = {http://www.scopus.com/inward/record.url?eid=2-s2.0-0033699159\&partnerID=40\&md5=1a0380976dbab160b286ea27218107d0 http://www.sciencedirect.com/science/article/pii/S1524070399905143},
+volume = {62},
+year = {2000}
+}
+@article{Halton1996,
+author = {Halton, A and Stoddart, A J and Illingworth, J and Wandeatt, T},
+file = {:home/evan/Documents/csc\_499/papers/Marching Triangle Image Fusion.pdf:pdf},
+isbn = {078033258X},
+pages = {381--384},
+title = {{MARCHING TRIANGLES : RANGE IMAGE FUSION FOR COMPLEX OBJECT MODELLING}},
+year = {1996}
+}
+@article{Hilton,
+abstract = {A new surface-based approach to triangulation of an implicit surface called `Marching Triangles' (MT) is introduced in this paper. MT enables reconstruction of an efficient triangular mesh representation of an open manifold implicit surface of arbitrary topology. The surface-based approach polygonises the implicit surface by growing a triangulated mesh according to the local geometry and topology. A local 3D Delaunay Surface Constraint is introduced to ensure that the triangulated mesh is locally Delaunay and is a correct surface approximation of the manifold surface. The resulting triangulation is globally Delaunay with uniform triangle shape providing an efficient representation of the implicit surface. MT overcomes several limitations of previous volume-based implicit surface polygonisation techniques. Volume-based approaches, such as Marching Cubes (MC), intersect the surface with a volumetric decomposition of the space. This results in highly ineffcient representation due to non-uniform triangle shape. MT also enables polygonisation of open manifolds, dynamic integration of new data into an existing triangulation, reduced computational cost and correct approximation of complex geometry. Results are presented for the polygonisation of implicit surfaces de ned parametrically and from surface measurements of real ob jects. Implicit surface representation of real ob jects is based on the geometric fusion of multiple range images. The Marching Triangles algorithm leads to both representational and computational costs a factor of 3-5 lower than previous volume based approaches such as MC.},
+author = {Hilton, A and Illingworth, J},
+file = {:home/evan/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Hilton, Illingworth - Unknown - Marching Triangles Delaunay Implicit Surface Triangulation 2 Implicit Representation of an Open Manifol.pdf:pdf},
+keywords = {Marching Triangles},
+mendeley-tags = {Marching Triangles},
+title = {{Marching Triangles : Delaunay Implicit Surface Triangulation 2 Implicit Representation of an Open Manifold Surface}},
+url = {http://fab.cba.mit.edu/classes/S62.12/docs/Hilton\_marching\_triangles.pdf},
+volume = {c}
+}
+@misc{VanOverveld,
+abstract = {An algorithm is presented which generates a triangular mesh to approximate an iso-surface. It starts with a triangulation of a sphere and next applies a series of deformations to this triangulation to transform it into the required surface. These deformations leave the topology invariant, so the final iso-surface should be homeomorphic with a sphere. The algorithm is adaptive in the sense that the lengths of the sides of the triangles in the mesh vary with the local curvature of the underlying surface. A quantitative analysis of the accuracy of the algorithm is given along with an empirical comparison with earlier algorithms.},
+author = {van Overveld, C.W.A.M and Wyvill, Brian},
+file = {:home/evan/Documents/csc\_499/papers/shrinkwrap.pdf:pdf},
+keywords = {implicit surfaces,iso-surfaces,polygonization},
+title = {{Shrinkwrap: An efficient adaptive algorithm for trangulating an iso-surface}}
+}
