@@ -195,20 +195,20 @@ void World::draw_coordinates()
 
 	glColor3ub(0, 255, 0);
 	glBegin(GL_LINES);
-	glVertex3f(0, 100, 0);
-	glVertex3f(0, -100, 0);
+	glVertex3f(0, 25, 0);
+	glVertex3f(0, -25, 0);
 	glEnd();
 
 	glColor3ub(0, 0, 255);
 	glBegin(GL_LINES);
-	glVertex3f(0, 0, 100);
-	glVertex3f(0, 0, -100);
+	glVertex3f(0, 0, 50);
+	glVertex3f(0, 0, -50);
 	glEnd();
 
 	glColor3ub(255, 0, 0);
 	glBegin(GL_LINES);
-	glVertex3f(100, 0, 0);
-	glVertex3f(-100, 0, 0);
+	glVertex3f(50, 0, 0);
+	glVertex3f(-50, 0, 0);
 	glEnd();
 
 
@@ -312,8 +312,8 @@ void World::camera_strafe(vec2 mouse_point)
 
 void World::camera_rotate(vec2 mouse_point)
 {
-	float x_rotate = (mouse_point.x - m_old_mouse.x) / 10;
-	float y_rotate = (mouse_point.y - m_old_mouse.y) / 10;
+	float x_rotate = (mouse_point.x - m_old_mouse.x) / 100;
+	float y_rotate = (mouse_point.y - m_old_mouse.y) / 100;
 	if (m_small_increments)
 	{
 		x_rotate /= 10;
