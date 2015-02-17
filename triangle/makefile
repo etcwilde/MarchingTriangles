@@ -27,8 +27,7 @@ D_DOCS	= docs/
 
 # Flags
 CFLAGS	= -c -iquote $(D_INC) -march=native -mfpmath=sse
-# CFLAGS 	= -c -iquote $(D_INC)
-LIBS	= -pthread -lGL -lGLU -lglfw
+LIBS	= -pthread -lGL -lglfw
 CXFLAGS = $(CFLAGS) -std=c++11
 
 # Generate Object file names
