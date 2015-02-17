@@ -73,11 +73,12 @@
 \begin{abstract}
 	In this paper, I describe a method of implementing the marching
 	triangles algorithm. The marching triangles algorithm provides a
-	technique of generating more-optimal triangulations of a surface, while eliminating some of the ambiguous cases seen in other algorithms.
-	The marching triangle algorithm begins with a seed triangle and grows
-	the mesh over an implicit surface in an iterative process. This allows
-	the algorithm to generate a mesh that more closely represents the
-	topology of the surface while minimizing polygons.
+	technique of generating more-optimal triangulations of a surface, while
+	eliminating some of the ambiguous cases seen in other algorithms.  The
+	marching triangle algorithm begins with a seed triangle and grows the
+	mesh over an implicit surface in an iterative process. This allows the
+	algorithm to generate a mesh that more closely represents the topology
+	of the surface while minimizing polygons.
 \end{abstract}
 
 \keywordlist
@@ -86,7 +87,7 @@
 
 
 \section{Introduction}
-Implicit surfaces (iso-surface) provide a method to store complex geometry or
+Implicit surfaces (iso-surfaces) provide a method to store complex geometry or
 geometry that cannot be generated in an explicit manner. Iso-surfaces are used
 to specify arbitrary objects and geometry, which is useful for many
 applications in physical simulations. It is also useful in the games industry
@@ -94,12 +95,15 @@ to show large amounts of detail, in a landscape for example, without storing
 large amounts of data.
 
 While iso-surfaces contain data accurately, computers have difficulty
-representing them in a visual manner. An iso-surface is rendered in one of two
-ways, ray-tracing, or polygonization followed by some rasterizer.
+representing them in a visual manner. A visual of an iso-surface can be
+generated either through the use of ray-tracing, or a polygonization algorithm.
 
-Even with current hardware and raytracing algorithms, raytracers are unable to
-produce images quickly enough for interactive or real-time rendering of
-implicit surfaces.
+Raytracing produces the most accurate visual representation of the
+iso-surface, where the accuracy is only limited by the size, in pixels, of the
+image being generated. The issue with raytracing is that even with
+state-of-the-art hardware and the most optimized raytracing algorithms,
+raytracers are unable to produce images quickly enough for interactive or
+real-time rendering of implicit surfaces.
 
 Currently, a very popular polygonization algorithm is the Marching Cubes, which
 fills the universe with voxels, determines how the surface intersects each
@@ -123,7 +127,7 @@ triangles where the curvature is large.
 In this paper, I investigate the implementation of the marching triangles
 algorithm presented by Samir Akkouche and Eric Galin in \textit{Adaptive
 Implicit Surface Polygonization using Marching Triangles} to see if the
-marching traingles is a viable algorithm in practice.
+marching triangles is a viable algorithm in practice.
 
 
 \section{Related Work}
