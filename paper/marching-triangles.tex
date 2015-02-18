@@ -2,13 +2,14 @@
 % -*- mode: latex; coding: UTF-8; -*-
 
 \newif\ifdraft
+\drafttrue
 
 %%% Marching Triangles.tex
 
 %%%
 %%% - ``review'' for content submitted for review
 %%% - ``preprint'' for accepted content making available.
-%%% - ``tog'' for technical papers accepted to the TOG joirnal and
+%%% - ``tog'' for technical papers accepted to the TOG journal and
 %%%	for presentation at the SIGGRAPH or SIGGRAPH Asia conference.
 %%% - ``conference'' for final content accepted to a sponsored event
 %%% 	(hint: if unsure, use ``conference'') %%% \documentclass[review]{acmsiggraph}
@@ -17,20 +18,21 @@
 	\documentclass[conference]{acmsiggraph}
 	\def\baselinestrech{1}
 	\setlength{\marginparwidth}{2cm}
+	\newcommand{\Title}{Marching Triangles on Implicit Surfaces | DRAFT}
 \else
 	\documentclass[conference]{acmsiggraph}
+	\newcommand{\Title}{Marching Triangles on Implicit Surfaces}
 \fi
 
 
-\newcommand{\Title}{An Implementation of Marching Triangles}
 \newcommand{\Author}{Evan T. C. Wilde}
 \newcommand{\Email}{etcwilde@uvic.ca}
-\newcommand{\Subject}{Investigating the marching traingles algorithm}
+\newcommand{\Subject}{Using marching triangles algorithm on implicit surfaces}
 \newcommand{\Keywords}{iso-surface, polygonization, marching-triangles}
 
 \synctex=1
 
-
+\usepackage{xspace}
 
 %% \usepackage[unicode=true,
 %% 	bookmarks=false,breaklinks=flase,pdfborder={0 0 0},
@@ -51,7 +53,7 @@
 
 \input{macros}
 
-\title{An implementation of Marching Triangles}
+\title{\Title}
 \author{
 	\Author \\
 	University of Victoria\\
@@ -60,7 +62,7 @@
 \keywords{\Keywords}
 
 \begin{document}
-%%% This is the ``teaser'' command, which puts an figure, centered, below 
+%%% This is the ``teaser'' command, which puts an figure, centered, below
 %%% the title and author information, and above the body of the content.
 
 \teaser{
@@ -72,38 +74,36 @@
 
 \begin{abstract}
 	In this paper, I describe a method of implementing the marching
-	triangles algorithm. The marching triangles algorithm provides a
-	technique of generating more-optimal triangulations of a surface, while
-	eliminating some of the ambiguous cases seen in other algorithms.  The
-	marching triangle algorithm begins with a seed triangle and grows the
-	mesh over an implicit surface in an iterative process. This allows the
-	algorithm to generate a mesh that more closely represents the topology
-	of the surface while minimizing polygons.
+	triangles algorithm to polygonize implicit surfaces. The marching
+	triangles algorithm provides a technique of generating optimal
+	triangulations of a surface, while eliminating ambiguous cases found in
+	other polygonization algorithms. The marching triangle algorithm, also
+	known as the advancing front algorithm, grows the mesh from a seed
+	triangle, until the surface is covered. This growth of single triangles
+	allows the algorithm to generate a mesh that more closely represents
+	the topology of the surface while minimizing polygons.
 \end{abstract}
 
 \keywordlist
 
 \copyrightspace
 
-
 \section{Introduction}
 Implicit surfaces (iso-surfaces) provide a method to store complex geometry or
-geometry that cannot be generated in an explicit manner. Iso-surfaces are used
-to specify arbitrary objects and geometry, which is useful for many
-applications in physical simulations. It is also useful in the games industry
-to show large amounts of detail, in a landscape for example, without storing
-large amounts of data.
+geometry that cannot be generated in an explicit manner. An iso-surface is
+specified with a mathematical formula, and can specify arbitrary geometry. It
+is useful in physical simulations and in the games industries. An iso-surface
+can contain a massive amount of information, while not requiring as much space.
 
-While iso-surfaces contain data accurately, computers have difficulty
-representing them in a visual manner. A visual of an iso-surface can be
-generated either through the use of ray-tracing, or a polygonization algorithm.
+While iso-surfaces contain lots of detail accurately, computers have difficulty
+representing them visually. There are two methods for creating a visual
+representation of an iso-surface: raytracing or a polygonization algorithm.
 
-Raytracing produces the most accurate visual representation of the
-iso-surface, where the accuracy is only limited by the size, in pixels, of the
-image being generated. The issue with raytracing is that even with
-state-of-the-art hardware and the most optimized raytracing algorithms,
-raytracers are unable to produce images quickly enough for interactive or
-real-time rendering of implicit surfaces.
+Raytracing the surface produces the most accurate visual representation, the
+accuracy is only limited by the dimensions of the image being generated, at the
+cost of speed. Even with state-of-the-art hardware and the most optimized
+raytacing algorithms, raytracers are unable to produce images quickly enough
+for interactive real-time rendering of implicit surfaces.
 
 Currently, a very popular polygonization algorithm is the Marching Cubes, which
 fills the universe with voxels, determines how the surface intersects each
@@ -141,6 +141,9 @@ time to the marching cubes polygonization algorithm, and that the resulting
 triangle mesh has higher visual appeal and better overall quality due to the
 triangle size adapting to the curvature of the surface.
 
+Extensive research has been performed on converting point-clouds to
+triangulations, keeping the properties of a Delaunay triangulation.
+
 \section{Marching Triangles Algorithm}
 The marching triangles algorithm creates a seed triangle and adds the three
 edges to an edge pool. Then it selects one of the edges at random then
@@ -164,8 +167,12 @@ that a triangle will never be too long in relation to the width.
 \section{Results}
 No results yet\ldots.
 
+\evanTodo{Find results!}
+
 \section{Conclusion}
 No conclusive information yet\ldots.
+
+\evanTodo{Make conclusions}
 
 \bibliographystyle{acmsiggraph}
 \nocite{*}
