@@ -17,7 +17,7 @@ inline const ColorRGB& Point::color() const
 	return m_color;
 }
 
-inline vec3 Point::normal()
+inline const vec3 Point::normal() const
 {
 	return m_normal;
 }
@@ -30,6 +30,16 @@ void Point::operator *= (const mat4& mat)
 void Point::operator *= (const float s)
 {
 	m_normal = s * m_normal;
+}
+
+Point operator * (const mat4& m, const Point& p)
+{
+	return Point(p.color(), vec3(vec4(p.normal(), 1) * m));
+}
+
+Point operator * (mat4& m, const Point& p)
+{
+	return Point(p.color(), vec3(vec4(p.normal(), 1) * m));
 }
 
 // Implicit Model

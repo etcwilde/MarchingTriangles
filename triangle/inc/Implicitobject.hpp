@@ -30,10 +30,13 @@ namespace Implicit
 		Point(ColorRGB color, vec3 normal);
 
 		inline const ColorRGB& color() const;
-		inline vec3 normal();
+		inline const vec3 normal() const;
 
 		void operator *= (const mat4& m);
 		void operator *= (const float s);
+		friend Point operator * (const mat4& m, const Point& p);
+		friend Point operator * (mat4& m, const Point& p);
+
 
 	protected:
 		ColorRGB m_color;
