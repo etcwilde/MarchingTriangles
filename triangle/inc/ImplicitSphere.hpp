@@ -1,7 +1,7 @@
 #ifndef IMPLICIT_SPHERE_H
 #define IMPLICIT_SPHERE_H
 
-#include "Implicitobject.hpp"
+#include "ImplicitObject.hpp"
 #include "Color.hpp"
 
 #include <glm/glm.hpp>

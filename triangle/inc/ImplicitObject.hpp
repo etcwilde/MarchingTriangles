@@ -5,6 +5,8 @@
 
 #include <glm/glm.hpp>
 
+#include <list>
+
 using namespace glm;
 
 /**
@@ -101,6 +103,28 @@ namespace Implicit
 		float (*m_fieldFunc)(float);
 		float m_coeff;
 	private:
+	};
+
+	/**
+	 * \class Model
+	 *
+	 * A model contains 1 or many implicit models.
+	 * These are more complex shapes than the implicit model.
+	 *
+	 */
+	class Model
+	{
+	public:
+		Model();
+		~Model();
+		Object* getRoot();
+
+	protected:
+		void setRoot(Object* r);
+		void addObject(Object* o);
+	private:
+		std::list<Object*> m_objects;
+		Object* m_root;
 	};
 };
 #endif // IMPLICITOBJ_H

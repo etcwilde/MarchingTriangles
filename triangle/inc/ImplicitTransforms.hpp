@@ -1,7 +1,7 @@
 #ifndef IMPLICIT_TRANSFORM_H
 #define IMPLICIT_TRANSFORM_H
 
-#include "Implicitobject.hpp"
+#include "ImplicitObject.hpp"
 
 #include <glm/glm.hpp>
 

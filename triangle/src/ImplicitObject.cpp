@@ -1,4 +1,4 @@
-#include "Implicitobject.hpp"
+#include "ImplicitObject.hpp"
 
 using namespace Implicit;
 
@@ -70,4 +70,37 @@ void ImplicitModel::setFieldCoeff(float coeff)
 {
 	m_coeff = coeff;
 }
+
+
+// Model
+Model::Model() :
+	m_objects(),
+	m_root(NULL)
+{ }
+
+Model::~Model()
+{
+	for (std::list<Object*>::iterator obj_it = m_objects.begin();
+			obj_it != m_objects.end(); ++obj_it)
+	{
+		delete *obj_it;
+	}
+}
+
+Object* Model::getRoot()
+{
+	return m_root;
+}
+
+// Protected Methods
+void Model::setRoot(Object* r)
+{
+	m_root = r;
+}
+
+void Model::addObject(Object* o)
+{
+	m_objects.push_back(o);
+}
+
 
