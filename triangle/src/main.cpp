@@ -1,3 +1,11 @@
+/**
+ * main
+ *
+ * File: 	main.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Jan 30 2015
+ */
+
 #include <ctime>
 #include <iostream>
 

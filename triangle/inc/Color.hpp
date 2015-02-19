@@ -1,3 +1,11 @@
+/**
+ * Color
+ *
+ * File: 	Color.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 15 2015
+ */
+
 #ifndef COLOR_H
 #define COLOR_H
 

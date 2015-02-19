@@ -1,3 +1,11 @@
+/**
+ * ImplicitObject
+ *
+ * File: 	ImplicitObject.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 18 2015
+ */
+
 #include "ImplicitObject.hpp"
 
 using namespace Implicit;
@@ -102,5 +110,3 @@ void Model::addObject(Object* o)
 {
 	m_objects.push_back(o);
 }
-
-

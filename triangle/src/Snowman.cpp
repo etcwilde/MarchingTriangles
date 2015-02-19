@@ -1,3 +1,11 @@
+/**
+ * Snowman
+ *
+ * File: 	Snowman.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 18 2015
+ */
+
 #include "Snowman.hpp"
 using namespace Implicit;
 

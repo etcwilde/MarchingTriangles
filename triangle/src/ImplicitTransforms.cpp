@@ -1,3 +1,11 @@
+/**
+ * ImplicitTransforms
+ *
+ * File: 	ImplicitTransforms.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 17 2015
+ */
+
 #include "ImplicitTransforms.hpp"
 
 using namespace Implicit;

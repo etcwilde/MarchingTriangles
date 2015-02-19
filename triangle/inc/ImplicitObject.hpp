@@ -1,3 +1,11 @@
+/**
+ * ImplicitObject
+ *
+ * File: 	ImplicitObject.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 18 2015
+ */
+
 #ifndef IMPLICITOBJ_H
 #define IMPLICITOBJ_H
 

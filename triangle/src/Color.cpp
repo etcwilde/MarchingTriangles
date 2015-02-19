@@ -1,3 +1,11 @@
+/**
+ * Color
+ *
+ * File: 	Color.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 15 2015
+ */
+
 #include "Color.hpp"
 
 ColorRGB::ColorRGB() :
@@ -52,4 +60,3 @@ ColorRGB ColorRGB::operator -(const ColorRGB& color) const
 			std::max((G - color.g()) * 2, 0.f),
 			std::max((B - color.b()) * 2, 0.f));
 }
-

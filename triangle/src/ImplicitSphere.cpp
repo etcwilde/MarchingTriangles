@@ -1,3 +1,11 @@
+/**
+ * ImplicitSphere
+ *
+ * File: 	ImplicitSphere.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 16 2015
+ */
+
 #include "ImplicitSphere.hpp"
 
 using namespace Implicit;
@@ -43,4 +51,3 @@ Point Sphere::getPoint(vec3 pt)
 {
 	return Point(m_color, normalize(pt));
 }
-

@@ -1,3 +1,11 @@
+/**
+ * floatlibs
+ *
+ * File: 	floatlibs.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Jan 31 2015
+ */
+
 #ifndef FLOATLIB_H
 #define FLOATLIB_H
 

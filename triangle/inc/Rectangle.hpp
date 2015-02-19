@@ -1,3 +1,11 @@
+/**
+ * Rectangle
+ *
+ * File: 	Rectangle.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Jan 30 2015
+ */
+
 #ifndef RECT_H
 #define RECT_H
 

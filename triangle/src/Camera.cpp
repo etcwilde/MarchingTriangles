@@ -1,3 +1,11 @@
+/**
+ * Camera
+ *
+ * File: 	Camera.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 6 2015
+ */
+
 #include "Camera.hpp"
 
 #include <GL/gl.h>
@@ -161,6 +169,3 @@ void Camera::set_bounds(GLint width, GLint height)
 	m_width = width;
 	m_height = height;
 }
-
-
-

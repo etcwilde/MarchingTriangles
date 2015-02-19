@@ -1,3 +1,11 @@
+/**
+ * ImplicitSphere
+ *
+ * File: 	ImplicitSphere.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 16 2015
+ */
+
 #ifndef IMPLICIT_SPHERE_H
 #define IMPLICIT_SPHERE_H
 

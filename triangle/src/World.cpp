@@ -1,3 +1,11 @@
+/**
+ * World
+ *
+ * File: 	World.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 6 2015
+ */
+
 #include "World.hpp"
 
 #include <GL/gl.h>

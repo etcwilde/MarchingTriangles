@@ -1,3 +1,11 @@
+/**
+ * ImplicitTransforms
+ *
+ * File: 	ImplicitTransforms.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 17 2015
+ */
+
 #ifndef IMPLICIT_TRANSFORM_H
 #define IMPLICIT_TRANSFORM_H
 

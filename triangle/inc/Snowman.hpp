@@ -1,3 +1,11 @@
+/**
+ * Snowman
+ *
+ * File: 	Snowman.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 18 2015
+ */
+
 #ifndef SNOWMAN_H
 #define SNOWMAN_H
 

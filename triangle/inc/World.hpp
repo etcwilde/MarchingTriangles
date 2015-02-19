@@ -1,3 +1,11 @@
+/**
+ * World
+ *
+ * File: 	World.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 6 2015
+ */
+
 #ifndef WORLD_H
 #define WORLD_H
 

@@ -1,3 +1,11 @@
+/**
+ * fieldFunctions
+ *
+ * File: 	fieldFunctions.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 19 2015
+ */
+
 #include "fieldFunctions.hpp"
 float solidFunction(float dist)
 {
@@ -44,4 +52,3 @@ float wyvillFunction(float dist)
 	if (dist < 1.f) return (1 - dist) * ( 1 - dist) * (1 - dist);
 	else return 0.f;
 }
-
