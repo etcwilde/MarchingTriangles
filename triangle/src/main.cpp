@@ -15,6 +15,7 @@
 #include "fieldFunctions.hpp"
 #include "floatlibs.hpp"
 
+#include "MarchingCubes.hpp"
 
 #ifdef TEST
 
