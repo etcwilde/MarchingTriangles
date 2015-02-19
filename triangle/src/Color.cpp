@@ -22,13 +22,6 @@ ColorRGB::ColorRGB(float r, float g, float b)
 	B = b > 255.f ? 255.f : (b < 0.f ? 0.f : b);
 }
 
-
-inline float ColorRGB::r() const { return R; }
-
-inline float ColorRGB::g() const { return G; }
-
-inline float ColorRGB::b() const { return B; }
-
 const float* ColorRGB::data() const {return m_vals;}
 
 void ColorRGB::operator +=(const ColorRGB& color)

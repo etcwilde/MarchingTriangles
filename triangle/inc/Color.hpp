@@ -35,9 +35,9 @@ public:
 	ColorRGB();
 	ColorRGB(float r, float g, float b);
 
-	inline float r() const;
-	inline float g() const;
-	inline float b() const;
+	inline float r() const { return R; }
+	inline float g() const { return G; }
+	inline float b() const { return B; }
 
 	const float* data() const;
 

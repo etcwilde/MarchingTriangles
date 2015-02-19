@@ -14,6 +14,8 @@
 #include <glm/glm.hpp>
 
 #include <list>
+#include <cmath>
+#include <cfloat>
 
 using namespace glm;
 
@@ -135,5 +137,96 @@ namespace Implicit
 		std::list<Object*> m_objects;
 		Object* m_root;
 	};
+
+
+	// Group
+	class Group : public Object
+	{
+	public:
+		Group();
+		Group(unsigned int max_depth);
+
+		void addBaseObject(Object* obj);
+		void addRecursiveObject(Object* obj);
+
+		float getFieldValue(vec3 pt);
+		Point getPoint(vec3 pt);
+		bool contains(vec3 pt, float tolerance);
+
+		virtual float getFieldFromObjects(std::list<Object*> objects,
+				vec3 pt)=0;
+		virtual Point getPointsFromObjects(std::list<Object*> objects,
+				vec3 pt);
+		virtual bool containedInObjects(std::list<Object*> objects,
+				vec3 pt, float tolerance);
+
+	private:
+		std::list<Object*> m_recursive_objects;
+		std::list<Object*> m_base_objects;
+		unsigned int m_max_depth;
+		unsigned int m_depth;
+	};
+
+	class Blend : public Group
+	{
+	public:
+		Blend();
+		Blend(unsigned int max_depth);
+
+		float getFieldFromObjects(std::list<Object*> objects, vec3 pt);
+	};
+
+	class RicciBlend : public Group
+	{
+	public:
+		RicciBlend(float power);
+		RicciBlend(float power, unsigned int max_depth);
+
+		float getFieldFromObjects(std::list<Object*> objects, vec3 pt);
+	private:
+		float m_power;
+		float m_invPower;
+	};
+
+	class Union : public Group
+	{
+	public:
+		Union();
+		Union(unsigned int max_depth);
+
+		float getFieldFromObjects(std::list<Object*> objects, vec3 pt);
+		Point getPointsFromObjects(std::list<Object*> objects,
+				vec3 pt);
+	};
+
+	class Intersect : public Group
+	{
+	public:
+		Intersect();
+		Intersect(unsigned int max_depth);
+
+		float getFieldFromObjects(std::list<Object*> objects, vec3 pt);
+		Point getPointsFromObjects(std::list<Object*> objects,
+				vec3 pt);
+
+	};
+
+	class Difference : public Group
+	{
+	public:
+		Difference(float iso);
+		Difference(float iso, unsigned int max_depth);
+
+		float getFieldFromObjects(std::list<Object*> objects, vec3 pt);
+		Point getPointsFromObjects(std::list<Object*> objects,
+				vec3 pt);
+		bool containsInObjects(std::list<Object*> objects, vec3 pt,
+				float tolerance);
+
+	private:
+		float m_iso;
+	};
+
+
 };
 #endif // IMPLICITOBJ_H
