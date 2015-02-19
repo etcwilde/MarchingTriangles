@@ -4,6 +4,7 @@
 #include "ImplicitObject.hpp"
 
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 using namespace glm;
 
@@ -37,5 +38,25 @@ namespace Implicit
 		mat4 m_inverse;
 		mat4 m_transformed_normal;
 	};
+
+	class Translate : public Transform
+	{
+		Translate(Object* obj, vec3 translate);
+		Translate(Object* obj, float x, float y, float z);
+	};
+
+	class Rotate : public Transform
+	{
+		Rotate(Object* obj, vec3 axis, float degrees);
+		Rotate(Object* obj, float x, float y, float z);
+	};
+
+	class Scale : public Transform
+	{
+		Scale(Object* obj, float s);
+		Scale(Object* obj, float x, float y, float z);
+		Scale(Object* obj, vec3 scale);
+	};
+
 };
 #endif // IMPLICIT_TRANSFORM_H

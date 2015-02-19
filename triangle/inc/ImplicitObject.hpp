@@ -56,6 +56,7 @@ namespace Implicit
 	 * retrieve the color and normal data, and a way to determine whether a
 	 * point is within the object.
 	 */
+
 	class Object
 	{
 	public:
