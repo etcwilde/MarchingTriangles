@@ -18,10 +18,10 @@
 	\documentclass[conference]{acmsiggraph}
 	\def\baselinestrech{1}
 	\setlength{\marginparwidth}{2cm}
-	\newcommand{\Title}{Marching Triangles on Implicit Surfaces | DRAFT}
+	\newcommand{\Title}{Investigating Toplogies of Marching Triangles | DRAFT}
 \else
 	\documentclass[conference]{acmsiggraph}
-	\newcommand{\Title}{Marching Triangles on Implicit Surfaces}
+	\newcommand{\Title}{Investigating Toplogies of Marching Triangles}
 \fi
 
 
@@ -42,7 +42,7 @@
 	pdfauthor={\Author},
 	pdfkeywords={\Keywords},
 	pdfsubject={\Subject},
-	urlcolor=blue,citecolor=red}
+	urlcolor=blue,citecolor=cyan}
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
@@ -124,25 +124,28 @@ the curvature of the surface to determine where new vertices are placed, either
 creating larger triangles where the curvature is small, or creating smaller
 triangles where the curvature is large.
 
-In this paper, I investigate the implementation of the marching triangles
-algorithm presented by Samir Akkouche and Eric Galin in \textit{Adaptive
-Implicit Surface Polygonization using Marching Triangles} to see if the
-marching triangles is a viable algorithm in practice.
-
+In this paper, I investigate the range of geometric topologies the Marching
+Triangles algorithm is capable of successfully polygonizing.
 
 \section{Related Work}
 
-Samir Akkouche and Eric Galin present an implementation of the marching
-triangles algorithm that is generalized for closed implicit surface manifolds.
-It provides a topologically correct and geometrically accurate triangle mesh.
+Research has been performed on converting point-cloud data to triangulations
+using a form of the marching triangles algorithm\cite{Scheidegger2005}. This
+area is helpful for visualizing the data collected from different sensors
+such as, ultrasound pings for robots, LIDAR scans for ocean bathymetry, 3D
+scans of objects, or any application where discrete vertices in 3-dimensional
+space must be converted to a continuous mesh. The method, also known as the
+``Advancing Front algorithm'' builds triangulations of the point cloud using a
+3-dimensional generalization of Delaunay triangulation to create a mesh
+representation where the triangles are not distorted.
 
-Their results suggest that the marching triangles algorithm runs in comparable
-time to the marching cubes polygonization algorithm, and that the resulting
-triangle mesh has higher visual appeal and better overall quality due to the
-triangle size adapting to the curvature of the surface.
-
-Extensive research has been performed on converting point-clouds to
-triangulations, keeping the properties of a Delaunay triangulation.
+Akkouche presents an implementation of the marching triangles algorithm for
+closed implicit surface manifolds\cite{Akkouche2001}. The algorithm provided
+topologically correct and geometrically accurate triangle meshes for closed
+surfaces. Their results suggest that the marching triangles algorithm runs in
+comparable time to the marching cubes algorithm, though the resulting mesh has
+higher visual appeal and better overall quality due to the adaptive triangle
+size.
 
 \section{Marching Triangles Algorithm}
 The marching triangles algorithm creates a seed triangle and adds the three
@@ -175,7 +178,6 @@ No conclusive information yet\ldots.
 \evanTodo{Make conclusions}
 
 \bibliographystyle{acmsiggraph}
-\nocite{*}
 \bibliography{references}
 
 
