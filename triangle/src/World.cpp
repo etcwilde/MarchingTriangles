@@ -11,7 +11,7 @@
 #include <GL/gl.h>
 
 // Hahahahahahaha -- this is dumb
-std::list<glm::vec3> dumb_find(Implicit::Object* obj, const glm::vec3& v, unsigned int trials)
+std::list<glm::vec3> dumb_find(Implicit::Cube* obj, const glm::vec3& v, unsigned int trials)
 {
 	float value = 1.f;
 	double range = 0.001e-5;
@@ -28,7 +28,7 @@ std::list<glm::vec3> dumb_find(Implicit::Object* obj, const glm::vec3& v, unsign
 		//std::cout << value  << '\n';
 		/*if (value != 0) */
 
-		if (obj->contains(glm::vec3(t_x, t_y, t_z), 0.1))
+		if (obj->touches(glm::vec3(t_x, t_y, t_z), 0.1))
 			ret_list.push_back(glm::vec3(t_x, t_y, t_z));
 		range *= 1.000005f;
 		trials--;
@@ -47,11 +47,11 @@ World::World()
 	// Do a thing with a sphere
 	Implicit::Sphere test_sphere(geoffFunction, 10);
 
-	Implicit::Scale scale = Implicit::Scale(&test_sphere, 0.5);
-	Implicit::Translate another_obj = Implicit::Translate(&scale, 10,0 ,0 );
+	Implicit::Cube test_cube(geoffFunction, 1, 5);
 
-	//m_point_cloud = dumb_find(&test_sphere, glm::vec3(-10, -10, -10), 10000);
-	m_point_cloud = dumb_find(&another_obj , glm::vec3(-10, -10, -10), 10000);
+
+	m_point_cloud = dumb_find(&test_cube, glm::vec3(-10, -10, -10), 1000000);
+	//m_point_cloud = dumb_find(&another_obj , glm::vec3(-10, -10, -10), 10000);
 
 
 

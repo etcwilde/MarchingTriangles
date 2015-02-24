@@ -36,6 +36,8 @@ namespace Implicit
 		float getDistanceSq(vec3 pt);
 		// float getDistance(vec3 pt);
 		bool contains(vec3 pt, float tolerance);
+		bool touches(vec3 pt, float tolerance);
+
 		Point getPoint(vec3 pt);
 
 	protected:

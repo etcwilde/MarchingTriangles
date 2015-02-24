@@ -20,6 +20,7 @@
 
 #include "ImplicitSystem.hpp"
 #include "fieldFunctions.hpp"
+#include "ImplicitCube.hpp"
 #include <cstdlib>
 #include <list>
 

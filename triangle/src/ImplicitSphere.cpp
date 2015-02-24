@@ -57,6 +57,13 @@ bool Sphere::contains(vec3 pt, float tolerance)
 		(m_radius + tolerance) * (m_radius + tolerance);
 }
 
+bool Sphere::touches(vec3 pt, float tolerance)
+{
+	return (getDistanceSq(pt) < (m_radius + tolerance) * (m_radius + tolerance))
+		&&
+		(getDistanceSq(pt) > (m_radius - tolerance) * (m_radius - tolerance));
+}
+
 Point Sphere::getPoint(vec3 pt)
 {
 	return Point(m_color, normalize(pt));
