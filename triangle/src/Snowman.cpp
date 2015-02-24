@@ -12,7 +12,7 @@ using namespace Implicit;
 Snowman::Snowman() :
 	Model()
 {
-	Group* body = addGroup(new RicciBlend(4.f, 2));
+	/*Group* body = addGroup(new RicciBlend(4.f, 2));
 	Object* bodySphere = addObject(new Sphere(geoffFunction, ColorRGB(1.f, 1.f, 1.f), 1.f));
 
 	Object* buttonSphere = addObject(new Sphere(wyvillFunction, ColorRGB(1.f, 0.f, 0.f), 0.1f));
@@ -36,5 +36,5 @@ Snowman::Snowman() :
 
 	body->addBaseObject(head);
 
-	setRoot(body);
+	setRoot(body); */
 }

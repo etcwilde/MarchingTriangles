@@ -16,7 +16,7 @@
 
 namespace Implicit
 {
-	class Snowman
+	class Snowman : public Model
 	{
 	public:
 		Snowman();

@@ -17,6 +17,16 @@
 
 #include "Camera.hpp"
 
+
+#include "ImplicitSystem.hpp"
+#include "fieldFunctions.hpp"
+#include <cstdlib>
+#include <list>
+
+
+std::list<glm::vec3> dumb_find(Implicit::Object* obj, const glm::vec3& v, unsigned int trials);
+
+
 // Camera movements
 #define CAM_ROTATE	0b0001
 #define CAM_STRAFE	0b0010
@@ -170,6 +180,8 @@ private:
 	bool m_drawGrid;
 
 	double m_prevTime;
+
+	std::list<glm::vec3> m_point_cloud;
 };
 
 #endif //WORLD_H

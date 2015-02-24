@@ -10,12 +10,58 @@
 
 #include <GL/gl.h>
 
+// Hahahahahahaha -- this is dumb
+std::list<glm::vec3> dumb_find(Implicit::Object* obj, const glm::vec3& v, unsigned int trials)
+{
+	float value = 1.f;
+	double range = 0.001e-5;
+	float t_x, t_y, t_z;
+	std::list<glm::vec3> ret_list;
+
+	std::cout << "value: ";
+	while (trials)
+	{
+		t_x = v.x + range * (rand() - 0.5f);
+		t_y = v.y + range * (rand() - 0.5f);
+		t_z = v.z + range * (rand() - 0.5f);
+		//value = obj->getFieldValue(glm::vec3(t_x, t_y, t_z));
+		//std::cout << value  << '\n';
+		/*if (value != 0) */
+
+		if (obj->contains(glm::vec3(t_x, t_y, t_z), 0.1))
+			ret_list.push_back(glm::vec3(t_x, t_y, t_z));
+		range *= 1.000005f;
+		trials--;
+	}
+	std::cout << '\n';
+	return ret_list;
+}
+
 World::World()
 	: m_drawGrid(true)
 {
 	m_background_color = glm::vec3(.0, .1, .1);
 	m_grid_color = glm::vec3(1, 1, 1);
 	initGL();
+
+	// Do a thing with a sphere
+	Implicit::Sphere test_sphere(geoffFunction, 10);
+
+	Implicit::Scale scale = Implicit::Scale(&test_sphere, 0.5);
+	Implicit::Translate another_obj = Implicit::Translate(&scale, 10,0 ,0 );
+
+	//m_point_cloud = dumb_find(&test_sphere, glm::vec3(-10, -10, -10), 10000);
+	m_point_cloud = dumb_find(&another_obj , glm::vec3(-10, -10, -10), 10000);
+
+
+
+	/*for (std::list<glm::vec3>::iterator it = m_point_cloud.begin();
+			it != m_point_cloud.end(); it++)
+	{
+		std::cout << (*it).x << ", "
+			<< (*it).y << ", "
+			<< (*it).z << '\n';
+	}*/
 }
 
 void World::initGL()
@@ -33,6 +79,8 @@ void World::initGL()
 	glLoadIdentity();
 	glPointSize(5.0f);
 	m_camera.set_bounds(1, 1);
+
+	glPointSize(10.f);
 }
 
 World::~World()
@@ -184,6 +232,20 @@ void World::Draw()
 	glLoadIdentity();
 	m_camera.Render();
 	draw_coordinates();
+
+	glBegin(GL_POINTS);
+	for (std::list<glm::vec3>::iterator it = m_point_cloud.begin();
+			it != m_point_cloud.end(); it++)
+	{
+		/*std::cout << (*it).x << ", "
+			<< (*it).y << ", "
+			<< (*it).z << '\n';*/
+		glVertex3f((*it).x, (*it).y, (*it).z);
+
+//1.64494e+10
+	}
+	glEnd();
+
 	glPopMatrix();
 }
 
