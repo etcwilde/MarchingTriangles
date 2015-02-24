@@ -31,13 +31,23 @@ Sphere::Sphere(float(*fieldFunc)(float), float coeff, ColorRGB color, float radi
 	m_radiusSq(radius * radius)
 { }
 
+// TODO Remove this
+#include <iostream>
+
 float Sphere::getFieldValue(vec3 pt)
 {
+	std::cout << "Distance^2: " << getDistanceSq(pt) << '\n'
+		<< "Radius^2: " << m_radiusSq << '\n'
+		<< "D/R: " << getDistanceSq(pt)/m_radiusSq << '\n'
+		<< "Coefficient: " << m_coeff << '\n'
+		<< "Field Value: " << m_fieldFunc(getDistanceSq(pt) / m_radiusSq)<<'\n';
+
 	return m_coeff * m_fieldFunc(getDistanceSq(pt) / m_radiusSq);
 }
 
 float Sphere::getDistanceSq(vec3 pt)
 {
+	std::cout << pt.x * pt.x + pt.y * pt.y + pt.z * pt.z << '\n';
 	return (pt.x * pt.x + pt.y * pt.y + pt.z * pt.z);
 }
 
