@@ -102,17 +102,23 @@ Object* Model::getRoot()
 }
 
 // Protected Methods
-void Model::setRoot(Object* r)
+Object* Model::setRoot(Object* r)
 {
 	m_root = r;
+	return r;
 }
 
-void Model::addObject(Object* o)
+Object* Model::addObject(Object* o)
 {
 	m_objects.push_back(o);
+	return o;
 }
 
-
+Group* Model::addGroup(Group* g)
+{
+	m_objects.push_back(g);
+	return g;
+}
 
 // Implicit Group
 Group::Group() :

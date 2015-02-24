@@ -49,18 +49,21 @@ namespace Implicit
 
 	class Translate : public Transform
 	{
+	public:
 		Translate(Object* obj, vec3 translate);
 		Translate(Object* obj, float x, float y, float z);
 	};
 
 	class Rotate : public Transform
 	{
+	public:
 		Rotate(Object* obj, vec3 axis, float degrees);
 		Rotate(Object* obj, float x, float y, float z);
 	};
 
 	class Scale : public Transform
 	{
+	public:
 		Scale(Object* obj, float s);
 		Scale(Object* obj, float x, float y, float z);
 		Scale(Object* obj, vec3 scale);

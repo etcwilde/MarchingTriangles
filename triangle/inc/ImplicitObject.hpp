@@ -116,28 +116,6 @@ namespace Implicit
 	private:
 	};
 
-	/**
-	 * \class Model
-	 *
-	 * A model contains 1 or many implicit models.
-	 * These are more complex shapes than the implicit model.
-	 *
-	 */
-	class Model
-	{
-	public:
-		Model();
-		~Model();
-		Object* getRoot();
-
-	protected:
-		void setRoot(Object* r);
-		void addObject(Object* o);
-	private:
-		std::list<Object*> m_objects;
-		Object* m_root;
-	};
-
 
 	// Group
 	class Group : public Object
@@ -227,6 +205,31 @@ namespace Implicit
 		float m_iso;
 	};
 
+	/**
+	 * \class Model
+	 *
+	 * A model contains 1 or many implicit models.
+	 * These are more complex shapes than the implicit model.
+	 *
+	 */
+	class Model
+	{
+	public:
+		Model();
+		~Model();
+		Object* getRoot();
+
+	protected:
+		Object* setRoot(Object* r);
+		Object* addObject(Object* o);
+		Group* addGroup(Group* g);
+	private:
+		std::list<Object*> m_objects;
+		Object* m_root;
+	};
+
 
 };
+
+
 #endif // IMPLICITOBJ_H

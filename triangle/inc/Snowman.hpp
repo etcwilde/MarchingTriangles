@@ -11,6 +11,7 @@
 
 #include "ImplicitObject.hpp"
 #include "ImplicitSphere.hpp"
+#include "ImplicitTransforms.hpp"
 #include "fieldFunctions.hpp"
 
 namespace Implicit
