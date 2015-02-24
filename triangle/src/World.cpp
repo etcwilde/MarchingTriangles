@@ -10,30 +10,26 @@
 
 #include <GL/gl.h>
 
+#include "ImplicitTorus.hpp"
+
 // Hahahahahahaha -- this is dumb
-std::list<glm::vec3> dumb_find(Implicit::Cube* obj, const glm::vec3& v, unsigned int trials)
+std::list<glm::vec3> dumb_find(Implicit::Torus* obj, const glm::vec3& v, unsigned int trials)
 {
 	float value = 1.f;
 	double range = 0.001e-5;
 	float t_x, t_y, t_z;
 	std::list<glm::vec3> ret_list;
 
-	std::cout << "value: ";
 	while (trials)
 	{
 		t_x = v.x + range * (rand() - 0.5f);
 		t_y = v.y + range * (rand() - 0.5f);
 		t_z = v.z + range * (rand() - 0.5f);
-		//value = obj->getFieldValue(glm::vec3(t_x, t_y, t_z));
-		//std::cout << value  << '\n';
-		/*if (value != 0) */
-
-		if (obj->touches(glm::vec3(t_x, t_y, t_z), 0.1))
+		if (obj->contains(glm::vec3(t_x, t_y, t_z), 0.1))
 			ret_list.push_back(glm::vec3(t_x, t_y, t_z));
 		range *= 1.000005f;
 		trials--;
 	}
-	std::cout << '\n';
 	return ret_list;
 }
 
@@ -45,12 +41,16 @@ World::World()
 	initGL();
 
 	// Do a thing with a sphere
-	Implicit::Sphere test_sphere(geoffFunction, 10);
+	//Implicit::Sphere test_sphere(geoffFunction, 10);
 
-	Implicit::Cube test_cube(geoffFunction, 1, 5);
+	//Implicit::Cube test_cube(geoffFunction, 1, 5);
+	//
+	Implicit::Torus test_torus(geoffFunction, 2, 4);
+
+	m_point_cloud = dumb_find(&test_torus, glm::vec3(-10, -10, -10), 1000000);
 
 
-	m_point_cloud = dumb_find(&test_cube, glm::vec3(-10, -10, -10), 1000000);
+	//m_point_cloud = dumb_find(&test_cube, glm::vec3(-10, -10, -10), 1000000);
 	//m_point_cloud = dumb_find(&another_obj , glm::vec3(-10, -10, -10), 10000);
 
 
