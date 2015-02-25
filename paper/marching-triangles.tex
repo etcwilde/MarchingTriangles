@@ -73,6 +73,17 @@
 \maketitle
 
 \begin{abstract}
+	Implicit surfaces (iso-surfaces) provide a method to store complex
+	geometry. Unfortunately, visualizing implicit surfaces is non-trivial.
+	There are two main methods of generating visual representations of
+	implicit surfaces, ray tracing and polygonizing. Raytracing creates
+	good, accurate image of the surface, however, it takes too long to
+	create a representation that is usable in an interactive manner.
+	Polygonization is the process of converting an iso-surface to an
+	explicitly defined triangle mesh, which can be rendered quickly by the
+	computer. Polygonization does not create as accurate visual
+	representations, but is able to generate a mesh that
+
 	In this paper, I describe a method of implementing the marching
 	triangles algorithm to polygonize implicit surfaces. The marching
 	triangles algorithm provides a technique of generating optimal
@@ -166,6 +177,12 @@ point-cloud it won't be useful in the generation of triangles in the mesh. It
 may be useful to create a circumsphere that bounds the size of the triangle so
 that a triangle will never be too long in relation to the width.
 \includegraphics[height=1.5in]{images/Triangulated.png}
+
+\subsection{Implicit System}
+I wrote an implicit system capable of drawing a primitive sphere, cube, and
+torus.\evanTodo{Add more as this list grows.} I've also implemented CSG
+capabilities for union, intersecting, blending, and difference of implicit
+surfaces.\evanTodo{Remove this: uh yeah}
 
 \section{Results}
 No results yet\ldots.
