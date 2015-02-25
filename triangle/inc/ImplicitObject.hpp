@@ -84,8 +84,16 @@ namespace Implicit
 
 		/**
 		 * Returns true if a point is within the implicit surface
+		 * i.e, the point is on the surface, or within the volume of
+		 * that surface.
 		 */
 		virtual bool contains(vec3 point, float tolerance) = 0;
+
+		/**
+		 * Returns true if a point is on the surface
+		 * i.e, that point is only on the surface ± the tolerance.
+		 */
+		virtual bool touches(vec3 point, float tolerance) = 0;
 
 	protected:
 	private:
@@ -129,13 +137,18 @@ namespace Implicit
 
 		float getFieldValue(vec3 pt);
 		Point getPoint(vec3 pt);
+
 		bool contains(vec3 pt, float tolerance);
+		bool touches(vec3 pt, float tolerance);
 
 		virtual float getFieldFromObjects(std::list<Object*> objects,
 				vec3 pt)=0;
 		virtual Point getPointsFromObjects(std::list<Object*> objects,
 				vec3 pt);
 		virtual bool containedInObjects(std::list<Object*> objects,
+				vec3 pt, float tolerance);
+
+		virtual bool touchesObjects(std::list<Object*> objects,
 				vec3 pt, float tolerance);
 
 	private:

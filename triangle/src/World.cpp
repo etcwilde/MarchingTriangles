@@ -10,10 +10,8 @@
 
 #include <GL/gl.h>
 
-#include "ImplicitTorus.hpp"
-
 // Hahahahahahaha -- this is dumb
-std::list<glm::vec3> dumb_find(Implicit::Torus* obj, const glm::vec3& v, unsigned int trials)
+std::list<glm::vec3> dumb_find(Implicit::Object* obj, const glm::vec3& v, unsigned int trials)
 {
 	float value = 1.f;
 	double range = 0.001e-5;
@@ -41,28 +39,27 @@ World::World()
 	initGL();
 
 	// Do a thing with a sphere
-	Implicit::Sphere test_sphere(geoffFunction, 10);
+	/*Implicit::Sphere test_sphere(geoffFunction, 10);
+	Implicit::Cube test_cube(geoffFunction, 1, 5);
+	Implicit::Torus test_torus(geoffFunction, 2, 8); */
 
-	//Implicit::Cube test_cube(geoffFunction, 1, 5);
-	//
-	Implicit::Torus test_torus(geoffFunction, 2, 4);
+	Implicit::Sphere s_1(solidFunction, ColorRGB(0, 0, 255), 4);
+	Implicit::Sphere s_2(solidFunction, ColorRGB(255, 0, 0), 4);
+	Implicit::Torus t_1(solidFunction, ColorRGB(0, 255, 0), 4, 6);
 
-	m_point_cloud = dumb_find(&test_torus, glm::vec3(-10, -10, -10), 1000000);
+	Implicit::Translate sphere_1(&s_1, 3.5, 0, 0);
+	Implicit::Translate sphere_2(&s_2, -3.5, 0, 0);
+	Implicit::Translate torus_1(&t_1, 0, 3.5, 0);
+	Implicit::RicciBlend spheres(0);
+	spheres.addBaseObject(&sphere_1);
+	spheres.addBaseObject(&sphere_2);
+	spheres.addBaseObject(&torus_1);
+
+	m_point_cloud = dumb_find(&spheres, glm::vec3(-10, -10, -10), 1000000);
+
+
+	//m_point_cloud = dumb_find(&test_torus, glm::vec3(-10, -10, -10), 1000000);
 	std::cout << "Points hit: " << m_point_cloud.size() << '\n';
-
-
-	//m_point_cloud = dumb_find(&test_cube, glm::vec3(-10, -10, -10), 1000000);
-	//m_point_cloud = dumb_find(&another_obj , glm::vec3(-10, -10, -10), 10000);
-
-
-
-	/*for (std::list<glm::vec3>::iterator it = m_point_cloud.begin();
-			it != m_point_cloud.end(); it++)
-	{
-		std::cout << (*it).x << ", "
-			<< (*it).y << ", "
-			<< (*it).z << '\n';
-	}*/
 }
 
 void World::initGL()
@@ -238,12 +235,7 @@ void World::Draw()
 	for (std::list<glm::vec3>::iterator it = m_point_cloud.begin();
 			it != m_point_cloud.end(); it++)
 	{
-		/*std::cout << (*it).x << ", "
-			<< (*it).y << ", "
-			<< (*it).z << '\n';*/
 		glVertex3f((*it).x, (*it).y, (*it).z);
-
-//1.64494e+10
 	}
 	glEnd();
 

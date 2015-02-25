@@ -31,6 +31,7 @@ namespace Implicit
 		float getFieldValue(vec3 point);
 		Point getPoint(vec3 point);
 		bool contains(vec3 point, float tolerance);
+		bool touches(vec3 point, float tolerance);
 
 	protected:
 		Transform(Object* obj);

@@ -183,22 +183,30 @@ Point Group::getPoint(vec3 pt)
 	return pnt;
 }
 
+//TODO Remove this
+#include <iostream>
 bool Group::contains(vec3 pt, float tolerance)
 {
-	bool result = false;
 	if (m_depth < m_max_depth)
 	{
-		m_depth++;
-		result = containedInObjects(m_recursive_objects, pt, tolerance);
-		m_depth--;
+		return containedInObjects(m_recursive_objects, pt, tolerance);
 	}
-	else if (m_depth = m_max_depth)
+	else if (m_depth == m_max_depth)
 	{
-		m_depth++;
-		result = containedInObjects(m_base_objects, pt, tolerance);
-		m_depth--;
+		return containedInObjects(m_base_objects, pt, tolerance);
 	}
-	return result;
+}
+
+bool Group::touches(vec3 pt, float tolerance)
+{
+	if (m_depth < m_max_depth)
+	{
+		return touchesObjects(m_recursive_objects, pt, tolerance);
+	}
+	else if (m_depth == m_max_depth)
+	{
+		return touchesObjects(m_base_objects, pt, tolerance);
+	}
 }
 
 Point Group::getPointsFromObjects(std::list<Object*> objs, vec3 pt)
@@ -232,6 +240,14 @@ bool Group::containedInObjects(std::list<Object*> objs, vec3 pt, float t)
 	for(std::list<Object*>::iterator obj_it = objs.begin();
 			obj_it != objs.end(); ++obj_it)
 		if ((*obj_it)->contains(pt, t)) return true;
+	return false;
+}
+
+bool Group::touchesObjects(std::list<Object*> objs, vec3 pt, float t)
+{
+	for(std::list<Object*>::iterator obj_it = objs.begin();
+			obj_it != objs.end(); ++obj_it)
+		if ((*obj_it)->touches(pt, t)) return true;
 	return false;
 }
 

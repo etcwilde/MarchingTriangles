@@ -52,7 +52,11 @@ bool Transform::contains(vec3 pt, float tolerance)
 	return m_object->contains(pt, tolerance);
 }
 
-
+bool Transform::touches(vec3 pt, float tolerance)
+{
+	applyInverseTransform(&pt);
+	return m_object->touches(pt, tolerance);
+}
 // Protected Methods
 
 void Transform::setTransform(const mat4& t)

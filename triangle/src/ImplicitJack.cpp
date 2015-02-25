@@ -57,6 +57,11 @@ bool Jack::contains(vec3 pt, float tolerance)
 	return getDistanceSq(pt) < ((2 + tolerance) * (2 + tolerance));
 }
 
+bool Jack::touches(vec3 pt, float tolerance)
+{
+	return false;
+}
+
 Point Jack::getPoint(vec3 pt)
 {
 	return Point();
