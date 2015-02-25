@@ -25,7 +25,7 @@ std::list<glm::vec3> dumb_find(Implicit::Torus* obj, const glm::vec3& v, unsigne
 		t_x = v.x + range * (rand() - 0.5f);
 		t_y = v.y + range * (rand() - 0.5f);
 		t_z = v.z + range * (rand() - 0.5f);
-		if (obj->contains(glm::vec3(t_x, t_y, t_z), 0.1))
+		if (obj->touches(glm::vec3(t_x, t_y, t_z), 0.1))
 			ret_list.push_back(glm::vec3(t_x, t_y, t_z));
 		range *= 1.000005f;
 		trials--;
@@ -41,13 +41,14 @@ World::World()
 	initGL();
 
 	// Do a thing with a sphere
-	//Implicit::Sphere test_sphere(geoffFunction, 10);
+	Implicit::Sphere test_sphere(geoffFunction, 10);
 
 	//Implicit::Cube test_cube(geoffFunction, 1, 5);
 	//
 	Implicit::Torus test_torus(geoffFunction, 2, 4);
 
 	m_point_cloud = dumb_find(&test_torus, glm::vec3(-10, -10, -10), 1000000);
+	std::cout << "Points hit: " << m_point_cloud.size() << '\n';
 
 
 	//m_point_cloud = dumb_find(&test_cube, glm::vec3(-10, -10, -10), 1000000);

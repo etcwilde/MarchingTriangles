@@ -53,8 +53,8 @@ float Sphere::getDistanceSq(vec3 pt)
 
 bool Sphere::contains(vec3 pt, float tolerance)
 {
-	return getDistanceSq(pt) <
-		(m_radius + tolerance) * (m_radius + tolerance);
+	return getDistanceSq(pt)
+		< (m_radius + tolerance) * (m_radius + tolerance);
 }
 
 bool Sphere::touches(vec3 pt, float tolerance)

@@ -78,7 +78,7 @@ float Cube::getDistanceSq(vec3 pt)
 
 bool Cube::contains(vec3 pt, float tolerance)
 {
-	return getDistanceSq(pt) < ((m_radius + tolerance) * m_radius + tolerance);
+	return getDistanceSq(pt) < ((m_radius + tolerance) * (m_radius + tolerance));
 }
 
 bool Cube::touches(vec3 pt, float tolerance)
