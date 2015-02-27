@@ -1,70 +1,59 @@
-/**
- * ImplicitSphere
- *
- * File: 	ImplicitSphere.cpp
- * Author:	Evan Wilde		<etcwilde@uvic.ca>
- * Date:	Feb 16 2015
- */
-
 #include "ImplicitSphere.hpp"
 
 using namespace Implicit;
 
-Sphere::Sphere(float(*fieldFunc)(float), float radius) :
-	ImplicitModel(fieldFunc),
-	m_color(),
+Sphere::Sphere(float (*fieldFunc)(float), float radius) :
+	Primitive(fieldFunc),
+	m_color(ColorRGB(0, 0, 0)),
 	m_radius(radius),
-	m_radiusSq(radius * radius)
+	m_radiusSq(radius*radius)
 { }
 
-Sphere::Sphere(float(*fieldFunc)(float), ColorRGB color, float radius) :
-	ImplicitModel(fieldFunc),
+Sphere::Sphere(float (*fieldFunc)(float), ColorRGB color, float radius) :
+	Primitive(fieldFunc),
 	m_color(color),
 	m_radius(radius),
-	m_radiusSq(radius * radius)
+	m_radiusSq(radius*radius)
 { }
 
-Sphere::Sphere(float(*fieldFunc)(float), float coeff, ColorRGB color, float radius) :
-	ImplicitModel(fieldFunc, coeff),
+Sphere::Sphere(float (*fieldFunc)(float), float coeff, ColorRGB color,
+				float radius) :
+	Primitive(fieldFunc, coeff),
 	m_color(color),
 	m_radius(radius),
-	m_radiusSq(radius * radius)
+	m_radiusSq(radius*radius)
 { }
 
-// TODO Remove this
-#include <iostream>
-
-float Sphere::getFieldValue(vec3 pt)
+float Sphere::getFieldValue(glm::vec3 pt)
 {
-	/*std::cout << "Distance^2: " << getDistanceSq(pt) << '\n'
-		<< "Radius^2: " << m_radiusSq << '\n'
-		<< "D/R: " << getDistanceSq(pt)/m_radiusSq << '\n'
-		<< "Coefficient: " << m_coeff << '\n'
-		<< "Field Value: " << m_fieldFunc(getDistanceSq(pt) / m_radiusSq)<<'\n'; */
-
-	return m_coeff * m_fieldFunc(getDistanceSq(pt) / m_radiusSq);
+	return m_fieldCoefficient * m_fieldFunc(getDistanceSq(pt)/m_radiusSq);
 }
 
-float Sphere::getDistanceSq(vec3 pt)
+float Sphere::getDistanceSq(glm::vec3 pt)
 {
-	//std::cout << pt.x * pt.x + pt.y * pt.y + pt.z * pt.z << '\n';
-	return (pt.x * pt.x + pt.y * pt.y + pt.z * pt.z);
+	return (pt.x * pt.x) + (pt.y * pt.y) + (pt.z * pt.z);
 }
 
-bool Sphere::contains(vec3 pt, float tolerance)
+float Sphere::getDistance(glm::vec3 pt)
 {
-	return getDistanceSq(pt)
-		< (m_radius + tolerance) * (m_radius + tolerance);
+	return std::sqrt(getDistanceSq(pt));
 }
 
-bool Sphere::touches(vec3 pt, float tolerance)
+bool Sphere::contains(glm::vec3 pt, float errorMargin)
 {
-	return (getDistanceSq(pt) < (m_radius + tolerance) * (m_radius + tolerance))
-		&&
-		(getDistanceSq(pt) > (m_radius - tolerance) * (m_radius - tolerance));
+	return getDistanceSq(pt) < (m_radius + errorMargin) * (m_radius * errorMargin);
 }
 
-Point Sphere::getPoint(vec3 pt)
+std::list<glm::vec3> Sphere::getPointsInObject()
 {
-	return Point(m_color, normalize(pt));
+	std::list<glm::vec3> result;
+	result.push_back(glm::vec3(0, 0, 0));
+	return result;
 }
+
+PointFlavour Sphere::getFlavour(glm::vec3 pt)
+{
+	return PointFlavour(m_color, normalize(pt));
+
+}
+

@@ -1,36 +1,26 @@
 #ifndef IMPLICIT_TORUS_H
 #define IMPLICIT_TORUS_H
-
-#include "ImplicitObject.hpp"
+#include "ImplicitPrimitive.hpp"
 #include "Color.hpp"
-
-#include <glm/glm.hpp>
-
-using namespace glm;
-
-
 namespace Implicit
 {
-	class Torus : public ImplicitModel
+	class Torus : public Primitive
 	{
 	public:
-		Torus(float (*fieldFunc)(float), float innerRadius, float outerRadius);
+		Torus(float (*fieldFunc)(float), float innerRadius,
+				float outerRadius);
 		Torus(float (*fieldFunc)(float), ColorRGB color,
 				float innerRadius, float outerRadius);
+		Torus(float (*fieldFunc)(float), float coeff, ColorRGB color,
+				float innerRadius, float outerRadius);
 
-		Torus(float (*fieldFunc)(float), float coeff, float innerRadius,
-				float outerRadius);
-
-		float getFieldValue(vec3 pt);
-		float getDistanceSq(vec3 pt);
-
-		bool contains(vec3 pt, float tolerance);
-		bool touches(vec3 pt, float tolerance);
-
-		Point getPoint(vec3 pt);
-
-		vec3 getNearestPoint(vec3 pt);
-
+		glm::vec3 getNearestPoint(glm::vec3 pt);
+		float getFieldValue(glm::vec3 pt);
+		float getDistanceSq(glm::vec3 pt);
+		float getDistance(glm::vec3 pt);
+		bool contains(glm::vec3 pt, float errorMargin);
+		std::list<glm::vec3> getPointsInObject();
+		PointFlavour getFlavour(glm::vec3 pt);
 	protected:
 		ColorRGB m_color;
 		float m_innerRadius;
@@ -38,7 +28,6 @@ namespace Implicit
 		float m_width;
 		float m_widthSq;
 		float m_centerRadius;
-
 	};
 };
 

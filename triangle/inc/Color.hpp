@@ -25,10 +25,14 @@
 class Color
 {
 public:
+	virtual float hue()=0;
 protected:
 private:
 };
 
+/**
+ * 0 - 255
+ */
 class ColorRGB : Color
 {
 public:
@@ -46,6 +50,7 @@ public:
 
 	ColorRGB operator + (const ColorRGB& color) const;
 	ColorRGB operator - (const ColorRGB& color) const;
+	virtual float hue();
 
 	// ColorRGBA operator + (const ColorRGBA& color) const;
 	// ColorRGBA operator - (const ColorRGBA& color) const;
@@ -58,7 +63,7 @@ private:
 	};
 };
 
-class ColorRGBA : Color
+/*class ColorRGBA : Color
 {
 private:
 	union
@@ -86,7 +91,7 @@ private:
 		struct {float H; float S; float L; float A;};
 		float m_vals[4];
 	};
-};
+}; */
 
 // Light colors
 //

@@ -11,7 +11,9 @@
 #include <GL/gl.h>
 
 // Hahahahahahaha -- this is dumb
-std::list<glm::vec3> dumb_find(Implicit::Object* obj, const glm::vec3& v, unsigned int trials)
+
+std::list<glm::vec3> dumb_find(Implicit::Object* obj, const glm::vec3& v,
+		unsigned int trials)
 {
 	float value = 1.f;
 	double range = 0.001e-5;
@@ -23,13 +25,14 @@ std::list<glm::vec3> dumb_find(Implicit::Object* obj, const glm::vec3& v, unsign
 		t_x = v.x + range * (rand() - 0.5f);
 		t_y = v.y + range * (rand() - 0.5f);
 		t_z = v.z + range * (rand() - 0.5f);
-		if (obj->touches(glm::vec3(t_x, t_y, t_z), 0.1))
+		if (obj->contains(glm::vec3(t_x, t_y, t_z), 0.1f))
 			ret_list.push_back(glm::vec3(t_x, t_y, t_z));
 		range *= 1.000005f;
 		trials--;
 	}
 	return ret_list;
 }
+
 
 World::World()
 	: m_drawGrid(true)
@@ -38,28 +41,27 @@ World::World()
 	m_grid_color = glm::vec3(1, 1, 1);
 	initGL();
 
-	// Do a thing with a sphere
-	/*Implicit::Sphere test_sphere(geoffFunction, 10);
-	Implicit::Cube test_cube(geoffFunction, 1, 5);
-	Implicit::Torus test_torus(geoffFunction, 2, 8); */
 
-	Implicit::Sphere s_1(solidFunction, ColorRGB(0, 0, 255), 4);
-	Implicit::Sphere s_2(solidFunction, ColorRGB(255, 0, 0), 4);
-	Implicit::Torus t_1(solidFunction, ColorRGB(0, 255, 0), 4, 6);
+	Implicit::Line obj = Implicit::Line(metaballFunction, 1.2, 10);
+	Implicit::Sphere sphere = Implicit::Sphere(metaballFunction, 6);
 
-	Implicit::Translate sphere_1(&s_1, 3.5, 0, 0);
-	Implicit::Translate sphere_2(&s_2, -3.5, 0, 0);
-	Implicit::Translate torus_1(&t_1, 0, 3.5, 0);
-	Implicit::RicciBlend spheres(0);
-	spheres.addBaseObject(&sphere_1);
-	spheres.addBaseObject(&sphere_2);
-	spheres.addBaseObject(&torus_1);
+	Implicit::Translate s1 = Implicit::Translate(&sphere, 5, 5, 0);
+	Implicit::Translate obj1 = Implicit::Translate(&obj, 0, 5, 0);
+	Implicit::Rotate obj2 = Implicit::Rotate(&obj, 0, 0, 3.1415926535926538 /2);
 
-	m_point_cloud = dumb_find(&spheres, glm::vec3(-10, -10, -10), 1000000);
+	Implicit::Sphere s2 = Implicit::Sphere(metaballFunction, 8);
 
+	Implicit::Blend obj3;
+	obj3.addBaseObject(&obj1);
+	obj3.addBaseObject(&obj2);
+	obj3.addBaseObject(&s1);
 
-	//m_point_cloud = dumb_find(&test_torus, glm::vec3(-10, -10, -10), 1000000);
-	std::cout << "Points hit: " << m_point_cloud.size() << '\n';
+	Implicit::Twist t = Implicit::Twist(&obj3, glm::vec3(0, 6, 1), glm::vec3(0, 1, 0), 1.0f);
+	Implicit::Rotate r = Implicit::Rotate(&t, 3.14159265359265358/2, 0, 0);
+
+	m_point_cloud = dumb_find(&r, glm::vec3(-10, -10, -10), 5000000);
+
+	//m_point_cloud = obj_1.getPointsInObject();
 }
 
 void World::initGL()
@@ -196,6 +198,10 @@ void World::keyPressEvent(GLFWwindow* w, int key, int scancode, int mods)
 	{
 		m_camera.adjust_fov(-.1);
 	}
+	else if (key == GLFW_KEY_G)
+	{
+		m_drawGrid = !m_drawGrid;
+	}
 	if (key == GLFW_KEY_LEFT_SHIFT) m_small_increments = true;
 }
 
@@ -229,7 +235,7 @@ void World::Draw()
 	glPushMatrix();
 	glLoadIdentity();
 	m_camera.Render();
-	draw_coordinates();
+	if (m_drawGrid) draw_coordinates();
 
 	glBegin(GL_POINTS);
 	for (std::list<glm::vec3>::iterator it = m_point_cloud.begin();

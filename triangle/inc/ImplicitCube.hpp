@@ -1,37 +1,38 @@
-#ifndef IMPLICIT_CUBE_H
-#define IMPLICIT_CUBE_H
-
-#include "ImplicitObject.hpp"
+#ifndef IMPLICIT_CUBE
+#define IMPLICIT_CUBE
+#include "ImplicitPrimitive.hpp"
 #include "Color.hpp"
 
+#include <algorithm>
+#include <cmath>
+#include <list>
 #include <complex>
-
-#include <glm/glm.hpp>
-
-using namespace glm;
 
 namespace Implicit
 {
-	class Cube : public ImplicitModel
+	class Cube : public Primitive
 	{
 	public:
 		Cube(float (*fieldFunc)(float), float radius, float sides);
-		Cube(float (*fieldFunc)(float), ColorRGB color, float r, float sides);
+		Cube(float (*fieldFunc)(float), ColorRGB color, float radius,
+				float sides);
 		Cube(float (*fieldFunc)(float), float coeff, ColorRGB color,
-				float r, float sides);
-		Cube(float (*fieldFunc)(float), float radius, float x, float y, float z);
-		Cube(float (*fieldFunc)(float), ColorRGB color, float radius, float x, float y, float z);
+				float radius, float sides);
+		Cube(float (*fieldFunc)(float), float radius, float x, float y,
+				float z);
+		Cube(float (*fieldFunc)(float), ColorRGB color, float radius,
+				float x, float y, float z);
+		Cube(float (*fieldFunc)(float), float coeff, ColorRGB color,
+				float radius, float x, float y, float z);
 
+		glm::vec3 getNearestPoint(glm::vec3 pt);
 
-		float getFieldValue(vec3 pt);
-		float getDistanceSq(vec3 pt);
-
-		bool contains(vec3 pt, float tolerance);
-		bool touches (vec3 pt, float tolerance);
-
-		Point getPoint(vec3 pt);
-
-		vec3 getNearestPoint(vec3 pt);
+		float getFieldValue(glm::vec3 point);
+		float getDistanceSq(glm::vec3 point);
+		float getDistance(glm::vec3 point);
+		bool contains(glm::vec3 point, float errorMargin);
+		std::list<glm::vec3> getPointsInObject();
+		PointFlavour getFlavour(glm::vec3 point);
 
 	protected:
 		ColorRGB m_color;
@@ -41,7 +42,7 @@ namespace Implicit
 		float m_y;
 		float m_z;
 	};
+
 };
 
 #endif
-

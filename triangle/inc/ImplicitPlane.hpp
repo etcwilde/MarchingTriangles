@@ -1,20 +1,23 @@
-#ifndef IMPLICIT_SPHERE_H
-#define IMPLICIT_SPHERE_H
+#ifndef IMPLICIT_PLANE_H
+#define IMPLICIT_PLANE_H
 
 #include "ImplicitPrimitive.hpp"
 
 #include "Color.hpp"
 
+#include <glm/glm.hpp>
+
+#include <list>
 #include <cmath>
 
 namespace Implicit
 {
-	class Sphere : public Primitive
+	class Plane : public Primitive
 	{
 	public:
-		Sphere(float (*fieldFunc)(float), float radius);
-		Sphere(float (*fieldFunc)(float), ColorRGB color, float radius);
-		Sphere(float (*fieldFunc)(float), float coeff, ColorRGB color,
+		Plane(float (*fieldFunc)(float), float radius);
+		Plane(float (*fieldFunc)(float), ColorRGB color, float radius);
+		Plane(float (*fieldFunc)(float), float coeff, ColorRGB color,
 				float radius);
 
 		float getFieldValue(glm::vec3 pt);

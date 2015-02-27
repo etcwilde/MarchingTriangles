@@ -18,15 +18,13 @@
 #include "Camera.hpp"
 
 
-#include "ImplicitSystem.hpp"
 #include "fieldFunctions.hpp"
-#include "ImplicitCube.hpp"
-#include "ImplicitJack.hpp"
+#include "ImplicitSystem.hpp"
+
 #include <cstdlib>
 #include <list>
 
 
-std::list<glm::vec3> dumb_find(Implicit::Object* obj, const glm::vec3& v, unsigned int trials);
 
 
 // Camera movements

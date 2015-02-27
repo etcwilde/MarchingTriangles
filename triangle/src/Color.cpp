@@ -53,3 +53,23 @@ ColorRGB ColorRGB::operator -(const ColorRGB& color) const
 			std::max((G - color.g()) * 2, 0.f),
 			std::max((B - color.b()) * 2, 0.f));
 }
+
+float ColorRGB::hue()
+{
+	float Red = R / 255;
+	float Green = G / 255;
+	float Blue = B / 255;
+	float Hue = 0;
+
+	float min = std::min(std::min(Red, Green), Blue);
+	float max = std::max(std::max(Red, Green), Blue);
+
+	if (max == Red) Hue = (Green - Blue) / (max - min);
+	else if (max == Green) Hue = 2.f + (Blue - Red) / (max - min);
+	else Hue = 4.f + (Red - Green) / (max - min);
+
+	Hue *= 60;
+
+	while (Hue < 0) Hue += 360;
+	return Hue;
+}

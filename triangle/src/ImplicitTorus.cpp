@@ -1,75 +1,87 @@
 #include "ImplicitTorus.hpp"
 
-using namespace glm;
 using namespace Implicit;
 
-Torus::Torus(float(*fieldFunc)(float), float innerRadius, float outerRadius) :
-	ImplicitModel(fieldFunc),
+Torus::Torus(float (*fieldFunc)(float), float innerRadius, float outerRadius) :
+	Primitive(fieldFunc),
 	m_color(ColorRGB(0, 0, 0)),
 	m_innerRadius(innerRadius),
 	m_outerRadius(outerRadius)
 {
 	m_width = outerRadius - innerRadius;
 	m_widthSq = m_width * m_width;
-	m_centerRadius = innerRadius + m_width / 2;
+	m_centerRadius = innerRadius + m_width  / 2;
 }
-
-Torus::Torus(float (*fieldFunc)(float), ColorRGB color, float innerRadius,
-	       float outerRadius) :
-	ImplicitModel(fieldFunc),
+Torus::Torus(float (*fieldFunc)(float), ColorRGB color, float innerRadius, 
+		float outerRadius) :
+	Primitive(fieldFunc),
 	m_color(color),
 	m_innerRadius(innerRadius),
 	m_outerRadius(outerRadius)
+
 {
 	m_width = outerRadius - innerRadius;
 	m_widthSq = m_width * m_width;
-	m_centerRadius = innerRadius + m_width / 2;
+	m_centerRadius = innerRadius + m_width  / 2;
 }
 
-Torus::Torus(float (*fieldFunc)(float), float coeff, float innerRadius,
-				float outerRadius) :
-	ImplicitModel(fieldFunc, coeff),
+
+Torus::Torus(float (*fieldFunc)(float), float coeff, ColorRGB color, 
+		float innerRadius, float outerRadius) :
+	Primitive(fieldFunc, coeff),
+	m_color(color),
 	m_innerRadius(innerRadius),
 	m_outerRadius(outerRadius)
+
 {
 	m_width = outerRadius - innerRadius;
-	m_widthSq = m_width*m_width;
-	m_centerRadius = innerRadius + m_width / 2;
+	m_widthSq = m_width * m_width;
+	m_centerRadius = innerRadius + m_width  / 2;
 }
 
-vec3 Torus::getNearestPoint(vec3 pt)
+glm::vec3 Torus::getNearestPoint(glm::vec3 pt)
 {
-	vec3 result = pt;
-	result.z = 0.f;
-	return normalize(result) * m_centerRadius;
+	// project
+	pt.z = 0;
+	return glm::normalize(pt) * m_centerRadius;
 }
 
-float Torus::getFieldValue(vec3 pt)
+float Torus::getFieldValue(glm::vec3 pt)
 {
-	return m_coeff * m_fieldFunc(getDistanceSq(pt) / (m_widthSq *0.25));
+	return m_fieldCoefficient * m_fieldFunc(getDistanceSq(pt)/(m_widthSq*.25f));
 }
 
-float Torus::getDistanceSq(vec3 pt)
+float Torus::getDistanceSq(glm::vec3 pt)
 {
-	vec3 nearest = getNearestPoint(pt);
-	return ((pt.x - nearest.x) * (pt.x - nearest.x)) +
-		((pt.y - nearest.y) * (pt.y - nearest.y)) +
-		((pt.z - nearest.z) * (pt.z - nearest.z));
-}
-bool Torus::contains(vec3 pt, float tolerance)
-{
-	return getDistanceSq(pt) <= ((m_width/2)+tolerance)*((m_width/2)+tolerance);
+	glm::vec3 nearest = getNearestPoint(pt);
+	return (
+			((pt.x - nearest.x) * (pt.x - nearest.x)) +
+			((pt.y - nearest.y) * (pt.y - nearest.y)) +
+			((pt.z - nearest.z) * (pt.z - nearest.z)));
+
+
 }
 
-bool Torus::touches(vec3 pt, float tolerance)
+float Torus::getDistance(glm::vec3 pt)
 {
-	return (getDistanceSq(pt) < ((m_width/2)+ tolerance) * ((m_width/2) + tolerance))
-		&&
-		(getDistanceSq(pt) > ((m_width/2) - tolerance) * ((m_width/2) - tolerance));
+	return std::sqrt(getDistanceSq(pt));
 }
 
-Point Torus::getPoint(vec3 pt)
+bool Torus::contains(glm::vec3 pt, float errorMargin)
 {
-	vec3 normal = pt - getNearestPoint(pt);
-	return Point(m_color, normalize(normal));
+	return getDistanceSq(pt) <= ((m_width/2)+errorMargin)*((m_width/2)+errorMargin);
 }
+
+std::list<glm::vec3> Torus::getPointsInObject()
+{
+	std::list<glm::vec3>points;
+	points.push_back(glm::vec3(m_centerRadius, 0.f, 0.f));
+	return points;
+}
+
+PointFlavour Torus::getFlavour(glm::vec3 pt)
+{
+	glm::vec3 normal = pt - getNearestPoint(pt);
+	return PointFlavour(m_color, glm::normalize(normal));
+}
+
