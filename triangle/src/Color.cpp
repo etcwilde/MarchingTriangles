@@ -1,3 +1,11 @@
+/**
+ * Color
+ *
+ * File: 	Color.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 15 2015
+ */
+
 #include "Color.hpp"
 
 ColorRGB::ColorRGB() :
@@ -13,13 +21,6 @@ ColorRGB::ColorRGB(float r, float g, float b)
 	G = g > 255.f ? 255.f : (g < 0.f ? 0.f : g);
 	B = b > 255.f ? 255.f : (b < 0.f ? 0.f : b);
 }
-
-
-inline float ColorRGB::r() const { return R; }
-
-inline float ColorRGB::g() const { return G; }
-
-inline float ColorRGB::b() const { return B; }
 
 const float* ColorRGB::data() const {return m_vals;}
 
@@ -53,3 +54,22 @@ ColorRGB ColorRGB::operator -(const ColorRGB& color) const
 			std::max((B - color.b()) * 2, 0.f));
 }
 
+float ColorRGB::hue()
+{
+	float Red = R / 255;
+	float Green = G / 255;
+	float Blue = B / 255;
+	float Hue = 0;
+
+	float min = std::min(std::min(Red, Green), Blue);
+	float max = std::max(std::max(Red, Green), Blue);
+
+	if (max == Red) Hue = (Green - Blue) / (max - min);
+	else if (max == Green) Hue = 2.f + (Blue - Red) / (max - min);
+	else Hue = 4.f + (Red - Green) / (max - min);
+
+	Hue *= 60;
+
+	while (Hue < 0) Hue += 360;
+	return Hue;
+}

@@ -1,3 +1,11 @@
+/**
+ * Camera
+ *
+ * File: 	Camera.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 6 2015
+ */
+
 #ifndef CAMERA_H
 #define CAMERA_H
 

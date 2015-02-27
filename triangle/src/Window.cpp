@@ -1,3 +1,11 @@
+/**
+ * Window
+ *
+ * File: 	Window.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Jan 30 2015
+ */
+
 #include "Window.hpp"
 
 #include <GLFW/glfw3.h>
@@ -136,5 +144,3 @@ void Window::redrawEvent(GLFWwindow* w)
 	// World
 	World::getWorldInstance().Draw();
 }
-
-

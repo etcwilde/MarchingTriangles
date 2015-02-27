@@ -1,3 +1,11 @@
+/**
+ * Window
+ *
+ * File: 	Window.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Jan 30 2015
+ */
+
 #ifndef WINDOW_H
 #define WINDOW_H
 

@@ -1,3 +1,11 @@
+/**
+ * World
+ *
+ * File: 	World.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 6 2015
+ */
+
 #ifndef WORLD_H
 #define WORLD_H
 
@@ -8,6 +16,16 @@
 #include <iostream>
 
 #include "Camera.hpp"
+
+
+#include "fieldFunctions.hpp"
+#include "ImplicitSystem.hpp"
+
+#include <cstdlib>
+#include <list>
+
+
+
 
 // Camera movements
 #define CAM_ROTATE	0b0001
@@ -162,6 +180,8 @@ private:
 	bool m_drawGrid;
 
 	double m_prevTime;
+
+	std::list<glm::vec3> m_point_cloud;
 };
 
 #endif //WORLD_H

@@ -1,6 +1,38 @@
+/**
+ * World
+ *
+ * File: 	World.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 6 2015
+ */
+
 #include "World.hpp"
 
 #include <GL/gl.h>
+
+// Hahahahahahaha -- this is dumb
+
+std::list<glm::vec3> dumb_find(Implicit::Object* obj, const glm::vec3& v,
+		unsigned int trials)
+{
+	float value = 1.f;
+	double range = 0.001e-5;
+	float t_x, t_y, t_z;
+	std::list<glm::vec3> ret_list;
+
+	while (trials)
+	{
+		t_x = v.x + range * (rand() - 0.5f);
+		t_y = v.y + range * (rand() - 0.5f);
+		t_z = v.z + range * (rand() - 0.5f);
+		if (obj->contains(glm::vec3(t_x, t_y, t_z), 0.1f))
+			ret_list.push_back(glm::vec3(t_x, t_y, t_z));
+		range *= 1.000005f;
+		trials--;
+	}
+	return ret_list;
+}
+
 
 World::World()
 	: m_drawGrid(true)
@@ -8,6 +40,28 @@ World::World()
 	m_background_color = glm::vec3(.0, .1, .1);
 	m_grid_color = glm::vec3(1, 1, 1);
 	initGL();
+
+
+	Implicit::Line obj = Implicit::Line(metaballFunction, 1.2, 10);
+	Implicit::Sphere sphere = Implicit::Sphere(metaballFunction, 6);
+
+	Implicit::Translate s1 = Implicit::Translate(&sphere, 5, 5, 0);
+	Implicit::Translate obj1 = Implicit::Translate(&obj, 0, 5, 0);
+	Implicit::Rotate obj2 = Implicit::Rotate(&obj, 0, 0, 3.1415926535926538 /2);
+
+	Implicit::Sphere s2 = Implicit::Sphere(metaballFunction, 8);
+
+	Implicit::Blend obj3;
+	obj3.addBaseObject(&obj1);
+	obj3.addBaseObject(&obj2);
+	obj3.addBaseObject(&s1);
+
+	Implicit::Twist t = Implicit::Twist(&obj3, glm::vec3(0, 6, 1), glm::vec3(0, 1, 0), 1.0f);
+	Implicit::Rotate r = Implicit::Rotate(&t, 3.14159265359265358/2, 0, 0);
+
+	m_point_cloud = dumb_find(&r, glm::vec3(-10, -10, -10), 5000000);
+
+	//m_point_cloud = obj_1.getPointsInObject();
 }
 
 void World::initGL()
@@ -25,6 +79,8 @@ void World::initGL()
 	glLoadIdentity();
 	glPointSize(5.0f);
 	m_camera.set_bounds(1, 1);
+
+	glPointSize(10.f);
 }
 
 World::~World()
@@ -142,6 +198,10 @@ void World::keyPressEvent(GLFWwindow* w, int key, int scancode, int mods)
 	{
 		m_camera.adjust_fov(-.1);
 	}
+	else if (key == GLFW_KEY_G)
+	{
+		m_drawGrid = !m_drawGrid;
+	}
 	if (key == GLFW_KEY_LEFT_SHIFT) m_small_increments = true;
 }
 
@@ -175,7 +235,16 @@ void World::Draw()
 	glPushMatrix();
 	glLoadIdentity();
 	m_camera.Render();
-	draw_coordinates();
+	if (m_drawGrid) draw_coordinates();
+
+	glBegin(GL_POINTS);
+	for (std::list<glm::vec3>::iterator it = m_point_cloud.begin();
+			it != m_point_cloud.end(); it++)
+	{
+		glVertex3f((*it).x, (*it).y, (*it).z);
+	}
+	glEnd();
+
 	glPopMatrix();
 }
 
@@ -195,20 +264,20 @@ void World::draw_coordinates()
 
 	glColor3ub(0, 255, 0);
 	glBegin(GL_LINES);
-	glVertex3f(0, 100, 0);
-	glVertex3f(0, -100, 0);
+	glVertex3f(0, 25, 0);
+	glVertex3f(0, -25, 0);
 	glEnd();
 
 	glColor3ub(0, 0, 255);
 	glBegin(GL_LINES);
-	glVertex3f(0, 0, 100);
-	glVertex3f(0, 0, -100);
+	glVertex3f(0, 0, 50);
+	glVertex3f(0, 0, -50);
 	glEnd();
 
 	glColor3ub(255, 0, 0);
 	glBegin(GL_LINES);
-	glVertex3f(100, 0, 0);
-	glVertex3f(-100, 0, 0);
+	glVertex3f(50, 0, 0);
+	glVertex3f(-50, 0, 0);
 	glEnd();
 
 
@@ -312,8 +381,8 @@ void World::camera_strafe(vec2 mouse_point)
 
 void World::camera_rotate(vec2 mouse_point)
 {
-	float x_rotate = (mouse_point.x - m_old_mouse.x) / 10;
-	float y_rotate = (mouse_point.y - m_old_mouse.y) / 10;
+	float x_rotate = (mouse_point.x - m_old_mouse.x) / 100;
+	float y_rotate = (mouse_point.y - m_old_mouse.y) / 100;
 	if (m_small_increments)
 	{
 		x_rotate /= 10;

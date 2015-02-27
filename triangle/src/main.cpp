@@ -1,12 +1,19 @@
-#include <iostream>
-#include "floatlibs.hpp"
-
-#include <glm/glm.hpp>
-#include "Rectangle.hpp"
-#include "Window.hpp"
-
+/**
+ * main
+ *
+ * File: 	main.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Jan 30 2015
+ */
 
 #include <ctime>
+#include <iostream>
+
+#include <glm/glm.hpp>
+
+#include "Window.hpp"
+#include "fieldFunctions.hpp"
+#include "floatlibs.hpp"
 
 #ifdef TEST
 
@@ -15,6 +22,7 @@
 #include <cppunit/TestResult.h>
 
 #endif //TEST
+
 
 /**
  * \mainpage Marching Triangles Documentation
@@ -25,7 +33,7 @@
  * triangle mesh. It works by creating a seed triangle at some point on the
  * surface, then begins to grow like a mold until the surface is covered.
  *
- * Basic Layout:
+ * Window Structuring:
  * The Window contains a World
  * The World contains all of the objects in the scene, and the Camera.
  * The Camera handles user movement through the scene and handles most of the
@@ -36,6 +44,7 @@
  *
  * \author Evan Wilde <etcwilde@uvic.ca>
  */
+
 
 int main()
 {

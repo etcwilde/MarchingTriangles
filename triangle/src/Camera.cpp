@@ -1,3 +1,11 @@
+/**
+ * Camera
+ *
+ * File: 	Camera.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 6 2015
+ */
+
 #include "Camera.hpp"
 
 #include <GL/gl.h>
@@ -135,7 +143,7 @@ void Camera::rotate_vertical(GLfloat distance)
 	vec3 direction = normalize(m_direction - m_position);
 	vec3 right_vec = normalize(cross(direction, m_updir));
 	vec3 up = normalize(cross(direction, right_vec));
-	m_position += normalize(up) * distance;
+	m_position += up * distance;
 	m_position = normalize(m_position - m_direction) * m_rotate_distance + m_direction;
 }
 
@@ -161,6 +169,3 @@ void Camera::set_bounds(GLint width, GLint height)
 	m_width = width;
 	m_height = height;
 }
-
-
-
