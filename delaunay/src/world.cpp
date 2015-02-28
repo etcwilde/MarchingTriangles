@@ -4,9 +4,55 @@ World::World()
 	: m_wireframe(false),
 	m_lines(false),
 	m_verts(true)
-
 {
+	initGL();
 }
+
+void World::initGL()
+{
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+}
+
+World::~World() {}
+
+World& World::getWorldInstance()
+{
+	static World instance;
+	return instance;
+}
+
+
+void World::keyPressEvent(GLFWwindow* w, int key, int scancode, int mods)
+{
+	if (key == GLFW_KEY_X)
+	{
+		ToggleWireframe();
+		std::cout << "X Button Pressed\n";
+
+	}
+	else if (key == GLFW_KEY_Z)
+	{
+		ToggleLines();
+		std::cout << "Z Button Pressed\n";
+
+	}
+	else if (key == GLFW_KEY_V)
+	{
+		ToggleVerts();
+		std::cout << "V Button Pressed\n";
+	}
+	else if (key == GLFW_KEY_T)
+	{
+		triangulate();
+	}
+	else if (key == GLFW_KEY_C)
+	{
+		ClearTriangles();
+	}
+}
+
+
 void World::add_polygon(Polygon p)
 {
 	m_polygons.push_back(p);
@@ -27,8 +73,9 @@ void World::set_polygons(std::vector<Polygon> polygons)
 	m_polygons = polygons;
 }
 
-void World::draw()
+void World::Draw()
 {
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	if (m_lines) draw_outline();
 	if (m_verts) draw_points();
 	draw_triangles();
@@ -132,6 +179,19 @@ void World::draw_outline()
 	}
 }
 
+void World::resizeEvent(GLFWwindow* w, int width, int height)
+{
+	glViewport(0, 0, width, height);
+	float aspect = width / (float)height;
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(-(GLdouble)width/2,
+			(GLdouble)width/2,
+			-(GLdouble)height/2,
+			(GLdouble)height/2, -10.0, 10.0);
+	glMatrixMode(GL_MODELVIEW);
+}
+
 void World::draw_triangles()
 {
 	for (unsigned int t = 0; t < m_triangles.size(); ++t)
@@ -169,18 +229,6 @@ void World::draw_triangles()
 		}
 		glEnd();
 	}
-
-	// Generate Vertex buffers
-	// TODO -- Use vertex buffers to decrease GPU calls
-
-	//unsigned int total_verts = m_triangles.size() * 3;
-
-	/*for (unsigned int t = 0; t < m_triangles.size(); ++t)
-	{
-	} */
-
-
-	//std::cerr << "Vertices: " << total_verts << '\n';
 }
 
 void World::triangulate()

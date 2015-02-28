@@ -82,4 +82,4 @@ $(BUILD)%.o: $(SRC)%.cpp
 
 # Link executable
 $(BIN)$(EXEC): $(OBJS)
-	$(CXX) $(LFLAGS) $(OBJS) -o $@ -L$(LIB) -rdynamic $(LIB)libglfw-cxx.so $(LIBS) -Wl,-rpath,$(LIB):$(BIN)
+	$(CXX) $(LFLAGS) $(OBJS) -o $@  $(LIBS)

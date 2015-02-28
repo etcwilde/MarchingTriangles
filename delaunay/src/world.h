@@ -5,9 +5,11 @@
 #include <list>
 #include <vector>
 
-#include <glfw-cxx/glfw-cxx.hpp>
 #include <GL/gl.h>
 #include <GL/glu.h>
+
+#include <glm/glm.hpp>
+#include <GLFW/glfw3.h>
 
 #include <string.h>
 
@@ -15,19 +17,35 @@
 
 #include "drawlib.h"
 
+#include <string>
+
 #define DEL_EPS 0.000001
 
 class World
 {
 	public:
-		World();
+
+		~World();
+		static World& getWorldInstance();
+
+		void initGL();
+
+		void Draw();
 
 		void add_polygon(Polygon p);
 		void add_color(Vector3<unsigned int> color);
 		void set_colors(std::vector<Vector3<unsigned int>> colors);
 		void set_polygons(std::vector<Polygon> polygons);
 
-		void draw();
+		void keyPressEvent(GLFWwindow* w, int key, int scancode, int mods);
+
+		void resizeEvent(GLFWwindow* w, int width, int height);
+
+	private:
+		World();
+
+
+
 
 		unsigned int polygons();
 
@@ -82,6 +100,7 @@ class World
 		bool m_wireframe;
 		bool m_lines;
 		bool m_verts;
+
 };
 
 #endif //WORLD_H
