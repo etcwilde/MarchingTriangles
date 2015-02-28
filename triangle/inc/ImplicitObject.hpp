@@ -1,6 +1,10 @@
 #ifndef IMPLICIT_OBJECT_H
 #define IMPLICIT_OBJECT_H
 
+// These two are just place-holders right now
+#define NUMERICAL_ITERATIONS 5
+#define NUMERICAL_EPSILON 5e-5
+
 #include <glm/glm.hpp>
 
 #include <list>
@@ -45,10 +49,14 @@ namespace Implicit
 	public:
 		virtual ~Object() {}
 		virtual float getFieldValue(glm::vec3 point) = 0;
+		virtual glm::vec3 gradient(glm::vec3 point);
+		virtual float maxCurvature(glm::vec3 point);
 		virtual PointFlavour getFlavour(glm::vec3 point) = 0;
 		virtual bool contains(glm::vec3 point, float errorMargin) = 0;
 		virtual std::list<glm::vec3> getPointsInObject() = 0;
 	protected:
+		// Secant Method
+		virtual float derivative(glm::vec3 pt);
 	private:
 	};
 

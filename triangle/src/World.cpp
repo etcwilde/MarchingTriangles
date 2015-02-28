@@ -59,7 +59,7 @@ World::World()
 	Implicit::Twist t = Implicit::Twist(&obj3, glm::vec3(0, 6, 1), glm::vec3(0, 1, 0), 1.0f);
 	Implicit::Rotate r = Implicit::Rotate(&t, 3.14159265359265358/2, 0, 0);
 
-	m_point_cloud = dumb_find(&r, glm::vec3(-10, -10, -10), 5000000);
+	m_point_cloud = dumb_find(&r, glm::vec3(-10, -10, -10), 5000);
 
 	//m_point_cloud = obj_1.getPointsInObject();
 }
@@ -127,53 +127,13 @@ void World::mouseReleaseEvent(GLFWwindow* w, int button, int mods)
 
 void World::mouseClickEvent(GLFWwindow* w, int button, int action, int mods)
 {
-	/*
-	if (button == GLFW_MOUSE_BUTTON_MIDDLE && mods == GLFW_MOD_ALT)
-	{
-		if (action == GLFW_PRESS)
-		{
-			double x, y;
-			glfwGetCursorPos(w, &x, &y);
-			m_mouseDrag = true;
-			m_lastRotation = m_currentRotation;
-			m_camera.mouseDown(glm::vec2(x, y), Camera::CameraMovements::TUMBLE);
-		}
-		else m_mouseDrag = false;
-		return;
-	}
-
-	if (button == GLFW_MOUSE_BUTTON_MIDDLE && mods == GLFW_MOD_SHIFT)
-	{
-		if (action == GLFW_PRESS)
-		{
-			double x, y;
-			glfwGetCursorPos(w, &x, &y);
-			m_mouseDrag = true;
-			m_lastTranslate = m_currentTranslate;
-			m_camera.mouseDown(glm::vec2(x, y), Camera::CameraMovements::TRACK);
-		}
-		else m_mouseDrag = false;
-		return;
-	}
-
-	if (button == GLFW_MOUSE_BUTTON_MIDDLE && mods == GLFW_MOD_CONTROL)
-	{
-		if (action == GLFW_PRESS)
-		{
-			double x, y;
-			glfwGetCursorPos(w, &x, &y);
-			m_mouseDrag = true;
-			m_lastScale = m_currentScale;
-			m_camera.mouseDown(glm::vec2(x, y), Camera::CameraMovements::DOLLY);
-		}
-		else m_mouseDrag = false;
-		return;
-	} */
+       double x, y;
+       glfwGetCursorPos(w, &x, &y);
+       m_old_mouse = vec2(x, y);
 }
 
 void World::mouseMoveEvent(GLFWwindow* w, double x, double y)
 {
-	if (!m_mouseDrag) m_old_mouse = vec2(x, y); // Expensive
 	if (m_mouseDrag)
 	{
 		if (m_cam_mode ==  CAM_STRAFE) camera_strafe(vec2(x, y));
