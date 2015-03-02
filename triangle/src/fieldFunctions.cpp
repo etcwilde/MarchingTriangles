@@ -7,19 +7,21 @@
  */
 
 #include "fieldFunctions.hpp"
-float solidFunction(float dist)
+
+float inverseFunction(float dist)
 {
-	return (dist <= 1.f && dist >= 0.f) ? 1.f : 0.f;
+	return 1 / (dist * dist);
 }
 
-float linearFunction(float dist)
+// Upper bound b 100
+// a = 3, b = 3 
+float metaballFunction(float dist)
 {
-	return (dist <= 1.f) ? 1.0 - std::sqrt(dist) : 0.f;
-}
-
-float parabolicFunction(float dist)
-{
-	return (dist <= 1.f) ? 1.f - dist : 0.f;
+	// max number is a + a, max distance is b
+	static const float a = 3.f, b = 3.f;
+	if (b < dist) return 0;
+	if(dist >= 3.f/b && dist <= b) return (3 * a)/2 * ((1 - (dist/b)) * (1 - (dist/b)));
+	else return a * (1 - (3 * dist * dist / b * b));
 }
 
 float geoffFunction(float dist)
@@ -39,13 +41,17 @@ float blinnFunction(float dist)
 	return std::pow(M_E, -3*dist);
 }
 
-float metaballFunction(float dist)
+/*float blinnFunction(float dist)
+{
+} */
+
+/*float metaballFunction(float dist)
 {
 	register float d = std::sqrt(dist);
 	if (d <= 0.333f) return 1 - 3*dist;
 	else if (d < 1.f) return 1.5f * (1-d)*(1-d);
 	else return 0.f;
-}
+} */
 
 float wyvillFunction(float dist)
 {

@@ -53,6 +53,7 @@ float Line::getFieldValue(glm::vec3 pt)
 
 float Line::getDistanceSq(glm::vec3 pt)
 {
+	// Treat it as a dot
 	if (m_radiusSq <= 0.05f)
 	{
 		return

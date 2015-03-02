@@ -10,9 +10,12 @@
 #define FIELDFUNCTIONS_H
 #include <cmath>
 
-float solidFunction(float dist);
+float inverseFunction(float dist);
 
-float linearFunction(float dist);
+
+
+
+
 
 float parabolicFunction(float dist);
 
