@@ -57,3 +57,24 @@ PointFlavour Sphere::getFlavour(glm::vec3 pt)
 
 }
 
+glm::vec3 Sphere::gradient(glm::vec3 pt)
+{
+	std::cout << "Sphere gradient\n";
+	return glm::vec3(x_deriv(pt), y_deriv(pt), z_deriv(pt));
+}
+
+float Sphere::x_deriv(glm::vec3 point)
+{
+	std::cout << "Sphere derivative\n";
+	return 2 * point.x;
+}
+
+float Sphere::y_deriv(glm::vec3 point)
+{
+	return 2 * point.y;
+}
+
+float Sphere::z_deriv(glm::vec3 point)
+{
+	return 2 * point.z;
+}

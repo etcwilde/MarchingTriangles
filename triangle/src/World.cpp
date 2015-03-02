@@ -11,7 +11,7 @@
 #include <GL/gl.h>
 
 // Hahahahahahaha -- this is dumb
-
+#include <iomanip>
 std::list<glm::vec3> dumb_find(Implicit::Object* obj, const glm::vec3& v,
 		unsigned int trials)
 {
@@ -20,16 +20,36 @@ std::list<glm::vec3> dumb_find(Implicit::Object* obj, const glm::vec3& v,
 	float t_x, t_y, t_z;
 	std::list<glm::vec3> ret_list;
 
+	bool neg;
+
+	srand(time(NULL));
 	while (trials)
 	{
+		neg = ((rand() % 2) == 0);
 		t_x = v.x + range * (rand() - 0.5f);
+		if (neg) t_x = -t_x;
+		neg = ((rand() % 2) == 0);
 		t_y = v.y + range * (rand() - 0.5f);
+		if (neg) t_y = -t_y;
+		neg = ((rand() % 2) == 0);
 		t_z = v.z + range * (rand() - 0.5f);
-		if (obj->contains(glm::vec3(t_x, t_y, t_z), 0.1f))
+		if (neg) t_z = -t_z;
+
+
+		/*std::cout << std::setw(3) << "Point: " << t_x
+			<< ", " << t_y << ", " << t_z << std::setw(80)
+			<< ret_list.size() << '\r' << std::flush; */
+
+		/*if (obj->contains(glm::vec3(t_x, t_y, t_z), 0.1f) &&
+				obj->getFieldValue(glm::vec3(t_x, t_y, t_z)) == 0)*/
+		if(obj->touches(glm::vec3(t_x, t_y, t_z)))
+		{
 			ret_list.push_back(glm::vec3(t_x, t_y, t_z));
+			trials--;
+		}
 		range *= 1.000005f;
-		trials--;
 	}
+	std::cout << '\n';
 	return ret_list;
 }
 
@@ -43,13 +63,22 @@ World::World()
 
 
 	Implicit::Line obj = Implicit::Line(metaballFunction, 1.2, 10);
-	Implicit::Sphere sphere = Implicit::Sphere(metaballFunction, 6);
+	Implicit::Sphere sphere = Implicit::Sphere(metaballFunction, 1);
 
-	Implicit::Translate s1 = Implicit::Translate(&sphere, 5, 5, 0);
+	m_point_cloud = dumb_find(&sphere, glm::vec3(0, 0, 0), 1);
+
+	/*Implicit::Translate s1 = Implicit::Translate(&sphere, 5, 5, 0);
 	Implicit::Translate obj1 = Implicit::Translate(&obj, 0, 5, 0);
 	Implicit::Rotate obj2 = Implicit::Rotate(&obj, 0, 0, 3.1415926535926538 /2);
 
 	Implicit::Sphere s2 = Implicit::Sphere(metaballFunction, 8);
+
+	Implicit::Cube c1 = Implicit::Cube(metaballFunction, 1.1, 4);
+
+	Implicit::Rotate obj5 = Implicit::Rotate(&obj, 0, 0, 3.1415926535926538 /2);
+	Implicit::Intersect obj4(0.1f);
+	obj4.addBaseObject(&obj);
+	obj4.addBaseObject(&c1);
 
 	Implicit::Blend obj3;
 	obj3.addBaseObject(&obj1);
@@ -58,10 +87,26 @@ World::World()
 
 	Implicit::Twist t = Implicit::Twist(&obj3, glm::vec3(0, 6, 1), glm::vec3(0, 1, 0), 1.0f);
 	Implicit::Rotate r = Implicit::Rotate(&t, 3.14159265359265358/2, 0, 0);
-
-	m_point_cloud = dumb_find(&r, glm::vec3(-10, -10, -10), 5000);
+	*/
+	//m_point_cloud = dumb_find(&obj4, glm::vec3(-10, -10, -10), 35);
 
 	//m_point_cloud = obj_1.getPointsInObject();
+	//
+
+	std::cout << '\n';
+
+	glm::vec3 point = *m_point_cloud.begin();
+	glm::vec3 grad = sphere.gradient(point);
+	std::cout << "Found Vertex: "
+		<< point.x << ", "
+		<< point.y << ", "
+		<< point.z <<'\n'
+		<< "Gradient: "
+		<< grad.x << ", "
+		<< grad.y << ", "
+		<< grad.z << '\n';
+
+	m_grad_cloud.push_back(grad);
 }
 
 void World::initGL()
@@ -197,9 +242,19 @@ void World::Draw()
 	m_camera.Render();
 	if (m_drawGrid) draw_coordinates();
 
+	glColor3f(1.f, 0.f, 0.f);
 	glBegin(GL_POINTS);
 	for (std::list<glm::vec3>::iterator it = m_point_cloud.begin();
 			it != m_point_cloud.end(); it++)
+	{
+		glVertex3f((*it).x, (*it).y, (*it).z);
+	}
+	glEnd();
+
+	glColor3f(0.f, 5.f, 7.f);
+	glBegin(GL_POINTS);
+	for (std::list<glm::vec3>::iterator it = m_grad_cloud.begin();
+			it != m_grad_cloud.end(); it++)
 	{
 		glVertex3f((*it).x, (*it).y, (*it).z);
 	}

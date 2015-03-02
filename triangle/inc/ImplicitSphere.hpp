@@ -7,6 +7,8 @@
 
 #include <cmath>
 
+#include <iostream>
+
 namespace Implicit
 {
 	class Sphere : public Primitive
@@ -24,10 +26,20 @@ namespace Implicit
 		std::list<glm::vec3> getPointsInObject();
 		PointFlavour getFlavour(glm::vec3 pt);
 
+
+		virtual glm::vec3 gradient(glm::vec3 point);
+
 	protected:
+
+
 		ColorRGB m_color;
 		float m_radius;
 		float m_radiusSq;
+
+	private:
+		float x_deriv(glm::vec3 point);
+		float y_deriv(glm::vec3 point);
+		float z_deriv(glm::vec3 point);
 	};
 };
 

@@ -9,7 +9,15 @@
 #ifndef POLYGONIZER_H
 #define POLYGONIZER_H
 
-#include "MarchingCubes.hpp"
+#include "ImplicitSystem.hpp"
+
+using namespace glm;
+
+class Polygonizer
+{
+public:
+
+};
 
 
 #endif //POLYGONIZER_H 

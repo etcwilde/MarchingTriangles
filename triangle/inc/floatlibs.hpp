@@ -13,18 +13,28 @@
 
 #include <iostream>
 
-inline bool f_is_zero(float a)
-{ return ((a == 0 + FLT_EPSILON) || (a == 0 - FLT_EPSILON)); }
 
-inline int f_sign(float x)
-{
-	return (f_is_zero(x) ? 0 : ( x < 0 ? -1 : 1 ));
-}
 
 inline float f_equ(float a, float b)
 {
 	//std::cerr << a << "==" << b << '\n';
 	return((a == b + FLT_EPSILON) || (a == b - FLT_EPSILON) || (a == b));
+}
+
+inline float f_equ(float a, float b, float eps)
+{
+	//std::cerr << a << "==" << b << '\n';
+	return((a == b + eps) || (a == b - eps) || (a == b));
+}
+
+inline bool f_is_zero(float a)
+{
+	return f_equ(a, 0);
+}
+
+inline int f_sign(float x)
+{
+	return (f_is_zero(x) ? 0 : ( x < 0 ? -1 : 1 ));
 }
 
 inline float f_ge(float a, float b)

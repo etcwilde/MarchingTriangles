@@ -182,6 +182,7 @@ private:
 	double m_prevTime;
 
 	std::list<glm::vec3> m_point_cloud;
+	std::list<glm::vec3> m_grad_cloud; // Just to see what happens
 };
 
 #endif //WORLD_H
