@@ -60,25 +60,58 @@ World::World()
 	m_grid_color = glm::vec3(1, 1, 1);
 	initGL();
 
+	Implicit::Sphere sphere = Implicit::Sphere(inverseFunction, 2, ColorRGB(0, 0, 0), 1);
+	std::list<glm::vec3> seeds;
+	seeds.push_back(glm::vec3(1, 0, 0));
+	seeds.push_back(glm::vec3(1, 0, 1));
+	seeds.push_back(glm::vec3(0, 0, 1));
 
-	//Implicit::Line obj = Implicit::Line(metaballFunction, 1.2, 10);
-	Implicit::Sphere sphere = Implicit::Sphere(metaballFunction , 2, ColorRGB(0, 0, 0), 1);
+	Polygonizer p(&sphere);
+	m_triangles = p.polygonize(seeds);
 
-	m_point_cloud = dumb_find(&sphere, glm::vec3(0, 0, 0), 10);
-	m_point_cloud.push_back(glm::vec3(0, 1, 0));
-	m_point_cloud.push_back(glm::vec3(1, 0, 0));
-	m_point_cloud.push_back(glm::vec3(0, 0, 1));
-	m_point_cloud.push_back(glm::vec3(-1, 0, 0));
-	m_point_cloud.push_back(glm::vec3(0, -1, 0));
-	m_point_cloud.push_back(glm::vec3(0, 0, -1));
+
+/*
+	m_triangles.push_back(Triangle(glm::vec3(1, 0, 0), glm::vec3(0, 1, 0),
+				glm::vec3(0, 0, 1)));
+	m_triangles.push_back(Triangle(glm::vec3(1, 0, 0), glm::vec3(0, -1, 0),
+				glm::vec3(0, 0, 1)));
+	m_triangles.push_back(Triangle(glm::vec3(-1, 0, 0), glm::vec3(0, 1, 0),
+				glm::vec3(0, 0, 1)));
+	m_triangles.push_back(Triangle(glm::vec3(-1, 0, 0), glm::vec3(0, -1, 0),
+				glm::vec3(0, 0, 1)));
+
+	m_triangles.push_back(Triangle(glm::vec3(1, 0, 0), glm::vec3(0, 1, 0),
+				glm::vec3(0, 0, -1)));
+	m_triangles.push_back(Triangle(glm::vec3(1, 0, 0), glm::vec3(0, -1, 0),
+				glm::vec3(0, 0, -1)));
+	m_triangles.push_back(Triangle(glm::vec3(-1, 0, 0), glm::vec3(0, 1, 0),
+				glm::vec3(0, 0, -1)));
+	m_triangles.push_back(Triangle(glm::vec3(-1, 0, 0), glm::vec3(0, -1, 0),
+				glm::vec3(0, 0, -1)));
+
+*/
+
+
+	//m_point_cloud = dumb_find(&sphere, glm::vec3(0, 0, 0), 10);
+	//m_point_cloud.push_back(glm::vec3(0, 1, 0));
+	//m_point_cloud.push_back(glm::vec3(1, 0, 0));
+
+
+	//m_point_cloud.push_back(glm::vec3(0, 0, 1));
+
+	//m_point_cloud.push_back(glm::vec3(0, 0, 0.9));
+	//m_point_cloud.push_back(glm::vec3(0, 0, 1.1));
+
+	//m_point_cloud.push_back(glm::vec3(-1, 0, 0));
+	//m_point_cloud.push_back(glm::vec3(0, -1, 0));
+	//m_point_cloud.push_back(glm::vec3(0, 0, -1));
 
 	// Bad points
 	m_point_cloud.push_back(glm::vec3(0, 0, 0));
 	m_point_cloud.push_back(glm::vec3(3, 0, 0));
-	m_point_cloud.push_back(glm::vec3(5, 0, 0));
+	//m_point_cloud.push_back(glm::vec3(5, 0, 0));
 	std::cout << '\n';
 
-	//glm::vec3 point = *m_point_cloud.begin();
 	for (std::list<glm::vec3>::iterator it = m_point_cloud.begin();
 			it != m_point_cloud.end(); it++)
 	{
@@ -91,23 +124,15 @@ World::World()
 			<< "Gradient: "
 			<< grad.x << ", "
 			<< grad.y << ", "
-			<< grad.z << '\n' 
+			<< grad.z << '\n'
 			<< "Value: "
 			<< sphere.getFieldValue(*it)
+			<< "\tFlavour: "
+			<< sphere.getFlavour(*it).normal().x << ", "
+			<< sphere.getFlavour(*it).normal().y << ", "
+			<< sphere.getFlavour(*it).normal().z << '\n'
 			<< '\n' << '\n';
 	}
-	/*glm::vec3 grad = sphere.gradient(point);
-	std::cout << "Found Vertex: "
-		<< point.x << ", "
-		<< point.y << ", "
-		<< point.z <<'\n'
-		<< "Gradient: "
-		<< grad.x << ", "
-		<< grad.y << ", "
-		<< grad.z << '\n';
-
-	m_grad_cloud.push_back(grad); 
-	*/
 }
 
 void World::initGL()
@@ -260,6 +285,10 @@ void World::Draw()
 		glVertex3f((*it).x, (*it).y, (*it).z);
 	}
 	glEnd();
+
+	for (std::list<Triangle>::iterator it = m_triangles.begin();
+			it != m_triangles.end(); it++)
+		(*it).Draw();
 
 	glPopMatrix();
 }

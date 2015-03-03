@@ -53,20 +53,17 @@ namespace Implicit
 	class Object
 	{
 	public:
-		bool touches(glm::vec3 point);
 		virtual ~Object() {}
 		virtual float getFieldValue(glm::vec3 point) = 0;
-		virtual glm::vec3 gradient(glm::vec3 point);
-		//virtual float maxCurvature(glm::vec3 point);
+		//virtual glm::vec3 gradient(glm::vec3 point);
 		virtual PointFlavour getFlavour(glm::vec3 point) = 0;
 		virtual bool contains(glm::vec3 point, float errorMargin) = 0;
 		virtual std::list<glm::vec3> getPointsInObject() = 0;
 	protected:
-		static inline void getDeltas(float& h_x, float& h_y, float& h_z,
+		/*static inline void getDeltas(float& h_x, float& h_y, float& h_z,
 				const glm::vec3& pt, float eps);
-
 		virtual glm::mat3 hessian(glm::vec3 point);
-		virtual void curvature(const glm::vec3& point, float& k1, float& k2);
+		virtual void curvature(const glm::vec3& point, float& k1, float& k2); */
 	private:
 	};
 

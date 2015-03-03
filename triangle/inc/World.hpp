@@ -20,11 +20,12 @@
 
 #include "fieldFunctions.hpp"
 #include "ImplicitSystem.hpp"
+#include "Polygonizer.hpp"
 
 #include <cstdlib>
 #include <list>
 
-
+#include "Triangle.hpp"
 
 
 // Camera movements
@@ -183,6 +184,9 @@ private:
 
 	std::list<glm::vec3> m_point_cloud;
 	std::list<glm::vec3> m_grad_cloud; // Just to see what happens
+
+	std::list<Triangle> m_triangles;
+
 };
 
 #endif //WORLD_H

@@ -1,13 +1,8 @@
 #include "ImplicitObject.hpp"
 using namespace Implicit;
 
-bool Object::touches(glm::vec3 pt)
-{
-	return (f_equ(getFieldValue(pt), 0, 0.8f) && contains(pt, 0.8f));
-}
-
 // Numerical_differentiation on wikipedia
-void Object::getDeltas(float& h_x, float& h_y, float& h_z, const glm::vec3& pt,
+/*void Object::getDeltas(float& h_x, float& h_y, float& h_z, const glm::vec3& pt,
 		float eps)
 {
 	float x = std::abs(pt.x);
@@ -22,9 +17,9 @@ void Object::getDeltas(float& h_x, float& h_y, float& h_z, const glm::vec3& pt,
 	h_x = tmp_x - x;
 	h_y = tmp_y - y;
 	h_z = tmp_z - z;
-}
+} */
 
-glm::vec3 Object::gradient(glm::vec3 pt)
+/*glm::vec3 Object::gradient(glm::vec3 pt)
 {
 
 	// Gradient = [f'x(x, y, z), f'y(x, y, z), f'z(x, y, z)]
@@ -39,11 +34,6 @@ glm::vec3 Object::gradient(glm::vec3 pt)
 		<< h_x << ", "
 		<< h_y << ", "
 		<< h_z << "\n";
-
-
-
-
-
 
 	float inv_2hx = 0.5f/h_x;
 	float inv_2hy = 0.5f/h_y;
@@ -93,12 +83,4 @@ glm::mat3 Object::hessian(glm::vec3 point)
 	glm::vec3 col1(h_xy, h_yy, h_xy);
 	glm::vec3 col2(h_xz, h_yz, h_zz);
 	glm::mat3 H(col0, col1, col2);
-}
-
-
-void Object::curvature(const glm::vec3& point, float& k1, float& k2)
-{
-	glm::vec3 grad = gradient(point);
-	//glm::mat3 H = 
-}
-
+} */
