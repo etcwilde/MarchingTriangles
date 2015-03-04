@@ -33,8 +33,16 @@ list<Triangle>Polygonizer::polygonize(list<glm::vec3> seed_points)
 	float iso = m_object->getFieldValue(*(seed_points.begin()));
 	std::cout << "iso Value: " << iso << '\n';
 
+	glm::vec3 test_pt(3, 1, 1);
 
+	std::cout << "test pt: "
+		<< test_pt.x << ", "
+		<< test_pt.y << ", "
+		<< test_pt.z << '\n';
 
+	glm::vec3 pt = project(test_pt, 1);
+
+	std::cout << "iso value 2: " << m_object->getFieldValue(pt) << '\n';
 	return m_triangles;
 }
 
@@ -49,32 +57,42 @@ list<Triangle> Polygonizer::polygonize()
 
 glm::vec3 Polygonizer::project(glm::vec3 point, float tol)
 {
-	float tolSq = tol*tol;
-	glm::vec3 x = point;
-	float f = m_object->getFieldValue(x);
-	float fSq = f*f;
-	int nIter = 0;
-	while (fSq>tolSq && nIter < MAX_ITERS)
+	/*glm::vec3 ret_vec;
+	glm::vec3 next_step;
+	glm::vec3 this_step;
+	glm::vec3 grad;
+	float f;
+
+	this_step = point;
+
+
+	std::cout << "Newton Raphson\n";
+	for (unsigned int i = 0; i < 10; ++i)
 	{
-		glm::vec3 grad = gradient(point);
-		glm::vec3 step = f * grad / (glm::dot(grad, grad));
-		// Newton
-		float fp, fpSq;
-		glm::vec3 xp;
-		do
-		{
-			nIter++;
-			xp = x - step;
-			fp = m_object->getFieldValue(xp);
-			fpSq = fp*fp;
-			step *= 0.5f;
-		}
-		while (fpSq < fSq && nIter < MAX_ITERS);
-		x = xp;
-		f = fp;
-		fSq = fpSq;
+		f = m_object->getFieldValue(this_step);
+		grad = gradient(this_step);
+		next_step.x = this_step.x - (f/grad.x);
+		next_step.y = this_step.y - (f/grad.y);
+		next_step.z = this_step.z - (f/grad.z);
+		this_step = next_step;
 	}
-	return x;
+	std::cout << "Final Variables:\n"
+		<< "Field Value: " << f << '\n'
+		<< "Gradient : "
+		<< grad.x << ", "
+		<< grad.y << ", "
+		<< grad.z << '\n'
+		<< "Point: "
+		<< this_step.x << ", "
+		<< this_step.y << ", "
+		<< this_step.z << '\n';
+
+	return this_step; */
+
+	float r = glm::length(point);
+	float dv = derivative(point);
+	glm::vec3 grad = gradient(point);
+	return r + (dv * grad) / (grad * grad);
 }
 
 glm::vec3 Polygonizer::gradient(const glm::vec3& pt)
@@ -188,6 +206,26 @@ void Polygonizer::curvature(const glm::vec3& p, float& k1, float& k2)
 	double det = sqrt(abs(mean * mean - gaussian));
 	k1 = mean + det;
 	k2 = mean - det;
+}
+
+float Polygonizer::derivative(glm::vec3 pt)
+{
+	// Small delta
+	
+	static const float delta = 0.0001f;
+	// Move a tiny bit along gradient
+	glm::vec3 grad = gradient(pt);
+	glm::vec3 test = delta * grad + pt;
+
+	float x1, x2;
+	float y1, y2;
+	x1 = glm::length(pt);
+	x2 = glm::length(test);
+	y1 = m_object->getFieldValue(pt);
+	y2 = m_object->getFieldValue(test);
+
+	return (y1 - y2) / (x1 - x2);
+
 }
 
 glm::mat3 Polygonizer::adjoint(const glm::mat3& F)
