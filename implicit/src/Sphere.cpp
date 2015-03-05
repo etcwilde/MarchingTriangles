@@ -27,4 +27,9 @@ float Sphere::getFieldFunc(float r)
 	return m_fieldFunc(r);
 }
 
+glm::vec3 Sphere::gradient(glm::vec3 pt)
+{
+	return pt * 2.f;
+}
+
 

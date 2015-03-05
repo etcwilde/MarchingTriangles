@@ -16,6 +16,8 @@ namespace Implicit
 		float evaluate(glm::vec3 point);
 		float getFieldFunc(float r);
 
+		glm::vec3 gradient(glm::vec3 pt);
+
 
 	private:
 		float (*m_fieldFunc)(float);
