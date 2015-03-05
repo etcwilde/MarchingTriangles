@@ -33,6 +33,8 @@
 \synctex=1
 
 \usepackage{xspace}
+\usepackage{amssymb}
+\usepackage{amsmath}
 
 %% \usepackage[unicode=true,
 %% 	bookmarks=false,breaklinks=flase,pdfborder={0 0 0},
@@ -171,18 +173,53 @@ selecting an edge and new vertex continues until the surface is covered.
 \section {Implementation}
 
 \subsection{Delaunay Triangulation}
-I began with an implementation of the Delaunay triangulation to look at
-possible methods of triangulation. Because the triangulation runs on a
-point-cloud it won't be useful in the generation of triangles in the mesh. It
-may be useful to create a circumsphere that bounds the size of the triangle so
-that a triangle will never be too long in relation to the width.
+The project began with an implementation of Delaunay triangulation to
+understand how to get non-distorted triangulations of point-clouds. The
+triangulation does not directly apply to the project because I am polygonizing
+implicit surfaces, not point clouds. Delaunay triangulation uses voronoi cells
+to determine how to triangulate the points in the cloud. For this section, I
+will refer to points as elements within the point cloud, and vertices are the
+locations where multiple edges of the cells meet. Each vertex is the centre of
+a circumcircle defining a triangle. To meet Delaunay, each circumcircle may not
+contain a point, and there must be exactly three points on the edge of the
+circumcircle. There is an ambiguous case where there are four points arranged
+in a perfect square so that no matter how the circumcircles are placed, there
+will always be four verticies on the circumcircle. My implementation does not
+handle this case.
+
 \includegraphics[height=1.5in]{images/Triangulated.png}
 
+
 \subsection{Implicit System}
-I wrote an implicit system capable of drawing a primitive sphere, cube, and
-torus.\evanTodo{Add more as this list grows.} I've also implemented CSG
-capabilities for union, intersecting, blending, and difference of implicit
-surfaces.\evanTodo{Remove this: uh yeah}
+
+$$f : \mathbb{R}^3 \rightarrow \mathbb{R}$$
+$$\rho : A \rightarrow \mathbb{R} $$
+$$A = \{x \in \mathbb{R}^3 | f(x) = 0\}$$
+$$\phi : \mathbb{R} \rightarrow \mathbb{R}$$
+
+$f$ is the implicit function of the shape. For example, a sphere is defined by
+$f(x, y, z) = x^2 + y ^ 2 + z ^ 2 - r^2$ where $r$ is the radius of the sphere.
+If the vertex is within the sphere $f(x, y, z) < 0$, when the vertex is on the
+surface $f(x, y, z) = 0$, and when the vertex is beyond the sphere $f(x, y, z)
+> 0$. If the vertex is not on the surface, we need to map it to the surface.
+This operation depends on the surface definition, but will make use of the
+gradient to determine which direction the vertex must travel to be on the
+surface. An example of a simple projection operation is for the sphere.
+
+$$p_1 = {\nabla f(p_0) \over |\nabla f(p_0)|} \times r$$
+
+$p_0$ defines some initial vertex. $p_1$ is a vertex that lies on the surface
+of the sphere.
+
+The sphere is a simple example where the distance from the centre is always the
+same and any point on the surface, however it is not necessary for this to be
+the case, an example would be a cube. The function $\rho$ converts the vertex
+on the surface into a distance, which can be fed into $\phi$, or the field
+falloff function.
+
+The end goal is for the vertex to be at some location where the iso-value is
+equal to some desired value, for example 0.5.
+
 
 \section{Results}
 No results yet\ldots.
