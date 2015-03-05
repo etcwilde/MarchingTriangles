@@ -5,7 +5,7 @@
 
 namespace Implicit
 {
-	float inverseFunction(float r);
+	float metaballFunction(float r);
 };
 
 #endif

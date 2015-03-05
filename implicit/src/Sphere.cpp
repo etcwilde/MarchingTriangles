@@ -22,7 +22,12 @@ float Sphere::evaluate(glm::vec3 p)
 	return (p.x * p.x + p.y * p.y + p.z * p.z) - (m_radius * m_radius);
 }
 
-float Sphere::getFieldFunc(float r)
+glm::vec3 Sphere::project(glm::vec3 pt)
+{
+	return glm::normalize(gradient(pt)) * m_radius;
+}
+
+float Sphere::getFieldValue(float r)
 {
 	return m_fieldFunc(r);
 }
@@ -32,4 +37,8 @@ glm::vec3 Sphere::gradient(glm::vec3 pt)
 	return pt * 2.f;
 }
 
-
+float Sphere::distance(glm::vec3 pt)
+{
+	//glm::vec3 p = project(pt);
+	return glm::length(pt);
+}

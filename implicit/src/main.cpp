@@ -8,7 +8,7 @@
 
 void position(Implicit::Sphere s, glm::vec3 pt)
 {
-	float v = s.evaluate(pt);
+	float v = trunc(s.evaluate(pt));
 	if (v == 0)
 	{
 		std::cout << "[ "
@@ -39,79 +39,44 @@ std::ostream& operator<<(std::ostream& os, glm::vec3 v)
 	return os;
 }
 
-glm::vec3 geometric_project(Implicit::Sphere s, glm::vec3 pt)
-{
-
-	glm::vec3 N = glm::normalize(s.gradient(pt));
-	return N * s.radius();
-
-	/*
-	glm::vec3 N;
-	glm::vec3 T;
-	glm::vec3 B;
-
-	N = glm::normalize(s.gradient(pt));
-
-	// Computer tangent space
-	if (N.x > 0.5f || N.y > 0.5f) T = glm::vec3(N.y, -N.x, 0.f);
-	else T = glm::vec3(-N.z, 0.f, N.x);
-	B = glm::cross(N, T);
-	T = glm::normalize(T);
-	B = glm::normalize(B); */
-
-/*
-	std::cout << "Normal: " << N << '\n';
-	std::cout << "Tangent: " << T << '\n';
-	std::cout << "Binormal: " << B << '\n';
-
-	std::cout << "Dot: " << glm::dot((pt - T), N) << '\n';
-	std::cout << "DotN: " <<  glm::dot((pt - T), N) * N << '\n'; */
-
-	//glm::vec3 out = (pt - (glm::dot((pt - T), N) * N));
-	//std::cout << "Out: " << out << '\n';
-
-	// Map to object
-	//return out;
-}
-
-
-
 void test(Implicit::Sphere s, float r)
 {
 
 	srand(time(NULL));
 	glm::vec3 delta(rand() /(float) rand(),rand() /(float) rand(),rand() /(float) rand() );
 	glm::vec3 pt(r, 0, 0);
-	std::cout << "Sphere: Radius: " << s.radius()  << " | Test radius: "
-		<< r << '\n'
-		<< "Geometric evaluation: " << s.evaluate(pt)
-		<< '\n'
-		<< "Field Function evaluation: " << s.getFieldFunc(r)
-		<< '\n'
-		<< "Mapped Point: Original Point: " << pt << " Projection: " <<
-		geometric_project(s, pt) << '\n'
-		<< "Geometric Project Test: "
-		<< s.evaluate(geometric_project(s, pt))
-		<< '\n' << '\n';
-	pt = glm::vec3(r, r, r);
-	std::cout << "Sphere: Radius: " << s.radius()  << " | Test radius: "
-		<< r << '\n'
-		<< "Geometric evaluation: " << s.evaluate(pt)
-		<< '\n'
-		<< "Field Function evaluation: " << s.getFieldFunc(r)
-		<< '\n'
-		<< "Mapped Point: Original Point: " << pt << " Projection: " <<
-		geometric_project(s, pt) << '\n'
-		<< "Geometric Project Test: "
-		<< trunc(s.evaluate(pt + delta))
-		<< " Projected: " << trunc(s.evaluate(geometric_project(s, pt + delta)))
-		<< '\n' << '\n';
+	glm::vec3 proj;
+
+	std::cout << "Test Sphere: " << s.radius() << '\n';
+	std::cout << "Testing: " << pt << '\n';
+	std::cout << "Value: " << s.evaluate(pt) << '\n';
+	std::cout << "Distance: " << s.distance(pt) << '\n';
+	std::cout << "Field: " << s.getFieldValue(s.distance(pt)) << '\n';
+	position(s, pt);
+	proj = s.project(pt);
+	std::cout << "Projection: " << proj << '\n';
+	std::cout << "Value: " << s.evaluate(proj) << '\n';
+	std::cout << "Distance: " << s.distance(proj) << '\n';
+	std::cout << "Field: " << s.getFieldValue(s.distance(proj)) << '\n';
+	position(s, proj);
+	std::cout << '\n';
+
+
+	pt = pt + delta;
+	std::cout << "Testing: " << pt << '\n';
+	std::cout << "Value: " << s.evaluate(pt) << '\n';
+	std::cout << "Distance: " << s.distance(pt) << '\n';
+	std::cout << "Field: " << s.getFieldValue(s.distance(pt)) << '\n';
+	position(s, pt);
+	proj = s.project(pt);
+	std::cout << "Projection: " << proj << '\n';
+	std::cout << "Value: " << s.evaluate(proj) << '\n';
+	std::cout << "Distance: " << s.distance(proj) << '\n';
+	std::cout << "Field: " << s.getFieldValue(s.distance(proj)) << '\n';
+	position(s, proj);
+	std::cout << '\n' << '\n' << '\n';
 
 }
-
-
-
-
 
 int main()
 {
@@ -119,7 +84,7 @@ int main()
 	float r2 = 3.f;
 	float r3 = 0.5f;
 
-	Implicit::Sphere sphere(Implicit::inverseFunction);
+	Implicit::Sphere sphere(Implicit::metaballFunction);
 
 	test(sphere, r1);
 	test(sphere, r2);
