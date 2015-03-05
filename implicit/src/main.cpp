@@ -74,8 +74,13 @@ glm::vec3 geometric_project(Implicit::Sphere s, glm::vec3 pt)
 	//return out;
 }
 
+
+
 void test(Implicit::Sphere s, float r)
 {
+
+	srand(time(NULL));
+	glm::vec3 delta(rand() /(float) rand(),rand() /(float) rand(),rand() /(float) rand() );
 	glm::vec3 pt(r, 0, 0);
 	std::cout << "Sphere: Radius: " << s.radius()  << " | Test radius: "
 		<< r << '\n'
@@ -88,7 +93,7 @@ void test(Implicit::Sphere s, float r)
 		<< "Geometric Project Test: "
 		<< s.evaluate(geometric_project(s, pt))
 		<< '\n' << '\n';
-	pt = glm::vec3(0, r, r);
+	pt = glm::vec3(r, r, r);
 	std::cout << "Sphere: Radius: " << s.radius()  << " | Test radius: "
 		<< r << '\n'
 		<< "Geometric evaluation: " << s.evaluate(pt)
@@ -98,7 +103,8 @@ void test(Implicit::Sphere s, float r)
 		<< "Mapped Point: Original Point: " << pt << " Projection: " <<
 		geometric_project(s, pt) << '\n'
 		<< "Geometric Project Test: "
-		<< s.evaluate(geometric_project(s, pt))
+		<< trunc(s.evaluate(pt + delta))
+		<< " Projected: " << trunc(s.evaluate(geometric_project(s, pt + delta)))
 		<< '\n' << '\n';
 
 }
@@ -122,9 +128,6 @@ int main()
 	/*position(sphere, glm::vec3(r1, 0, 0));
 	position(sphere, glm::vec3(r2, 0, 0));
 	position(sphere, glm::vec3(r3, 0, 0)); */
-
-
-
 
 	/*std::cout << "Surface: " << r1 << " : " << Implicit::inverseFunction(r1) << '\n';
 	std::cout << "Outside: " << r2 << " : " << Implicit::inverseFunction(r2) << '\n';
