@@ -49,13 +49,13 @@ void test(Implicit::Sphere s, float r)
 
 	std::cout << "Test Sphere: " << s.radius() << '\n';
 	std::cout << "Testing: " << pt << '\n';
-	std::cout << "Value: " << s.evaluate(pt) << '\n';
+	std::cout << "Geometric Value: " << s.evaluate(pt) << '\n';
 	std::cout << "Distance: " << s.distance(pt) << '\n';
 	std::cout << "Field: " << s.getFieldValue(s.distance(pt)) << '\n';
 	position(s, pt);
 	proj = s.project(pt);
 	std::cout << "Projection: " << proj << '\n';
-	std::cout << "Value: " << s.evaluate(proj) << '\n';
+	std::cout << "Geometric Value: " << s.evaluate(proj) << '\n';
 	std::cout << "Distance: " << s.distance(proj) << '\n';
 	std::cout << "Field: " << s.getFieldValue(s.distance(proj)) << '\n';
 	position(s, proj);
@@ -64,13 +64,13 @@ void test(Implicit::Sphere s, float r)
 
 	pt = pt + delta;
 	std::cout << "Testing: " << pt << '\n';
-	std::cout << "Value: " << s.evaluate(pt) << '\n';
+	std::cout << "Geometric Value: " << s.evaluate(pt) << '\n';
 	std::cout << "Distance: " << s.distance(pt) << '\n';
 	std::cout << "Field: " << s.getFieldValue(s.distance(pt)) << '\n';
 	position(s, pt);
 	proj = s.project(pt);
 	std::cout << "Projection: " << proj << '\n';
-	std::cout << "Value: " << s.evaluate(proj) << '\n';
+	std::cout << "Geometric Value: " << s.evaluate(proj) << '\n';
 	std::cout << "Distance: " << s.distance(proj) << '\n';
 	std::cout << "Field: " << s.getFieldValue(s.distance(proj)) << '\n';
 	position(s, proj);
@@ -85,10 +85,17 @@ int main()
 	float r3 = 0.5f;
 
 	Implicit::Sphere sphere(Implicit::metaballFunction);
+	Implicit::Sphere s2(Implicit::metaballFunction, 2);
 
+	std::cout << "--------- Test 1 Sphere radius 1 -------------\n";
 	test(sphere, r1);
 	test(sphere, r2);
 	test(sphere, r3);
+	std::cout << "--------- Test 2 Sphere radius 2 -------------\n";
+	test(s2, r1);
+	test(s2, r2);
+	test(s2, r3);
+
 
 	/*position(sphere, glm::vec3(r1, 0, 0));
 	position(sphere, glm::vec3(r2, 0, 0));
