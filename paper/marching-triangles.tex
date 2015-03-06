@@ -84,17 +84,13 @@
 	Polygonization is the process of converting an iso-surface to an
 	explicitly defined triangle mesh, which can be rendered quickly by the
 	computer. Polygonization does not create as accurate visual
-	representations, but is able to generate a mesh that
+	representations, but is able to generate a mesh that is able to be
+	rendered in real-time for interactive purposes.
 
-	In this paper, I describe a method of implementing the marching
-	triangles algorithm to polygonize implicit surfaces. The marching
-	triangles algorithm provides a technique of generating optimal
-	triangulations of a surface, while eliminating ambiguous cases found in
-	other polygonization algorithms. The marching triangle algorithm, also
-	known as the advancing front algorithm, grows the mesh from a seed
-	triangle, until the surface is covered. This growth of single triangles
-	allows the algorithm to generate a mesh that more closely represents
-	the topology of the surface while minimizing polygons.
+	In this paper, I investigate the range of topologies the Marching
+	Triangles algorithm is able to accurately polygonize. I will look at
+	the standard cases of simple blobs. Then expand the investigation,
+	particularly looking at sharp edges.
 \end{abstract}
 
 \keywordlist
@@ -108,7 +104,7 @@ specified with a mathematical formula, and can specify arbitrary geometry. It
 is useful in physical simulations and in the games industries. An iso-surface
 can contain a massive amount of information, while not requiring as much space.
 
-While iso-surfaces contain lots of detail accurately, computers have difficulty
+While iso-surface can maintain accurate details, computers have difficulty
 representing them visually. There are two methods for creating a visual
 representation of an iso-surface: raytracing or a polygonization algorithm.
 
@@ -118,18 +114,19 @@ cost of speed. Even with state-of-the-art hardware and the most optimized
 raytacing algorithms, raytracers are unable to produce images quickly enough
 for interactive real-time rendering of implicit surfaces.
 
-Currently, a very popular polygonization algorithm is the Marching Cubes, which
+Currently, a popular polygonization algorithm is the Marching Cubes, which
 fills the universe with voxels, determines how the surface intersects each
 voxel, and results in a plane within the voxel. This results in triangles which
 are non-optimal to the topology of the surface, furthermore, there are
-ambiguous cases where geometry is lost or cracks emerge.
+ambiguous cases where geometry is lost or cracks emerge. Finally, the marching
+cubes algorithm cannot natively handle sharp edges.
 
 An ideal polygonization would meet the following criteria:
 it would produce a mesh that does not distort triangles, that is there are no
 triangles that are long and narrow; it would produce triangles small enough
 that no features of the surface are lost; smooth, flat, surfaces would not be
 broken into more triangles than necessary; the mesh should not have holes or
-disconnected vertices.
+disconnected vertices, and any topology can be converted to a mesh.
 
 The Marching Triangles (MT) algorithm has the potential to create such a
 polygonization. The marching triangles is an incremental algorithm that uses
@@ -139,6 +136,23 @@ triangles where the curvature is large.
 
 In this paper, I investigate the range of geometric topologies the Marching
 Triangles algorithm is capable of successfully polygonizing.
+
+\subsection{Introducing implicit surfaces}
+This polygonizer works on blobs. A blob is defined as a point in 3D space and a
+filter field falloff function, and an iso-value. A common filter field falloff
+function is the Metaball function.
+\begin{displaymath}
+	V(r) = \left\{
+		\begin{array}{lr}
+			a(1 - {{3r^2}\over{b^2}}) : 0 \le r \le {b\over 3}\\
+			{3a\over2}(1 - {r\over b})^2 : {b\over 3} \le r \le b\\
+			0 : b \le r
+		\end{array}
+	\right.
+\end{displaymath}
+
+The surface exists where $V(r)$ evaluates to the iso-value.
+
 
 \section{Related Work}
 
@@ -160,15 +174,20 @@ comparable time to the marching cubes algorithm, though the resulting mesh has
 higher visual appeal and better overall quality due to the adaptive triangle
 size.
 
+Rodrigues de Ara\'{u}jo presents an implementation similar to Marching
+triangles, but instead of expanding on edges, it expands on a single
+vertex\cite{DeAraujo2004}.
+\evanTodo{Expand this paragraph}
+
 \section{Marching Triangles Algorithm}
-The marching triangles algorithm creates a seed triangle and adds the three
-edges to an edge pool. Then it selects one of the edges at random then
-generates a new vertex in the direction of the gradient. If the curvature is
-too great, the vertex will be brought closer to the selected edge, otherwise it
-will push the vertex away. Once the vertex is placed, two new edges are added
-between the vertices of the selected edge and the new vertex to generate a new
-triangle. Then the selected edge is removed from the edge pool. The process of
-selecting an edge and new vertex continues until the surface is covered.
+The classical marching triangles algorithm begins by creating a seed triangle
+on the surface of the object. It adds the three edges to a stack, and begins
+iterating. In the iterative step, while the stack is not empty, it pops an
+edge, finds a suitable location for a third vertex off of the midpoint of the
+selected edge. Then determines if there is an intersection between two
+triangles to determine if the fronts are overlapping. If the fronts overlap, it
+attempts to merge the two fronts. It returns when there are no more edges on
+the front to be processed.
 
 \section {Implementation}
 
@@ -186,12 +205,32 @@ circumcircle. There is an ambiguous case where there are four points arranged
 in a perfect square so that no matter how the circumcircles are placed, there
 will always be four verticies on the circumcircle. My implementation does not
 handle this case.
-
-\includegraphics[height=1.5in]{images/Triangulated.png}
+\begin{figure}
+	\centering
+	\includegraphics[height=1.5in]{images/Triangulated.png}
+	\caption{Delaunay Triangulation}
+\end{figure}
 
 
 \subsection{Implicit System}
 
+The implicit system only uses blobs for now. A blob is defined by a vertex in
+3D space and a filter field falloff function. Since we know the centre of the
+surface, we can simply use a root finding method to determine where the surface
+exists.
+
+I used the secant method, as defined by
+
+$$x_i = x_{i-1} - f(x_{i-1}) \times {{x_{i-1} - x_{i-2}}\over{f(x_{i-1}) -
+f(x_{i-2})}}$$
+
+We are able to quickly determine a direction by wiggling\evan{reword this}
+the centre vertex to determine in which direction the filter field falloff
+function changes most quickly. By multiplying the result of the root-finding
+method by the direction vector, we are able to quickly determine where the
+iso-surface exists.
+
+\evan{The stuff beyond here is based off of misunderstandings}
 $$f : \mathbb{R}^3 \rightarrow \mathbb{R}$$
 $$\rho : A \rightarrow \mathbb{R} $$
 $$A = \{x \in \mathbb{R}^3 | f(x) = 0\}$$
