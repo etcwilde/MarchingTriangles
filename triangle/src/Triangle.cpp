@@ -6,6 +6,8 @@ std::list<glm::vec3> Triangle::get_vertices()
 	verts.push_back(vertex_3);
 	verts.push_back(vertex_2);
 	verts.push_back(vertex_1);
+
+	return verts;
 }
 
 #include <GL/gl.h>

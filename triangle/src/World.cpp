@@ -12,46 +12,8 @@
 
 // Hahahahahahaha -- this is dumb
 #include <iomanip>
-std::list<glm::vec3> dumb_find(Implicit::Object* obj, const glm::vec3& v,
-		unsigned int trials)
-{
-	float value = 1.f;
-	//double range = 0.001e-5;
-	double range = 0.05f;
-	float t_x, t_y, t_z;
-	std::list<glm::vec3> ret_list;
 
-	bool neg;
-
-	srand(time(NULL));
-	while (trials)
-	{
-		neg = ((rand() % 2) == 0);
-		t_x = v.x + range * (rand() % 100 - 0.5f);
-		if (neg) t_x = -t_x;
-		neg = ((rand() % 2) == 0);
-		t_y = v.y + range * (rand() % 100 - 0.5f);
-		if (neg) t_y = -t_y;
-		neg = ((rand() % 2) == 0);
-		t_z = v.z + range * (rand() % 100 - 0.5f);
-		if (neg) t_z = -t_z;
-
-
-		std::cout << std::setw(3) << "Point: " << t_x
-			<< ", " << t_y << ", " << t_z << std::setw(80)
-			<< ret_list.size() << '\r' << std::flush;
-
-		if (obj->contains(glm::vec3(t_x, t_y, t_z), 0.9f))
-		{
-			ret_list.push_back(glm::vec3(t_x, t_y, t_z));
-			trials--;
-		}
-		range *= 1.000005f;
-	}
-	std::cout << '\n';
-	return ret_list;
-}
-
+#include "vecHelp.hpp"
 
 World::World()
 	: m_drawGrid(true)
@@ -60,79 +22,15 @@ World::World()
 	m_grid_color = glm::vec3(1, 1, 1);
 	initGL();
 
-	Implicit::Sphere sphere = Implicit::Sphere(inverseFunction, 2, ColorRGB(0, 0, 0), 1);
-	std::list<glm::vec3> seeds;
-	seeds.push_back(glm::vec3(1, 0, 0));
-	seeds.push_back(glm::vec3(1, 0, 1));
-	seeds.push_back(glm::vec3(0, 0, 1));
+	Implicit::Blob blob1(geoffFunction, 0.5, 3);
 
-	Polygonizer p(&sphere);
-	m_triangles = p.polygonize(seeds);
+	std::cout << blob1.getFieldValue(glm::vec3(0.5, 0.5, 0)) << '\n';
 
+	glm::vec3 start = blob1.getStartPoint();
+	std::cout << "Surface Vertex: " << start << '\n';
+	std::cout << "Start Value: " << blob1.getFieldValue(start) << '\n';
+	//std::cout << :geoffFunction(0.44, 1) << '\n';
 
-/*
-	m_triangles.push_back(Triangle(glm::vec3(1, 0, 0), glm::vec3(0, 1, 0),
-				glm::vec3(0, 0, 1)));
-	m_triangles.push_back(Triangle(glm::vec3(1, 0, 0), glm::vec3(0, -1, 0),
-				glm::vec3(0, 0, 1)));
-	m_triangles.push_back(Triangle(glm::vec3(-1, 0, 0), glm::vec3(0, 1, 0),
-				glm::vec3(0, 0, 1)));
-	m_triangles.push_back(Triangle(glm::vec3(-1, 0, 0), glm::vec3(0, -1, 0),
-				glm::vec3(0, 0, 1)));
-
-	m_triangles.push_back(Triangle(glm::vec3(1, 0, 0), glm::vec3(0, 1, 0),
-				glm::vec3(0, 0, -1)));
-	m_triangles.push_back(Triangle(glm::vec3(1, 0, 0), glm::vec3(0, -1, 0),
-				glm::vec3(0, 0, -1)));
-	m_triangles.push_back(Triangle(glm::vec3(-1, 0, 0), glm::vec3(0, 1, 0),
-				glm::vec3(0, 0, -1)));
-	m_triangles.push_back(Triangle(glm::vec3(-1, 0, 0), glm::vec3(0, -1, 0),
-				glm::vec3(0, 0, -1)));
-
-*/
-
-
-	//m_point_cloud = dumb_find(&sphere, glm::vec3(0, 0, 0), 10);
-	//m_point_cloud.push_back(glm::vec3(0, 1, 0));
-	//m_point_cloud.push_back(glm::vec3(1, 0, 0));
-
-
-	//m_point_cloud.push_back(glm::vec3(0, 0, 1));
-
-	//m_point_cloud.push_back(glm::vec3(0, 0, 0.9));
-	//m_point_cloud.push_back(glm::vec3(0, 0, 1.1));
-
-	//m_point_cloud.push_back(glm::vec3(-1, 0, 0));
-	//m_point_cloud.push_back(glm::vec3(0, -1, 0));
-	//m_point_cloud.push_back(glm::vec3(0, 0, -1));
-
-	// Bad points
-	m_point_cloud.push_back(glm::vec3(0, 0, 0));
-	m_point_cloud.push_back(glm::vec3(3, 0, 0));
-	//m_point_cloud.push_back(glm::vec3(5, 0, 0));
-	std::cout << '\n';
-
-	for (std::list<glm::vec3>::iterator it = m_point_cloud.begin();
-			it != m_point_cloud.end(); it++)
-	{
-		glm::vec3 grad = sphere.gradient(*it);
-		m_grad_cloud.push_back(grad);
-		std::cout << "Found Vertex: "
-			<< (*it).x << ", "
-			<< (*it).y << ", "
-			<< (*it).z <<'\n'
-			<< "Gradient: "
-			<< grad.x << ", "
-			<< grad.y << ", "
-			<< grad.z << '\n'
-			<< "Value: "
-			<< sphere.getFieldValue(*it)
-			<< "\tFlavour: "
-			<< sphere.getFlavour(*it).normal().x << ", "
-			<< sphere.getFlavour(*it).normal().y << ", "
-			<< sphere.getFlavour(*it).normal().z << '\n'
-			<< '\n' << '\n';
-	}
 }
 
 void World::initGL()

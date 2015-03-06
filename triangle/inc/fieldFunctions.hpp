@@ -10,22 +10,12 @@
 #define FIELDFUNCTIONS_H
 #include <cmath>
 
-float inverseFunction(float dist);
+// Outputs are in [0, 1]
 
+float metaballFunction(float r, float R);
 
+float geoffFunction(float r, float R);
 
-
-
-
-float parabolicFunction(float dist);
-
-float geoffFunction(float dist);
-
-float blinnFunction(float dist);
-
-float metaballFunction(float dist);
-
-float wyvillFunction(float dist);
-
+namespace Implicit {};
 
 #endif // FIELDFUNCTIONS_H

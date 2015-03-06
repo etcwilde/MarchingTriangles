@@ -19,8 +19,8 @@
 
 
 #include "fieldFunctions.hpp"
-#include "ImplicitSystem.hpp"
-#include "Polygonizer.hpp"
+//#include "Polygonizer.hpp"
+#include "ImplicitBlob.hpp"
 
 #include <cstdlib>
 #include <list>
