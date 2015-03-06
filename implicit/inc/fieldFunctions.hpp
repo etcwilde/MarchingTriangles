@@ -6,6 +6,7 @@
 namespace Implicit
 {
 	float metaballFunction(float r);
+	float wyvillFunction(float r);
 };
 
 #endif

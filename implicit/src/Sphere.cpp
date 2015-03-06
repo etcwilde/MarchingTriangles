@@ -39,6 +39,7 @@ glm::vec3 Sphere::gradient(glm::vec3 pt)
 
 float Sphere::distance(glm::vec3 pt)
 {
-	//glm::vec3 p = project(pt);
 	return glm::length(pt);
 }
+
+

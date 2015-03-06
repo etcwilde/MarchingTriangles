@@ -6,6 +6,12 @@
 #include "fieldFunctions.hpp"
 #include "Sphere.hpp"
 
+std::ostream& operator<<(std::ostream& os, glm::vec3 v)
+{
+	os << '[' << v.x << ", " << v.y << ", " << v.z << "]";
+	return os;
+}
+
 void position(Implicit::Sphere s, glm::vec3 pt)
 {
 	float v = trunc(s.evaluate(pt));
@@ -33,11 +39,10 @@ void position(Implicit::Sphere s, glm::vec3 pt)
 
 }
 
-std::ostream& operator<<(std::ostream& os, glm::vec3 v)
-{
-	os << '[' << v.x << ", " << v.y << ", " << v.z << "]";
-	return os;
-}
+
+
+
+
 
 void test(Implicit::Sphere s, float r)
 {
@@ -88,6 +93,7 @@ int main()
 	Implicit::Sphere s2(Implicit::metaballFunction, 2);
 
 	std::cout << "--------- Test 1 Sphere radius 1 -------------\n";
+	test(sphere, 0.0f);
 	test(sphere, r1);
 	test(sphere, r2);
 	test(sphere, r3);
