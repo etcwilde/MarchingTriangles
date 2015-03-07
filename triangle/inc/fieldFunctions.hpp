@@ -11,9 +11,6 @@
 #include <cmath>
 
 // Outputs are in [0, 1]
-
-float metaballFunction(float r, float R);
-
 float geoffFunction(float r, float R);
 
 namespace Implicit {};

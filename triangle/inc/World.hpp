@@ -21,6 +21,7 @@
 #include "fieldFunctions.hpp"
 //#include "Polygonizer.hpp"
 #include "ImplicitBlob.hpp"
+#include "ImplicitBlend.hpp"
 
 #include <cstdlib>
 #include <list>

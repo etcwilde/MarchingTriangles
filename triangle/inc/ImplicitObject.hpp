@@ -17,27 +17,24 @@ namespace Implicit
 		 * \param point The point at which to get the value
 		 * \return Field Function evaluated at the point
 		 */
-		virtual float getFieldValue(glm::vec3 point) const = 0;
+		virtual float getFieldValue(glm::vec3 point) = 0;
 
-		/**
-		 * Get Distance
-		 *
-		 * Get the distance from a skeleton point to some point in
-		 * space.
-		 *
-		 * \param point The point to get the distance to.
-		 * \return Distance
-		 */
-		virtual float getDistance(glm::vec3 point) const =0;
-		
 		/**
 		 * Get Start Point
 		 *
 		 * Gets a point on the surface.
 		 * \return Point on surface
 		 */
-		virtual glm::vec3 getStartPoint() const =0;
+		virtual glm::vec3 getStartPoint()=0;
+
+		/**
+		 * Evaluate the field function with respect to the local iso
+		 * value
+		 */
+		virtual float evaluate(float r)= 0;
 	protected:
+
+
 		/**
 		 * Get tangent space
 		 *
@@ -50,6 +47,14 @@ namespace Implicit
 		 */
 		void get_tangent_space(const glm::vec3& N,
 				glm::vec3& T, glm::vec3& B) const;
+
+		/**
+		 * Finds the radius at which the iso value is satisfied
+		 */
+		float findRoot(float r);
+
+		glm::vec3 project_to_surface(glm::vec3 initial_guess);
+
 
 	private:
 	};

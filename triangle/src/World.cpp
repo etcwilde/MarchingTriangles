@@ -22,15 +22,17 @@ World::World()
 	m_grid_color = glm::vec3(1, 1, 1);
 	initGL();
 
-	Implicit::Blob blob1(geoffFunction, 0.5, 3);
+	Implicit::Blob blob1(geoffFunction, 0.5, 4);
+	Implicit::Blob blob2(geoffFunction, 0.5, glm::vec3(1, 0, 0));
+	Implicit::Blend blobs;
+	blobs.addObject(&blob1);
+	blobs.addObject(&blob2);
+	glm::vec3 start = blobs.getStartPoint();
 
-	std::cout << blob1.getFieldValue(glm::vec3(0.5, 0.5, 0)) << '\n';
-
-	glm::vec3 start = blob1.getStartPoint();
+	//glm::vec3 start = blob1.getStartPoint();
 	std::cout << "Surface Vertex: " << start << '\n';
 	std::cout << "Start Value: " << blob1.getFieldValue(start) << '\n';
-	//std::cout << :geoffFunction(0.44, 1) << '\n';
-
+	m_point_cloud.push_back(start);
 }
 
 void World::initGL()
