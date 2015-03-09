@@ -35,6 +35,7 @@
 \usepackage{xspace}
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{svg}
 
 %% \usepackage[unicode=true,
 %% 	bookmarks=false,breaklinks=flase,pdfborder={0 0 0},
@@ -237,34 +238,6 @@ The implicit field is defined as follows:
 $$\sum\limits_{i=1}^n w_i f(x / \sigma_i ) - T$$
 where $w_i$ are weights and $\sigma_i$ are radii and $T$ is the iso-value.
 
-\evan{The stuff beyond here is based off of misunderstandings}
-$$f : \mathbb{R}^3 \rightarrow \mathbb{R}$$
-$$\rho : A \rightarrow \mathbb{R} $$
-$$A = \{x \in \mathbb{R}^3 | f(x) = 0\}$$
-$$\phi : \mathbb{R} \rightarrow \mathbb{R}$$
-
-$f$ is the implicit function of the shape. For example, a sphere is defined by
-$f(x, y, z) = x^2 + y ^ 2 + z ^ 2 - r^2$ where $r$ is the radius of the sphere.
-If the vertex is within the sphere $f(x, y, z) < 0$, when the vertex is on the
-surface $f(x, y, z) = 0$, and when the vertex is beyond the sphere $f(x, y, z)
-> 0$. If the vertex is not on the surface, we need to map it to the surface.
-This operation depends on the surface definition, but will make use of the
-gradient to determine which direction the vertex must travel to be on the
-surface. An example of a simple projection operation is for the sphere.
-
-$$p_1 = {\nabla f(p_0) \over |\nabla f(p_0)|} \times r$$
-
-$p_0$ defines some initial vertex. $p_1$ is a vertex that lies on the surface
-of the sphere.
-
-The sphere is a simple example where the distance from the centre is always the
-same and any point on the surface, however it is not necessary for this to be
-the case, an example would be a cube. The function $\rho$ converts the vertex
-on the surface into a distance, which can be fed into $\phi$, or the field
-falloff function.
-
-The end goal is for the vertex to be at some location where the iso-value is
-equal to some desired value, for example 0.5.
 
 \subsection{Curvature Information}
 Curvature is used in computer graphics to improve meshing of surfaces. Implicit
@@ -280,7 +253,32 @@ follows: $\overrightarrow{G} = \nabla F(X) = [{\partial F\over\partial x},
 {\partial F \over \partial y}, {\partial F \over \partial z}]$ and the normal
 $\overrightarrow{N} = {\overrightarrow{G} \over ||\overrightarrow{G}||}$.
 
-We can determine the gradient\cite{Stam2011} with a method.
+% We can determine the gradient\cite{Stam2011} with a method.
+We determine the gradient by taking a linear combination of the normals of each
+blob. To determine the normal of a single blob is trivial. $\nabla F = p - c_0$
+where $p$ is the vertex on the surface, and $c_0$ is the center of the
+blob. \evan{I think I'm getting tricky here and that this might actually work
+AND be fast}
+
+\begin{figure}
+	\centering
+	\includegraphics{images/Normal.pdf}
+	\caption{Normal of Multiple Blobs}
+\end{figure}\evanTodo{Figure out why graphic is not showing up in the correct
+location}
+
+Where $c_0$ is the center of one blob, $c_1$ is the center of the second blob,
+and $pt$ is the point on th surface where we want to find the normal vector.
+
+$\overrightarrow{G} = {total\over (|pt - c_0|)}(pt - c_0) + {total\over (|pt -
+c_1|)}(pt - c_1)$, assuming that $f(|pt - c_0|) > 0$.\evanTodo{Normalize
+these!}
+
+For a more generalized scenario with many Blobs in the vicinity of the test
+point, we simply sum the resulting gradients for each blob.
+
+
+
 
 
 
