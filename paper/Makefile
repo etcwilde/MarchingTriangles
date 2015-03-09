@@ -10,7 +10,7 @@ clean:
 
 proper:
 	rubber	--clean $(latexfile)
-	rm -f $(latexfile).synctex $(latexfile).syntex.gz $(latexfile).pdf
+	rm -f $(latexfile).synctex $(latexfile).synctex.gz $(latexfile).pdf
 	rm -f $(latexfile).brf
 	rm -f new.tex
 

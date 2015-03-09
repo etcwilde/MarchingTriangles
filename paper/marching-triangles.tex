@@ -28,7 +28,7 @@
 \newcommand{\Author}{Evan T. C. Wilde}
 \newcommand{\Email}{etcwilde@uvic.ca}
 \newcommand{\Subject}{Using marching triangles algorithm on implicit surfaces}
-\newcommand{\Keywords}{iso-surface, polygonization, marching-triangles}
+\newcommand{\Keywords}{iso-surface, polygonization, marching-triangles, blobs}
 
 \synctex=1
 
@@ -175,9 +175,12 @@ higher visual appeal and better overall quality due to the adaptive triangle
 size.
 
 Rodrigues de Ara\'{u}jo presents an implementation similar to Marching
-triangles, but instead of expanding on edges, it expands on a single
-vertex\cite{DeAraujo2004}.
-\evanTodo{Expand this paragraph}
+triangles. Instead of expanding on edges, it expands on a single
+vertex\cite{DeAraujo2004}. This allows them to use Hessian curvature
+information instead of approximation methods, providing better results than
+traditional marching cubes-based approaches. Furthermore it does not require
+computationally heavy re-meshing. \evan{This, Brian, is why I think it will
+natively work on sharp edges}
 
 \section{Marching Triangles Algorithm}
 The classical marching triangles algorithm begins by creating a seed triangle
@@ -230,6 +233,10 @@ function changes most quickly. By multiplying the result of the root-finding
 method by the direction vector, we are able to quickly determine where the
 iso-surface exists.
 
+The implicit field is defined as follows:
+$$\sum\limits_{i=1}^n w_i f(x / \sigma_i ) - T$$
+where $w_i$ are weights and $\sigma_i$ are radii and $T$ is the iso-value.
+
 \evan{The stuff beyond here is based off of misunderstandings}
 $$f : \mathbb{R}^3 \rightarrow \mathbb{R}$$
 $$\rho : A \rightarrow \mathbb{R} $$
@@ -259,16 +266,39 @@ falloff function.
 The end goal is for the vertex to be at some location where the iso-value is
 equal to some desired value, for example 0.5.
 
+\subsection{Curvature Information}
+Curvature is used in computer graphics to improve meshing of surfaces. Implicit
+surfaces are defined by mathematical modles, making it possible to derive the
+notion of curvature using differential geometry. There has been research on
+methods to determine curvature\cite{DeAraujo2004} of implicit surfaces, however
+to my knowledge, they work with a different model of implicit surfaces. The
+model used takes $X \in \mathbb{R}^3$ such that $F(X) = 0$, where $F$ is the
+implicit function. With this model, shapes are defined algebraically. An
+example is a simple sphere where $F(x, y, z) = x^2 + y ^ 2 + z ^2 - R^2$. This
+model lends itself nicely to determining gradients. The gradient is defined as
+follows: $\overrightarrow{G} = \nabla F(X) = [{\partial F\over\partial x},
+{\partial F \over \partial y}, {\partial F \over \partial z}]$ and the normal
+$\overrightarrow{N} = {\overrightarrow{G} \over ||\overrightarrow{G}||}$.
+
+We can determine the gradient\cite{Stam2011} with a method.
+
+
 
 \section{Results}
 No results yet\ldots.
 
+\subsection{Issues with the Implicit Model}
+The model used for defining implicit surfaces does not lend itself nicely to
+determining gradient vectors. It requires samples along the $x$, $-x$, $y$,
+$-y$, $z$ and $-z$ axes. Along each axis, we must project the vertex onto
+the surface and determine which direction has the greatest change. Due to this
+model, we must sample the implicit surface more to determine the gradient,
+hurting performance.
+
 \evanTodo{Find results!}
 
-\section{Conclusion}
-No conclusive information yet\ldots.
+\section{Conclusions and Future Work}
 
-\evanTodo{Make conclusions}
 
 \bibliographystyle{acmsiggraph}
 \bibliography{references}
