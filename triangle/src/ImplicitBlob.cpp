@@ -45,7 +45,7 @@ float Blob::getDistance(glm::vec3 pt) const
 	return glm::length(pt - m_center);
 }
 
-glm::vec3 Blob::getStartPoint() 
+glm::vec3 Blob::getStartPoint()
 {
 #ifdef DEBUG
 	std::cout << "Center Vertex: " << getCenter() << '\n';
@@ -59,11 +59,17 @@ glm::vec3 Blob::getCenter() const
 }
 
 
-
-
 float Blob::evaluate(float r)
 {
 	return m_fieldFunc(r, m_max_distance) - m_iso;
 }
 
+glm::vec3 Blob::normal(glm::vec3 pt)
+{
 
+#ifdef DEBUG
+	std::cout << "Gradient: \nCenter Vertex: " << getCenter() << '\n';
+#endif
+
+	return glm::normalize(pt - getCenter());
+}

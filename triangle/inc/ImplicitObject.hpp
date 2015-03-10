@@ -30,8 +30,19 @@ namespace Implicit
 		/**
 		 * Evaluate the field function with respect to the local iso
 		 * value
+		 *
+		 * \param r The distance from the center of the object
 		 */
 		virtual float evaluate(float r)= 0;
+
+		/**
+		 * Find the normal vector of the implicit object at a given point
+		 *
+		 * \param point A point either on the surface or within the
+		 * surface where we want to find the normal vector.
+		 * 
+		 */
+		virtual glm::vec3 normal(glm::vec3 point)=0;
 	protected:
 
 

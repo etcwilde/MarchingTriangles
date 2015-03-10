@@ -46,6 +46,8 @@ namespace Implicit
 		glm::vec3 getCenter() const;
 
 		virtual float evaluate(float r);
+
+		virtual glm::vec3 normal(glm::vec3 point);
 	protected:
 
 	private:

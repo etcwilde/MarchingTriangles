@@ -74,6 +74,4 @@ glm::vec3 Object::project_to_surface(glm::vec3 g0)
 	float distance = 1.f;
 	distance = findRoot(distance);
 	return g0 + direction * distance;
-
-
 }

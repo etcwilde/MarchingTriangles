@@ -2,6 +2,7 @@
 #define IMPLICIT_BLEND_HPP
 
 #include <list>
+#include <vector>
 
 #include <glm/glm.hpp>
 
@@ -22,6 +23,8 @@ namespace Implicit
 
 
 		virtual float evaluate(float r);
+
+		virtual glm::vec3 normal(glm::vec3 pt);
 	protected:
 
 	private:
@@ -29,7 +32,6 @@ namespace Implicit
 
 		std::list<Object*> m_objects;
 		float m_iso;
-
 	};
 };
 

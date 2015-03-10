@@ -20,30 +20,27 @@ void Blend::addObject(Object* obj)
 
 float Blend::getFieldValue(glm::vec3 pt)
 {
-	float field_value = 0.f;
-	for (std::list<Implicit::Object*>::iterator it = m_objects.begin();
-			it != m_objects.end(); it++)
-		field_value += (*it)->getFieldValue(pt);
-	return field_value;
+
+	return 10;
 };
 
 glm::vec3 Blend::getStartPoint()
 {
-	// Hopefully the start point of one of the children will be close
-	// enough
-	// TODO Ensure that this actually works
-	return project_to_surface((*m_objects.begin())->getStartPoint());
+	return glm::vec3(0, 0, 0);
 }
 
 float Blend::evaluate(float r)
 {
-	float field_value = 0.f;
-	for (std::list<Implicit::Object*>::iterator it = m_objects.begin();
+	float value = 0;
+	for (std::list<Object*>::iterator it = m_objects.begin();
 			it != m_objects.end(); it++)
 	{
-		field_value += (*it)->evaluate(r);
+
 	}
-	return field_value;
+	return value - m_iso;
 }
 
-
+glm::vec3 Blend::normal(glm::vec3 pt)
+{
+	return glm::vec3(0, 0, 0);
+}

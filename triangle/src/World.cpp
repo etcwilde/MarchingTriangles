@@ -23,16 +23,35 @@ World::World()
 	initGL();
 
 	Implicit::Blob blob1(geoffFunction, 0.5, 4);
-	Implicit::Blob blob2(geoffFunction, 0.5, glm::vec3(1, 0, 0));
+	Implicit::Blob blob2(geoffFunction, 0.5, glm::vec3(3, 0, 0));
+
 	Implicit::Blend blobs;
 	blobs.addObject(&blob1);
-	blobs.addObject(&blob2);
+
 	glm::vec3 start = blobs.getStartPoint();
 
-	//glm::vec3 start = blob1.getStartPoint();
-	std::cout << "Surface Vertex: " << start << '\n';
-	std::cout << "Start Value: " << blob1.getFieldValue(start) << '\n';
 	m_point_cloud.push_back(start);
+	std::cout << "Vertex: " << start << '\n';
+
+	m_grad_cloud.push_back(blob1.getStartPoint());
+	std::cout << "Correct Vertex: " << blob1.getStartPoint() << '\n';
+
+	//Implicit::Blend blobs;
+	//blobs.addObject(&blob1);
+	//blobs.addObject(&blob2);
+	//glm::vec3 start = blobs.getStartPoint();
+
+	/*Implicit::Blend blobs;
+	blobs.addObject(&blob1);
+	blobs.addObject(&blob2);
+	blobs.normal(glm::vec3(1, 0, 0)); */
+
+	/*glm::vec3 start = blob2.getStartPoint();
+	std::cout << "Surface Vertex: " << start << '\n';
+	std::cout << "Start Value: " << blob2.getFieldValue(start) << '\n';
+	std::cout << "Surface Vertex normal: " << glm::normalize(blob2.normal(start)) << '\n';
+	m_point_cloud.push_back(start);
+	m_grad_cloud.push_back(start + blob2.normal(start)); */
 }
 
 void World::initGL()
