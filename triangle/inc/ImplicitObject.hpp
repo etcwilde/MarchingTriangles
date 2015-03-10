@@ -2,77 +2,129 @@
 #define IMPLICIT_OBJECT_HPP
 
 #include <glm/glm.hpp>
-#include "vecHelp.hpp"
+#include "floatlibs.hpp"
 
 #ifdef DEBUG
 #include <iostream>
+#include "vecHelp.hpp"
 #endif
+
+#define FIND_ROOT_ITERS 100
 
 namespace Implicit
 {
-	class Object
-	{
+	class Object {
 	public:
 		/**
-		 * Get Field Value
+		 * \brief Create new default object
 		 *
-		 * Evaluate the filter field falloff function at a vertex.
-		 *
-		 * \param point The point at which to get the value
-		 * \return Field Function evaluated at the point
+		 * Sets the iso value to the default 0.5
+		 * Sets the center to the default (0, 0, 0)
 		 */
-		virtual float getFieldValue(glm::vec3 point) = 0;
+		Object();
 
 		/**
-		 * Get Start Point
+		 * \brief Create new object with set iso value.
 		 *
-		 * Gets a point on the surface.
-		 * \return Point on surface
+		 * Sets the desired iso value
+		 * The iso value should be between 0 and 1
+		 *
+		 * Sets the center to the default (0, 0, 0)
+		 *
+		 * \param iso The iso value where the surface is defined
 		 */
-		virtual glm::vec3 getStartPoint()=0;
+		Object(float iso);
 
 		/**
-		 * Evaluate the field function with respect to the local iso
-		 * value
+		 * \brief Create a new object at a position
 		 *
-		 * \param r The distance from the center of the object
+		 * Create the object at a defined position
+		 * Sets the iso value to the default 0.5
+		 *
+		 * \param center The center position of the object
 		 */
-		virtual float evaluate(float r)= 0;
+		Object(glm::vec3 center);
 
 		/**
-		 * Find the normal vector of the implicit object at a given point
+		 * \brief Create a new object at a position
 		 *
-		 * \param point A point either on the surface or within the
-		 * surface where we want to find the normal vector.
+		 * Create the object at a defined position
+		 * with a defined iso value
 		 *
+		 * \param center The center position of the object
+		 * \param iso The iso value where the surface is defined
 		 */
-		virtual glm::vec3 normal(glm::vec3 point)=0;
+		Object(glm::vec3 center, float iso);
+
+		/**
+		 * \brief Changes the iso value for the object
+		 *
+		 * Will change the iso value where the surface is defined.
+		 * The iso value should be between 0 and 1.
+		 */
+		void SetIso(float iso);
+
+		/**
+		 * \brief evaluate the surface at a given point
+		 *
+		 * Where this evaluates to 0, the surface is defined
+		 *
+		 * \param point the point to evaluate
+		 */
+		virtual float Evaluate(glm::vec3 point)=0;
+
+		/**
+		 * \brief Evaluates field function at point
+		 *
+		 * Will return a value between 0 and 1
+		 *
+		 * \return The result of the field function at the point
+		 */
+		virtual float FieldValue(glm::vec3 point)=0;
+
+		glm::vec3 Project(glm::vec3 pt);
+
 	protected:
 
+		/**
+		 * \brief Secant method root finder
+		 * Uses secant method to perform root finding
+		 * Finds the surface of the object
+		 *
+		 * \param direction The direction to find the value
+		 * \return The distance along the direction to move to
+		 * intersect the surface
+		 */
+		float findRoot(glm::vec3 point, glm::vec3 direction);
 
 		/**
-		 * Get tangent space
+		 * \brief Generate Tangent space
+		 * Generates the tangent space of a given normal vector
 		 *
-		 * Given a Normal N, defines the Tangent T, and binormal B.
-		 *
-		 * This method writes to vector T and vector B
-		 * \param N Normalized normal
-		 * \param T Vector to write tangent to
-		 * \param B Vector to write binormal to
+		 * \param N The normal vector to find tangent space of
+		 * \param T Where the tangent will be stored
+		 * \param B Where the binormal will be stored
 		 */
-		void get_tangent_space(const glm::vec3& N,
-				glm::vec3& T, glm::vec3& B) const;
+		void getTangentSpace(const glm::vec3& N, glm::vec3& T,
+				glm::vec3& B) const;
 
 		/**
-		 * Finds the radius at which the iso value is satisfied
+		 * \brief Projects a vertex onto the surface
+		 * \param pt The point to be projected
 		 */
-		float findRoot(float r);
+		glm::vec3 project(glm::vec3 pt);
 
-		glm::vec3 project_to_surface(glm::vec3 initial_guess);
+		/**
+		 * \brief Iso value where surface is defined
+		 */
+		float m_iso;
 
-
+		/**
+		 * \brief center position of the object
+		 */
+		glm::vec3 m_center;
 	private:
 	};
 };
 
-#endif //IMPLICIT_OBJECT_HPP
+#endif // IMPLICIT_OBJECT_HPP

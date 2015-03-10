@@ -1,13 +1,9 @@
 #ifndef IMPLICIT_BLEND_HPP
 #define IMPLICIT_BLEND_HPP
 
-#include <list>
-#include <vector>
-
-#include <glm/glm.hpp>
-
 #include "ImplicitObject.hpp"
-#include "ImplicitBlob.hpp"
+
+#include <list>
 
 #ifdef DEBUG
 #include <iostream>
@@ -15,28 +11,42 @@
 
 namespace Implicit
 {
+	/**
+	 * Blends multiple primitive objects into one blobject
+	 */
 	class Blend : public Object
 	{
 	public:
+		/**
+		 * \brief Create a blend object
+		 * Uses default iso value of 0.5
+		 */
 		Blend();
+
+		/**
+		 * \brief Create a blend object with defined iso value
+		 *
+		 * \param iso The value where the surface is defined
+		 */
 		Blend(float iso);
-		void addObject(Object* obj);
 
-		float getFieldValue(glm::vec3 pt);
-		virtual glm::vec3 getStartPoint();
+		/**
+		 * \brief Add object to blend
+		 *
+		 * Adds more objects to be blended
+		 *
+		 * \param obj The address of the primitive to be added to the
+		 * blend object
+		 */
+		void AddObject(Object* obj);
 
-
-		virtual float evaluate(float r);
-
-		virtual glm::vec3 normal(glm::vec3 pt);
+		virtual float Evaluate(glm::vec3 point);
+		virtual float FieldValue(glm::vec3 point);
 	protected:
 
 	private:
-		//glm::vec3 project_to_surface(glm::vec3 initial_guess) const;
-
 		std::list<Object*> m_objects;
-		float m_iso;
 	};
 };
 
-#endif //IMPLICIT_BLEND_HPP
+#endif // IMPLICIT_BLEND_HPP

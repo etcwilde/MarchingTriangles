@@ -7,12 +7,8 @@
  */
 
 #include "World.hpp"
-
 #include <GL/gl.h>
-
-// Hahahahahahaha -- this is dumb
 #include <iomanip>
-
 #include "vecHelp.hpp"
 
 World::World()
@@ -22,53 +18,26 @@ World::World()
 	m_grid_color = glm::vec3(1, 1, 1);
 	initGL();
 
-	Implicit::Blob blob1(geoffFunction, 0.5, 4);
-	Implicit::Blob blob2(geoffFunction, 0.5, glm::vec3(3, 0, 0), 4);
+	//Implicit::Primitive blob1(geoffFunction, glm::vec3(0, 0, 0),  0.5, 1);
 
-	Implicit::Blend blobs;
-	blobs.addObject(&blob1);
-	blobs.addObject(&blob2);
+	Implicit::Primitive blob1(geoffFunction);
 
-	glm::vec3 test_point1 = glm::vec3(0, 0, 0);
-	glm::vec3 test_point2 = glm::vec3(3, 0, 0);
-	glm::vec3 test_point3 = glm::vec3(2, 0, 0);
-	std::cout << "blob 1 value at: " << test_point1 << ": " << blob1.getFieldValue(test_point1) << '\n'<< '\n';
-	std::cout << "blob 1 value at: " << test_point2 << ": " << blob1.getFieldValue(test_point2) << '\n'<< '\n';
-	std::cout << "blob 1 value at: " << test_point3 << ": " << blob1.getFieldValue(test_point3) << '\n'<< '\n';
+	//glm::vec3 start = blob1.StartPoint();
+	glm::vec3 start(0, 0.541154, 0);
+	glm::vec3 proj = blob1.Project(start);
+	std::cout << "Start Point: " << start << '\n'
+		<< "Field Value: " << blob1.FieldValue(start) << '\n'
+		<< "Evaluation: " << blob1.Evaluate(start)
+		<< '\n' << '\n';
+	std::cout << "Projected Point: " << proj << '\n'
+		<< "Field Value: " << blob1.FieldValue(proj) << '\n'
+		<< "Evaluation: " << blob1.Evaluate(proj)
+		<< '\n';
 
-	std::cout << "blob 2 value at: " << test_point1 << ": " << blob2.getFieldValue(test_point1) << '\n'<< '\n';
-	std::cout << "blob 2 value at: " << test_point2 << ": " << blob2.getFieldValue(test_point2) << '\n'<< '\n';
-	std::cout << "blob 2 value at: " << test_point3 << ": " << blob2.getFieldValue(test_point3) << '\n'<< '\n';
-
-	std::cout << "blobs value at: " << test_point1 << ": " << blobs.getFieldValue(test_point1) << '\n'<< '\n';
-	std::cout << "blobs value at: " << test_point2 << ": " << blobs.getFieldValue(test_point2) << '\n'<< '\n';
-	std::cout << "blobs value at: " << test_point3 << ": " << blobs.getFieldValue(test_point3) << '\n'<< '\n';
-
-	glm::vec3 start = blobs.getStartPoint();
-
+	m_point_cloud.push_back(glm::vec3(0, 0, 0));
 	m_point_cloud.push_back(start);
-	std::cout << "Vertex: " << start << '\n';
+	m_point_cloud.push_back(proj);
 
-	m_grad_cloud.push_back(blob1.getStartPoint());
-	m_grad_cloud.push_back(blob2.getStartPoint());
-	std::cout << "Correct Vertex: " << blob1.getStartPoint() << '\n';
-
-	//Implicit::Blend blobs;
-	//blobs.addObject(&blob1);
-	//blobs.addObject(&blob2);
-	//glm::vec3 start = blobs.getStartPoint();
-
-	/*Implicit::Blend blobs;
-	blobs.addObject(&blob1);
-	blobs.addObject(&blob2);
-	blobs.normal(glm::vec3(1, 0, 0)); */
-
-	/*glm::vec3 start = blob2.getStartPoint();
-	std::cout << "Surface Vertex: " << start << '\n';
-	std::cout << "Start Value: " << blob2.getFieldValue(start) << '\n';
-	std::cout << "Surface Vertex normal: " << glm::normalize(blob2.normal(start)) << '\n';
-	m_point_cloud.push_back(start);
-	m_grad_cloud.push_back(start + blob2.normal(start)); */
 }
 
 void World::initGL()
@@ -84,10 +53,9 @@ void World::initGL()
 	glShadeModel(GL_FLAT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glPointSize(5.0f);
 	m_camera.set_bounds(1, 1);
-
 	glPointSize(10.f);
+
 }
 
 World::~World()
