@@ -20,8 +20,26 @@ void Blend::addObject(Object* obj)
 
 float Blend::getFieldValue(glm::vec3 pt)
 {
+	// Get the sum of the field values of each object
+	float field_value = 0.f;
+#ifdef DEBUG
+	unsigned int counter = 0;
+#endif
+	for (std::list<Object*>::iterator obj = m_objects.begin();
+			obj != m_objects.end(); obj++)
+	{
+#ifdef DEBUG
+		std::cout << "Object " << counter << ": " << (*obj)->getFieldValue(pt) << '\n';
+		counter++;
+#endif
+		field_value += (*obj)->getFieldValue(pt);
+	}
 
-	return 10;
+#ifdef DEBUG
+	std::cout << "Blend Field value: " << field_value << '\n';
+#endif
+	return field_value;
+
 };
 
 glm::vec3 Blend::getStartPoint()
@@ -32,10 +50,10 @@ glm::vec3 Blend::getStartPoint()
 float Blend::evaluate(float r)
 {
 	float value = 0;
-	for (std::list<Object*>::iterator it = m_objects.begin();
-			it != m_objects.end(); it++)
+	for (std::list<Object*>::iterator obj = m_objects.begin();
+			obj != m_objects.end(); obj++)
 	{
-
+		value += (*obj)->evaluate(r);
 	}
 	return value - m_iso;
 }

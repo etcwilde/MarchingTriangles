@@ -4,6 +4,10 @@
 #include <glm/glm.hpp>
 #include "vecHelp.hpp"
 
+#ifdef DEBUG
+#include <iostream>
+#endif
+
 namespace Implicit
 {
 	class Object
@@ -40,7 +44,7 @@ namespace Implicit
 		 *
 		 * \param point A point either on the surface or within the
 		 * surface where we want to find the normal vector.
-		 * 
+		 *
 		 */
 		virtual glm::vec3 normal(glm::vec3 point)=0;
 	protected:

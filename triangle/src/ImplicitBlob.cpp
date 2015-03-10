@@ -37,6 +37,13 @@ Blob::Blob(FieldFunction fieldFunc, float iso,
 
 float Blob::getFieldValue(glm::vec3 pt)
 {
+#ifdef DEBUG
+	std::cout << "Vertex: " << pt << '\n';
+	std::cout << "Distance: " << getDistance(pt) << '\n';
+	std::cout << "max distance: " << m_max_distance << '\n';
+#endif
+	float distance = getDistance(pt);
+	if (distance > m_max_distance) return 0.f;
 	return m_fieldFunc(getDistance(pt), m_max_distance);
 }
 

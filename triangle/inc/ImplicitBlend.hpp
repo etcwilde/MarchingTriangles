@@ -9,6 +9,10 @@
 #include "ImplicitObject.hpp"
 #include "ImplicitBlob.hpp"
 
+#ifdef DEBUG
+#include <iostream>
+#endif
+
 namespace Implicit
 {
 	class Blend : public Object

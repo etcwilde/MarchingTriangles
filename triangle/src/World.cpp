@@ -23,10 +23,26 @@ World::World()
 	initGL();
 
 	Implicit::Blob blob1(geoffFunction, 0.5, 4);
-	Implicit::Blob blob2(geoffFunction, 0.5, glm::vec3(3, 0, 0));
+	Implicit::Blob blob2(geoffFunction, 0.5, glm::vec3(3, 0, 0), 4);
 
 	Implicit::Blend blobs;
 	blobs.addObject(&blob1);
+	blobs.addObject(&blob2);
+
+	glm::vec3 test_point1 = glm::vec3(0, 0, 0);
+	glm::vec3 test_point2 = glm::vec3(3, 0, 0);
+	glm::vec3 test_point3 = glm::vec3(2, 0, 0);
+	std::cout << "blob 1 value at: " << test_point1 << ": " << blob1.getFieldValue(test_point1) << '\n'<< '\n';
+	std::cout << "blob 1 value at: " << test_point2 << ": " << blob1.getFieldValue(test_point2) << '\n'<< '\n';
+	std::cout << "blob 1 value at: " << test_point3 << ": " << blob1.getFieldValue(test_point3) << '\n'<< '\n';
+
+	std::cout << "blob 2 value at: " << test_point1 << ": " << blob2.getFieldValue(test_point1) << '\n'<< '\n';
+	std::cout << "blob 2 value at: " << test_point2 << ": " << blob2.getFieldValue(test_point2) << '\n'<< '\n';
+	std::cout << "blob 2 value at: " << test_point3 << ": " << blob2.getFieldValue(test_point3) << '\n'<< '\n';
+
+	std::cout << "blobs value at: " << test_point1 << ": " << blobs.getFieldValue(test_point1) << '\n'<< '\n';
+	std::cout << "blobs value at: " << test_point2 << ": " << blobs.getFieldValue(test_point2) << '\n'<< '\n';
+	std::cout << "blobs value at: " << test_point3 << ": " << blobs.getFieldValue(test_point3) << '\n'<< '\n';
 
 	glm::vec3 start = blobs.getStartPoint();
 
@@ -34,6 +50,7 @@ World::World()
 	std::cout << "Vertex: " << start << '\n';
 
 	m_grad_cloud.push_back(blob1.getStartPoint());
+	m_grad_cloud.push_back(blob2.getStartPoint());
 	std::cout << "Correct Vertex: " << blob1.getStartPoint() << '\n';
 
 	//Implicit::Blend blobs;
