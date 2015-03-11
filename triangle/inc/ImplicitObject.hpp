@@ -82,7 +82,18 @@ namespace Implicit
 		 */
 		virtual float FieldValue(glm::vec3 point)=0;
 
+		/**
+		 * \brief Projects a point onto the surface of the object
+		 *
+		 * Note: The initial point must be within the range of the
+		 * falloff field function.
+		 */
 		glm::vec3 Project(glm::vec3 pt);
+
+		/**
+		 * \brief Gets the normal of the surface at a given point.
+		 */
+		virtual glm::vec3 Normal(glm::vec3 point)=0;
 
 	protected:
 

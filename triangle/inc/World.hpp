@@ -18,6 +18,7 @@
 #include "Camera.hpp"
 
 #include "ImplicitPrimitive.hpp"
+#include "ImplicitBlend.hpp"
 
 
 #include "fieldFunctions.hpp"

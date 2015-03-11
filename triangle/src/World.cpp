@@ -18,25 +18,63 @@ World::World()
 	m_grid_color = glm::vec3(1, 1, 1);
 	initGL();
 
-	//Implicit::Primitive blob1(geoffFunction, glm::vec3(0, 0, 0),  0.5, 1);
+	Implicit::Primitive blob(geoffFunction, glm::vec3(0, -1, 0), 0.5, 2);
+	Implicit::Primitive blob2(geoffFunction, glm::vec3(0, 1, 0), 0.5, 2);
 
-	Implicit::Primitive blob1(geoffFunction);
+	Implicit::Blend blobs(0.5);
+	blobs.AddObject(&blob);
+	blobs.AddObject(&blob2);
+	/*std::cout << blob.Project(glm::vec3 (0, 0, 0)) << '\t'
+		<< blob.FieldValue(blob.Project(glm::vec3(0, 0, 0))) << '\n';
+	std::cout << blob.Project(glm::vec3 (0.2, 0, 0)) << '\t'
+		<< blob.FieldValue(blob.Project(glm::vec3(0.2, 0, 0))) << '\n';
+	m_point_cloud.push_back(blob.Project(glm::vec3(0, 0, 0)));
+	m_point_cloud.push_back(blob.Project(glm::vec3(0.2, 0, 0)));
+	m_point_cloud.push_back(blob.Project(glm::vec3(-0.2, 0, 0)));
 
-	//glm::vec3 start = blob1.StartPoint();
-	glm::vec3 start(0, 0.541154, 0);
-	glm::vec3 proj = blob1.Project(start);
-	std::cout << "Start Point: " << start << '\n'
-		<< "Field Value: " << blob1.FieldValue(start) << '\n'
-		<< "Evaluation: " << blob1.Evaluate(start)
-		<< '\n' << '\n';
-	std::cout << "Projected Point: " << proj << '\n'
-		<< "Field Value: " << blob1.FieldValue(proj) << '\n'
-		<< "Evaluation: " << blob1.Evaluate(proj)
-		<< '\n';
+	m_point_cloud.push_back(blob.Project(glm::vec3(0.4, 0, 0)));
+	m_point_cloud.push_back(blob.Project(glm::vec3(0.4, 0, 0.2)));
+	m_point_cloud.push_back(blob.Project(glm::vec3(0.4, 0, 0.3)));
+
+	m_point_cloud.push_back(blob.Project(glm::vec3(0, -0.2, 0))); */
+
+	//m_point_cloud.push_back(blob.Project(glm::vec3(0, 0, 0)));
+	//m_point_cloud.push_back(blob.Project(glm::vec3(0, 0.1, 0)));
+	//m_point_cloud.push_back(blob.Project(glm::vec3(0, -0.1, 0)));
+
+	//m_point_cloud.push_back(blob.Project(glm::vec3(0, 0.3, 0.1)));
 
 	m_point_cloud.push_back(glm::vec3(0, 0, 0));
-	m_point_cloud.push_back(start);
-	m_point_cloud.push_back(proj);
+	m_point_cloud.push_back(glm::vec3(0, 0, 0.1));
+	m_point_cloud.push_back(glm::vec3(0.1, 0.1, 0));
+
+
+	srand(time(NULL));
+	for (unsigned int i = 0; i < 1000; i++) {
+		bool neg = false;
+		neg = rand() % 2;
+		float one = rand() % 10 / 10.f;
+		if (neg) one = -one;
+		neg = rand() % 2;
+		float two = rand() % 10 / 10.f;
+		if (neg) two = -two;
+		neg = rand() % 2;
+		float three = rand() % 10 / 10.f;
+		if (neg) three = -three;
+		m_point_cloud.push_back(glm::vec3(one, two, three));
+	}
+
+
+	for (auto objs = m_point_cloud.begin(); objs != m_point_cloud.end();
+			objs++)
+	{
+		/*std::cout << (*objs) << "\t\t" << blob.FieldValue((*objs))
+			<< "\tProjection value: " 
+			<< blob2.FieldValue(blob.Project((*objs))) << '\n'; */
+		//m_grad_cloud.push_back(blob.Project((*objs)));
+		//m_grad_cloud.push_back(blob2.Project((*objs)));
+		m_grad_cloud.push_back(blobs.Project((*objs)));
+	}
 
 }
 
@@ -174,11 +212,11 @@ void World::Draw()
 
 	glColor3f(1.f, 0.f, 0.f);
 	glBegin(GL_POINTS);
-	for (std::list<glm::vec3>::iterator it = m_point_cloud.begin();
+	/*for (std::list<glm::vec3>::iterator it = m_point_cloud.begin();
 			it != m_point_cloud.end(); it++)
 	{
 		glVertex3f((*it).x, (*it).y, (*it).z);
-	}
+	} */
 	glEnd();
 
 	glColor3f(0.f, 5.f, 7.f);

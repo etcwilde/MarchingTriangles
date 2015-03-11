@@ -31,6 +31,14 @@ namespace Implicit
 		Blend(float iso);
 
 		/**
+		 * \brief Create a blend object with defined iso value
+		 *
+		 * \param iso The value where the surface is defined
+		 * \param center The center of the blend object
+		 */
+		Blend(float iso, glm::vec3 center);
+
+		/**
 		 * \brief Add object to blend
 		 *
 		 * Adds more objects to be blended
@@ -42,6 +50,8 @@ namespace Implicit
 
 		virtual float Evaluate(glm::vec3 point);
 		virtual float FieldValue(glm::vec3 point);
+
+		virtual glm::vec3 Normal(glm::vec3 point);
 	protected:
 
 	private:

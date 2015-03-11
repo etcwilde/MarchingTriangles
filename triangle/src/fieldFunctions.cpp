@@ -15,6 +15,5 @@ float geoffFunction(float r, float R)
 	register const float rs = (r * r) / (R * R);
 	register const float rq = rs * rs;
 	register const float rse = rq * rs;
-	return 1 - (4/9)*rse + (17/9) * rq - (22/9)*rs;
+	return 1 - (4.f/9.f) * rse + (17.f/9.f) * rq - (22.f/9.f) * rs;
 }
-

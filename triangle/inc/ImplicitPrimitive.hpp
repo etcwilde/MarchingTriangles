@@ -106,6 +106,8 @@ namespace Implicit
 		virtual float FieldValue(glm::vec3 point);
 
 		glm::vec3 StartPoint();
+
+		virtual glm::vec3 Normal(glm::vec3 point);
 	protected:
 
 		/**

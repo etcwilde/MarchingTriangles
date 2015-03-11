@@ -57,6 +57,12 @@ glm::vec3 Primitive::StartPoint()
 	return project(m_center);
 }
 
+glm::vec3 Primitive::Normal(glm::vec3 pt)
+{
+	if (pt == m_center) return glm::vec3(0, 1, 0);
+	return glm::normalize(pt - m_center);
+}
+
 
 // Protected Methods
 float Primitive::getDistance(glm::vec3 pt)
