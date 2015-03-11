@@ -40,7 +40,6 @@ float Object::findRoot(glm::vec3 point, glm::vec3 direction)
 		register float fxi2 = Evaluate(point + (direction * xi2));
 		xi = xi1 - fxi1 * ((xi1 - xi2)/(fxi1 - fxi2));
 #ifdef DEBUG
-
 		std::cout
 			<< "i: " << i + 1
 			<< " xi: " << xi
@@ -49,14 +48,11 @@ float Object::findRoot(glm::vec3 point, glm::vec3 direction)
 			<< " xi2: " << xi2
 			<< " fxi2: " << fxi2
 			<< '\n';
-
 #endif
-		//if (f_equ(xi, xi1)) break;
-		if (xi == xi1) break;
+		if (fxi1 == fxi2) break;
 		xi2 = xi1; xi1 = xi;
 	}
-	return xi;
-}
+	return xi1; }
 
 void Object::getTangentSpace(const glm::vec3& N, glm::vec3& T, glm::vec3& B)
 	const
@@ -70,7 +66,7 @@ void Object::getTangentSpace(const glm::vec3& N, glm::vec3& T, glm::vec3& B)
 
 glm::vec3 Object::project(glm::vec3 pt)
 {
-	glm::vec3 N = glm::vec3(0, 1, 0);
+	glm::vec3 N = glm::vec3(0, 2, 0);
 	glm::vec3 T;
 	glm::vec3 B;
 	getTangentSpace(N, T, B);
@@ -83,11 +79,11 @@ glm::vec3 Object::project(glm::vec3 pt)
 #endif
 	const float eps = 0.001f;
 
-	float dx = FieldValue(pt + (T * eps));
+	/*float dx = FieldValue(pt + (T * eps));
 	float dy = FieldValue(pt + (N * eps));
-	float dz = FieldValue(pt + (B * eps));
-	glm::vec3 direction = glm::normalize(glm::vec3(dx, dy, dz));
-	float distance = findRoot(pt, direction);
+	float dz = FieldValue(pt + (B * eps)); */
+	//glm::vec3 direction = glm::normalize(glm::vec3(dx, dy, dz));
+	float distance = findRoot(pt, glm::vec3(0, 1, 0));
 
 #ifdef DEBUG
 	std::cout << "Distance: " << distance << '\n';
@@ -95,5 +91,5 @@ glm::vec3 Object::project(glm::vec3 pt)
 	std::cout << "Value: " << FieldValue((distance * direction) + pt) << '\n';
 	std::cout << "Evaluation: " << Evaluate((distance * direction) + pt) << '\n';
 #endif
-	return pt + (direction * distance);
+	return pt + (glm::vec3(0, 1, 0) * distance);
 }

@@ -34,13 +34,6 @@ void Primitive::SetRadius(float radius)
 
 float Primitive::FieldValue(float r)
 {
-#ifdef DEBUG
-	std::cout << "Function Value: " << m_fieldFunction(r, m_radius) << '\n';
-	if (m_fieldFunction(r, m_radius)  == m_iso)
-	{
-		std::cout << "RIGHT HERE!\n";
-	}
-#endif
 	return m_fieldFunction(r, m_radius);
 }
 

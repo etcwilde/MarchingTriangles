@@ -17,14 +17,13 @@
 
 inline float f_equ(float a, float b)
 {
-	//std::cerr << a << "==" << b << '\n';
-	return((a == b + FLT_EPSILON) || (a == b - FLT_EPSILON) || (a == b));
+	return (a < b + FLT_EPSILON || a > b - FLT_EPSILON);
 }
 
 inline float f_equ(float a, float b, float eps)
 {
 	//std::cerr << a << "==" << b << '\n';
-	return((a == b + eps) || (a == b - eps) || (a == b));
+	return (a < b + eps || a > b - eps);
 }
 
 inline bool f_is_zero(float a)
