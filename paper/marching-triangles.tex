@@ -228,11 +228,9 @@ I used the secant method, as defined by
 $$x_i = x_{i-1} - f(x_{i-1}) \times {{x_{i-1} - x_{i-2}}\over{f(x_{i-1}) -
 f(x_{i-2})}}$$
 
-We are able to quickly determine a direction by wiggling\evan{reword this}
-the centre vertex to determine in which direction the filter field falloff
-function changes most quickly. By multiplying the result of the root-finding
-method by the direction vector, we are able to quickly determine where the
-iso-surface exists.
+We determine the direction by taking the gradient of the point. By multiplying
+the result of the root-finding method by the direction vector, we are able to
+quickly determine where the iso-surface exists.
 
 The implicit field is defined as follows:
 $$\sum\limits_{i=1}^n w_i f(x / \sigma_i ) - T$$
@@ -253,12 +251,24 @@ follows: $\overrightarrow{G} = \nabla F(X) = [{\partial F\over\partial x},
 {\partial F \over \partial y}, {\partial F \over \partial z}]$ and the normal
 $\overrightarrow{N} = {\overrightarrow{G} \over ||\overrightarrow{G}||}$.
 
-% We can determine the gradient\cite{Stam2011} with a method.
-We determine the gradient by taking a linear combination of the normals of each
-blob. To determine the normal of a single blob is trivial. $\nabla F = p - c_0$
-where $p$ is the vertex on the surface, and $c_0$ is the center of the
-blob. \evan{I think I'm getting tricky here and that this might actually work
-AND be fast}
+
+
+In a paper\cite{Stam2011}, we are able to determine the gradient using a
+sampling method of the function as time progresses.\evan{Provide some of the
+maths from the paper} As we are not working with time, there is a far simpler
+method to determining the normal at a given point. 
+
+
+
+
+
+
+
+field functions centered at a given point, blended objects will always be made
+of component spheres. By realizing this, it becomes apparent that the gradient
+is a weighted linear combination of the normal vectors of the component spheres
+at the given point; where the weights are defined by the contribution of each
+component sphere to the total iso value.
 
 \begin{figure}
 	\centering
@@ -266,6 +276,27 @@ AND be fast}
 	\caption{Normal of Multiple Blobs}
 \end{figure}\evanTodo{Figure out why graphic is not showing up in the correct
 location}
+
+
+\begin{figure}
+	\centering
+	\includegraphics[width=1.7in]{images/SpheresBlending.png}
+	\caption{Blended spheres}
+\end{figure}
+
+
+
+
+
+
+% We can determine the gradient\cite{Stam2011} with a method.
+We determine the gradient by taking a linear combination of the normals of each
+blob. To determine the normal of a single blob is trivial. $\nabla F = p - c_0$
+where $p$ is the vertex on the surface, and $c_0$ is the center of the
+blob. \evan{I think I'm getting tricky here and that this might actually work
+AND be fast}
+
+
 
 Where $c_0$ is the center of one blob, $c_1$ is the center of the second blob,
 and $pt$ is the point on th surface where we want to find the normal vector.
