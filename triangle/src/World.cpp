@@ -108,12 +108,12 @@ void World::mousePressEvent(GLFWwindow* w, int button, int mods)
 	switch(button)
 	{
 		case GLFW_MOUSE_BUTTON_LEFT:
+			if ((mods & GLFW_MOD_CONTROL) == GLFW_MOD_CONTROL)
+				m_cam_mode = CAM_STRAFE;
 			break;
 		case GLFW_MOUSE_BUTTON_RIGHT:
 			break;
 		case GLFW_MOUSE_BUTTON_MIDDLE:
-			if ((mods & GLFW_MOD_CONTROL) == GLFW_MOD_CONTROL)
-				m_cam_mode = CAM_STRAFE;
 			break;
 	}
 }
@@ -124,12 +124,12 @@ void World::mouseReleaseEvent(GLFWwindow* w, int button, int mods)
 	switch(button)
 	{
 		case GLFW_MOUSE_BUTTON_LEFT:
+			// release camera mode
+			m_cam_mode = CAM_ROTATE;
 			break;
 		case GLFW_MOUSE_BUTTON_RIGHT:
 			break;
 		case GLFW_MOUSE_BUTTON_MIDDLE:
-			// release camera mode
-			m_cam_mode = CAM_ROTATE;
 			break;
 	}
 }
@@ -342,10 +342,11 @@ void World::camera_dolly(double x, double y)
 		x /= 10;
 		y /= 10;
 	}
-	glm::vec3 direction = m_camera.View() - m_camera.Position();
+	/*glm::vec3 direction = m_camera.View() - m_camera.Position();
 	direction = glm::normalize(direction);
-	m_camera.move_camera(direction * (GLfloat)y);
-	m_camera.set_view(m_camera.View() +(direction * (GLfloat)y));
+	m_camera.move_camera(direction * (GLfloat)y); */
+	m_camera.dolly_in(y);
+	//m_camera.set_view(m_camera.View() +(direction * (GLfloat)y));
 }
 
 void World::camera_strafe(vec2 mouse_point)
@@ -373,6 +374,7 @@ void World::camera_rotate(vec2 mouse_point)
 		x_rotate /= 10;
 		y_rotate /= 10;
 	}
+	// We want to scale it based on the distance from the lookat point
 	m_camera.rotate_horizontal(x_rotate);
 	m_camera.rotate_vertical(y_rotate);
 	m_old_mouse = mouse_point;

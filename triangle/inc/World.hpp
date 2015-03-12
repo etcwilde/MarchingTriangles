@@ -192,7 +192,6 @@ private:
 
 	// TEST
 	Explicit::Mesh m_mesh;
-
 };
 
 #endif //WORLD_H

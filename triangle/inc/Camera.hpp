@@ -124,10 +124,12 @@ public:
 	 */
 	void strafe_up(GLfloat distance);
 
+	void dolly_in(GLfloat distance);
 
 	void rotate_horizontal(GLfloat distance);
 
 	void rotate_vertical(GLfloat distance);
+
 
 
 	/**
