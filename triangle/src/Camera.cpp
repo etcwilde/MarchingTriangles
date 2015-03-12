@@ -131,25 +131,19 @@ void Camera::strafe_up(GLfloat distance)
 void Camera::dolly_in(GLfloat distance)
 {
 	glm::vec3 direction = glm::normalize(View() - Position());
-	move_camera(direction * distance);
-	m_rotate_distance = glm::length(m_position - m_direction);
+	move_camera(direction * distance  * m_rotate_distance / 10.f);
 #ifdef DEBUG
 	std::cout << "Rotation Distance: " << m_rotate_distance << '\n';
 #endif
-	if (m_rotate_distance < 1.f)
-	{
-		set_view(View() + (direction * distance));
-	}
 }
 
 void Camera::rotate_horizontal(GLfloat distance)
 {
 	m_View_good = false;
 	vec3 direction = normalize(m_direction - m_position);
-	vec3 right_vec = cross(direction, m_updir) * distance;
-	m_position += right_vec;
-	m_direction = normalize(m_direction - m_position) * m_rotate_distance
-		+ m_position;
+	vec3 right_vec = cross(direction, m_updir) * -distance;
+	m_position += right_vec * m_rotate_distance;
+	m_direction = normalize(m_direction - m_position) * m_rotate_distance + m_position;
 }
 
 void Camera::rotate_vertical(GLfloat distance)
@@ -158,7 +152,7 @@ void Camera::rotate_vertical(GLfloat distance)
 	vec3 direction = normalize(m_direction - m_position);
 	vec3 right_vec = normalize(cross(direction, m_updir));
 	vec3 up = normalize(cross(direction, right_vec));
-	m_position += up * distance;
+	m_position += up * -distance * m_rotate_distance;
 	m_position = normalize(m_position - m_direction) * m_rotate_distance + m_direction;
 }
 

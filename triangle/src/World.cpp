@@ -114,6 +114,9 @@ void World::mousePressEvent(GLFWwindow* w, int button, int mods)
 		case GLFW_MOUSE_BUTTON_RIGHT:
 			break;
 		case GLFW_MOUSE_BUTTON_MIDDLE:
+			if ((mods & GLFW_MOD_CONTROL) == GLFW_MOD_CONTROL)
+				m_cam_mode = CAM_STRAFE;
+
 			break;
 	}
 }
@@ -130,6 +133,8 @@ void World::mouseReleaseEvent(GLFWwindow* w, int button, int mods)
 		case GLFW_MOUSE_BUTTON_RIGHT:
 			break;
 		case GLFW_MOUSE_BUTTON_MIDDLE:
+			// release camera mode
+			m_cam_mode = CAM_ROTATE;
 			break;
 	}
 }
