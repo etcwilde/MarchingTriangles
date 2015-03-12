@@ -28,8 +28,6 @@ World::World()
 	blobs.AddObject(&blob1);
 	blobs.AddObject(&blob2);
 
-	Explicit::Mesh m;
-
 	Explicit::Face f;
 	f.m_vertex_index[0] = 1;
 	f.m_vertex_index[1] = 2;
@@ -39,16 +37,24 @@ World::World()
 	f.m_normal_index[1] = 1;
 	f.m_normal_index[2] = 1;
 
-	m.m_vertex_atlas.push_back(glm::vec3(10, 0, 0));
-	m.m_vertex_atlas.push_back(glm::vec3(-10, 0, 0));
-	m.m_vertex_atlas.push_back(glm::vec3(0, 0, 10));
+	m_mesh.push_vertex(glm::vec3(3, 0, 0));
+	m_mesh.push_vertex(glm::vec3(-3, 0, 0));
+	m_mesh.push_vertex(glm::vec3(0, 1, 3));
 
-	m.m_normal_atlas.push_back(glm::vec3(0, 1, 0));
+	m_mesh.push_normal(glm::vec3(0, 1, 0));
 
-	m.m_faces.push_back(f);
+	m_mesh.push_face(f);
 
 
-	m.Export();
+	/*m_mesh.m_vertex_atlas.push_back();
+	m_mesh.m_vertex_atlas.push_back(glm::vec3(-10, 0, 0));
+	m_mesh.m_vertex_atlas.push_back(glm::vec3(0, 0, 10));
+
+	m_mesh.m_normal_atlas.push_back(glm::vec3(0, 1, 0));
+
+	m_mesh.m_faces.push_back(f); */
+
+	m_mesh.Export();
 
 
 	/*m_point_cloud.push_back(glm::vec3(0, 0, 0));
@@ -221,6 +227,8 @@ void World::Draw()
 	for (std::list<Triangle>::iterator it = m_triangles.begin();
 			it != m_triangles.end(); it++)
 		(*it).Draw();
+
+	m_mesh.Draw();
 
 	glPopMatrix();
 }

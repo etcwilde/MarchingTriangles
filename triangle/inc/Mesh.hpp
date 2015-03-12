@@ -17,6 +17,8 @@
 
 #include <glm/vec3.hpp>
 
+#include "Triangle.hpp"
+
 
 namespace Explicit
 {
@@ -46,12 +48,35 @@ namespace Explicit
 		 */
 		void Export();
 
+		/**
+		 * \brief Adds vertex to the vertex atlas
+		 */
+		void push_vertex(glm::vec3 vertex);
+
+		/**
+		 * \brief Adds normal to the normal atlas
+		 */
+		void push_normal(glm::vec3 normal);
+
+		/**
+		 * \brief Adds a face to the list of faces
+		 */
+		void push_face(Face face);
+
+		/**
+		 * \brief Draws the mesh
+		 *
+		 * This will get removed when we work in getting it to the vbo
+		 */
+		void Draw();
+
+	protected:
+	private:
 		std::vector<glm::vec3> m_vertex_atlas;
 		std::vector<glm::vec3> m_normal_atlas;
 		std::list<Face> m_faces;
 
-	protected:
-	private:
+
 	};
 };
 #endif // MESH_HPP

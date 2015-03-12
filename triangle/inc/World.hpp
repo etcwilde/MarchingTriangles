@@ -14,20 +14,19 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
+#include <cstdlib>
+#include <list>
 
 #include "Camera.hpp"
 
+#include "fieldFunctions.hpp"
 #include "ImplicitPrimitive.hpp"
 #include "ImplicitBlend.hpp"
 
 
-#include "fieldFunctions.hpp"
-
 #include "Mesh.hpp"
 
 
-#include <cstdlib>
-#include <list>
 
 #include "Triangle.hpp"
 
@@ -190,6 +189,9 @@ private:
 	std::list<glm::vec3> m_grad_cloud; // Just to see what happens
 
 	std::list<Triangle> m_triangles;
+
+	// TEST
+	Explicit::Mesh m_mesh;
 
 };
 

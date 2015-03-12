@@ -27,6 +27,34 @@ Mesh::Mesh() :
 	m_faces()
 { }
 
+void Mesh::push_vertex(glm::vec3 vertex)
+{
+	m_vertex_atlas.push_back(vertex);
+}
+
+void Mesh::push_normal(glm::vec3 normal)
+{
+	m_normal_atlas.push_back(normal);
+}
+
+void Mesh::push_face(Face f)
+{
+	m_faces.push_back(f);
+}
+
+// Lol
+void Mesh::Draw()
+{
+	for (auto faces = m_faces.begin(); faces != m_faces.end(); faces++)
+	{
+		Triangle t(
+				m_vertex_atlas[(*faces).m_vertex_index[0] - 1],
+				m_vertex_atlas[(*faces).m_vertex_index[1] - 1],
+				m_vertex_atlas[(*faces).m_vertex_index[2] - 1]);
+		t.Draw();
+	}
+}
+
 void Mesh::Export()
 {
 	std::filebuf fb;
@@ -90,6 +118,9 @@ void Mesh::Export()
 			<< '\n';
 	}
 
+
+	os << "# Vertices Written " << m_vertex_atlas.size() << '\n';
+	os << "# Normals Written " << m_normal_atlas.size() << '\n';
 	os << "# Triangles written " << m_faces.size();
 	std::string faces;
 	fb.close();
