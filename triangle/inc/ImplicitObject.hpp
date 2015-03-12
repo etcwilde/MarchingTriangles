@@ -95,6 +95,13 @@ namespace Implicit
 		 */
 		virtual glm::vec3 Normal(glm::vec3 point)=0;
 
+		/**
+		 * \brief Get an initial vertex on the surface
+		 *
+		 * \return The vertex on the surface of the object
+		 */
+		virtual glm::vec3 GetStartVertex();
+
 	protected:
 
 		/**

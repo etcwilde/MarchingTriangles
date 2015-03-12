@@ -27,6 +27,10 @@ glm::vec3 Object::Project(glm::vec3 p)
 	return project(p);
 }
 
+glm::vec3 Object::GetStartVertex()
+{
+	return Project(m_center);
+}
 
 float Object::findRoot(glm::vec3 point, glm::vec3 direction)
 {
@@ -35,35 +39,27 @@ float Object::findRoot(glm::vec3 point, glm::vec3 direction)
 	register float xi;
 	register float xi1 = 0;
 	register float xi2 = 1;
+#ifdef DEBUG
+	unsigned int iteration = 0;
+#endif
 	for (unsigned int i = 0; i < FIND_ROOT_ITERS; ++i)
 	{
 		register float fxi1 = Evaluate(point + (direction * xi1));
 		register float fxi2 = Evaluate(point + (direction * xi2));
 		xi = xi1 - fxi1 * ((xi1 - xi2)/(fxi1 - fxi2));
-
-/*#ifdef DEBUG
-		std::cout
-			<< "i: " << i + 1
-			<< " xi: " << xi
-			<< " xi1: " << xi1
-			<< " fxi1: " << fxi1
-			<< " xi2: " << xi2
-			<< " fxi2: " << fxi2
-			<< '\n';
-#endif  */
-
-		/*if (xi == xi1)
-		{
-			ret_val = xi;
-			break;
-		} */
 		if (fxi1 == fxi2)
 		{
 			ret_val = xi1;
+#ifdef DEBUG
+			iteration = i;
+#endif
 			break;
 		}
 		xi2 = xi1; xi1 = xi;
 	}
+#ifdef DEBUG
+	std::cout << "Iterations: " << iteration << '\n';
+#endif
 	return ret_val;
 }
 
@@ -79,8 +75,8 @@ void Object::getTangentSpace(const glm::vec3& N, glm::vec3& T, glm::vec3& B)
 
 glm::vec3 Object::project(glm::vec3 pt)
 {
-	glm::vec3 direction = Normal(pt);
-	float distance;
-	distance = findRoot(pt, direction);
-	return pt + (direction * distance);
+	// the point + some distance along the gradient
+	// Gives us the point on the surface
+	return pt + (Normal(pt) * findRoot(pt, Normal(pt)));
 }
+

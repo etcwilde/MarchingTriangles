@@ -23,6 +23,8 @@
 
 #include "fieldFunctions.hpp"
 
+#include "Mesh.hpp"
+
 
 #include <cstdlib>
 #include <list>

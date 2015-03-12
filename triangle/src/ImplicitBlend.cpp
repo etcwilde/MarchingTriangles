@@ -39,13 +39,24 @@ float Blend::FieldValue(glm::vec3 point)
 glm::vec3 Blend::Normal(glm::vec3 point)
 {
 	float total_field_value = FieldValue(point);
+
+/*
+#ifdef DEBUG
+	std::cout << "Field Value: " << point << " " << total_field_value << '\n';
+#endif
+*/
+
 	glm::vec3 normal;
 	for (std::list<Object*>::iterator obj = m_objects.begin();
 			obj != m_objects.end(); obj++)
 	{
 		float partial_field_value = (*obj)->FieldValue(point);
-		normal += (partial_field_value / total_field_value) 
+		if (f_equ(partial_field_value, 0)) continue;
+		normal += (partial_field_value / total_field_value)
 			* (*obj)->Normal(point);
+	//	normal += ((partial_field_value / m_iso) / total_field_value)
+	//		* (*obj)->Normal(point);
 	}
-	return normal;
+
+	return glm::normalize(normal);
 }
