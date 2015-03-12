@@ -14,17 +14,21 @@
 #include <GLFW/glfw3.h>
 
 #include <iostream>
-
-#include "Camera.hpp"
-
-
-#include "fieldFunctions.hpp"
-#include "ImplicitSystem.hpp"
-
 #include <cstdlib>
 #include <list>
 
+#include "Camera.hpp"
 
+#include "fieldFunctions.hpp"
+#include "ImplicitPrimitive.hpp"
+#include "ImplicitBlend.hpp"
+
+
+#include "Mesh.hpp"
+
+
+
+#include "Triangle.hpp"
 
 
 // Camera movements
@@ -182,6 +186,12 @@ private:
 	double m_prevTime;
 
 	std::list<glm::vec3> m_point_cloud;
+	std::list<glm::vec3> m_grad_cloud; // Just to see what happens
+
+	std::list<Triangle> m_triangles;
+
+	// TEST
+	Explicit::Mesh m_mesh;
 };
 
 #endif //WORLD_H

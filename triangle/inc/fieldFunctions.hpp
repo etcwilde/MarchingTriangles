@@ -10,19 +10,9 @@
 #define FIELDFUNCTIONS_H
 #include <cmath>
 
-float solidFunction(float dist);
+// Outputs are in [0, 1]
+float geoffFunction(float r, float R);
 
-float linearFunction(float dist);
-
-float parabolicFunction(float dist);
-
-float geoffFunction(float dist);
-
-float blinnFunction(float dist);
-
-float metaballFunction(float dist);
-
-float wyvillFunction(float dist);
-
+namespace Implicit {};
 
 #endif // FIELDFUNCTIONS_H

@@ -9,7 +9,5 @@
 #ifndef POLYGONIZER_H
 #define POLYGONIZER_H
 
-#include "MarchingCubes.hpp"
 
-
-#endif //POLYGONIZER_H 
+#endif //POLYGONIZER_H

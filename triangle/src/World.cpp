@@ -7,32 +7,9 @@
  */
 
 #include "World.hpp"
-
 #include <GL/gl.h>
-
-// Hahahahahahaha -- this is dumb
-
-std::list<glm::vec3> dumb_find(Implicit::Object* obj, const glm::vec3& v,
-		unsigned int trials)
-{
-	float value = 1.f;
-	double range = 0.001e-5;
-	float t_x, t_y, t_z;
-	std::list<glm::vec3> ret_list;
-
-	while (trials)
-	{
-		t_x = v.x + range * (rand() - 0.5f);
-		t_y = v.y + range * (rand() - 0.5f);
-		t_z = v.z + range * (rand() - 0.5f);
-		if (obj->contains(glm::vec3(t_x, t_y, t_z), 0.1f))
-			ret_list.push_back(glm::vec3(t_x, t_y, t_z));
-		range *= 1.000005f;
-		trials--;
-	}
-	return ret_list;
-}
-
+#include <iomanip>
+#include "vecHelp.hpp"
 
 World::World()
 	: m_drawGrid(true)
@@ -41,27 +18,60 @@ World::World()
 	m_grid_color = glm::vec3(1, 1, 1);
 	initGL();
 
+	Implicit::Primitive blob(geoffFunction, glm::vec3(0, 0, 0), 0.5, 1);
+	Implicit::Primitive blob1(geoffFunction, glm::vec3(0, 0, 0.5), 0.5, 1);
+	Implicit::Primitive blob2(geoffFunction, glm::vec3(0, 1, 0), 0.5, 1);
 
-	Implicit::Line obj = Implicit::Line(metaballFunction, 1.2, 10);
-	Implicit::Sphere sphere = Implicit::Sphere(metaballFunction, 6);
 
-	Implicit::Translate s1 = Implicit::Translate(&sphere, 5, 5, 0);
-	Implicit::Translate obj1 = Implicit::Translate(&obj, 0, 5, 0);
-	Implicit::Rotate obj2 = Implicit::Rotate(&obj, 0, 0, 3.1415926535926538 /2);
+	Implicit::Blend blobs(0.5);
+	blobs.AddObject(&blob);
+	blobs.AddObject(&blob1);
+	blobs.AddObject(&blob2);
 
-	Implicit::Sphere s2 = Implicit::Sphere(metaballFunction, 8);
+	Explicit::Face f;
+	f.m_vertex_index[0] = 1;
+	f.m_vertex_index[1] = 2;
+	f.m_vertex_index[2] = 3;
 
-	Implicit::Blend obj3;
-	obj3.addBaseObject(&obj1);
-	obj3.addBaseObject(&obj2);
-	obj3.addBaseObject(&s1);
+	f.m_normal_index[0] = 1;
+	f.m_normal_index[1] = 1;
+	f.m_normal_index[2] = 1;
 
-	Implicit::Twist t = Implicit::Twist(&obj3, glm::vec3(0, 6, 1), glm::vec3(0, 1, 0), 1.0f);
-	Implicit::Rotate r = Implicit::Rotate(&t, 3.14159265359265358/2, 0, 0);
+	m_mesh.push_vertex(glm::vec3(3, 0, 0));
+	m_mesh.push_vertex(glm::vec3(-3, 0, 0));
+	m_mesh.push_vertex(glm::vec3(0, 1, 3));
 
-	m_point_cloud = dumb_find(&r, glm::vec3(-10, -10, -10), 5000000);
+	m_mesh.push_normal(glm::vec3(0, 1, 0));
 
-	//m_point_cloud = obj_1.getPointsInObject();
+	m_mesh.push_face(f);
+
+
+	/*m_mesh.m_vertex_atlas.push_back();
+	m_mesh.m_vertex_atlas.push_back(glm::vec3(-10, 0, 0));
+	m_mesh.m_vertex_atlas.push_back(glm::vec3(0, 0, 10));
+
+	m_mesh.m_normal_atlas.push_back(glm::vec3(0, 1, 0));
+
+	m_mesh.m_faces.push_back(f); */
+
+	m_mesh.Export();
+
+
+	/*m_point_cloud.push_back(glm::vec3(0, 0, 0));
+	m_point_cloud.push_back(glm::vec3(0, 0, 0.1));
+	m_point_cloud.push_back(glm::vec3(0.1, 0.1, 0));
+	m_point_cloud.push_back(glm::vec3(0.5, 0, 0));
+	m_point_cloud.push_back(glm::vec3(0.1, 0.3, 0.5)); */
+
+	/*for (auto objs = m_point_cloud.begin(); objs != m_point_cloud.end();
+			objs++)
+	{
+		m_grad_cloud.push_back(blobs.Project((*objs)));
+		std::cout << "Point " << (*objs) << " : " << 
+			blobs.Project((*objs)) <<  " : " <<
+			blobs.FieldValue(blobs.Project((*objs))) << '\n';
+	} */
+
 }
 
 void World::initGL()
@@ -77,10 +87,9 @@ void World::initGL()
 	glShadeModel(GL_FLAT);
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
-	glPointSize(5.0f);
 	m_camera.set_bounds(1, 1);
-
 	glPointSize(10.f);
+
 }
 
 World::~World()
@@ -99,12 +108,15 @@ void World::mousePressEvent(GLFWwindow* w, int button, int mods)
 	switch(button)
 	{
 		case GLFW_MOUSE_BUTTON_LEFT:
+			if ((mods & GLFW_MOD_CONTROL) == GLFW_MOD_CONTROL)
+				m_cam_mode = CAM_STRAFE;
 			break;
 		case GLFW_MOUSE_BUTTON_RIGHT:
 			break;
 		case GLFW_MOUSE_BUTTON_MIDDLE:
 			if ((mods & GLFW_MOD_CONTROL) == GLFW_MOD_CONTROL)
 				m_cam_mode = CAM_STRAFE;
+
 			break;
 	}
 }
@@ -115,6 +127,8 @@ void World::mouseReleaseEvent(GLFWwindow* w, int button, int mods)
 	switch(button)
 	{
 		case GLFW_MOUSE_BUTTON_LEFT:
+			// release camera mode
+			m_cam_mode = CAM_ROTATE;
 			break;
 		case GLFW_MOUSE_BUTTON_RIGHT:
 			break;
@@ -127,53 +141,13 @@ void World::mouseReleaseEvent(GLFWwindow* w, int button, int mods)
 
 void World::mouseClickEvent(GLFWwindow* w, int button, int action, int mods)
 {
-	/*
-	if (button == GLFW_MOUSE_BUTTON_MIDDLE && mods == GLFW_MOD_ALT)
-	{
-		if (action == GLFW_PRESS)
-		{
-			double x, y;
-			glfwGetCursorPos(w, &x, &y);
-			m_mouseDrag = true;
-			m_lastRotation = m_currentRotation;
-			m_camera.mouseDown(glm::vec2(x, y), Camera::CameraMovements::TUMBLE);
-		}
-		else m_mouseDrag = false;
-		return;
-	}
-
-	if (button == GLFW_MOUSE_BUTTON_MIDDLE && mods == GLFW_MOD_SHIFT)
-	{
-		if (action == GLFW_PRESS)
-		{
-			double x, y;
-			glfwGetCursorPos(w, &x, &y);
-			m_mouseDrag = true;
-			m_lastTranslate = m_currentTranslate;
-			m_camera.mouseDown(glm::vec2(x, y), Camera::CameraMovements::TRACK);
-		}
-		else m_mouseDrag = false;
-		return;
-	}
-
-	if (button == GLFW_MOUSE_BUTTON_MIDDLE && mods == GLFW_MOD_CONTROL)
-	{
-		if (action == GLFW_PRESS)
-		{
-			double x, y;
-			glfwGetCursorPos(w, &x, &y);
-			m_mouseDrag = true;
-			m_lastScale = m_currentScale;
-			m_camera.mouseDown(glm::vec2(x, y), Camera::CameraMovements::DOLLY);
-		}
-		else m_mouseDrag = false;
-		return;
-	} */
+       double x, y;
+       glfwGetCursorPos(w, &x, &y);
+       m_old_mouse = vec2(x, y);
 }
 
 void World::mouseMoveEvent(GLFWwindow* w, double x, double y)
 {
-	if (!m_mouseDrag) m_old_mouse = vec2(x, y); // Expensive
 	if (m_mouseDrag)
 	{
 		if (m_cam_mode ==  CAM_STRAFE) camera_strafe(vec2(x, y));
@@ -237,13 +211,29 @@ void World::Draw()
 	m_camera.Render();
 	if (m_drawGrid) draw_coordinates();
 
-	glBegin(GL_POINTS);
+	glColor3f(1.f, 0.f, 0.f);
+	/*glBegin(GL_POINTS);
 	for (std::list<glm::vec3>::iterator it = m_point_cloud.begin();
 			it != m_point_cloud.end(); it++)
 	{
 		glVertex3f((*it).x, (*it).y, (*it).z);
 	}
+	glEnd();*/
+
+	glColor3f(0.f, 5.f, 7.f);
+	glBegin(GL_POINTS);
+	for (std::list<glm::vec3>::iterator it = m_grad_cloud.begin();
+			it != m_grad_cloud.end(); it++)
+	{
+		glVertex3f((*it).x, (*it).y, (*it).z);
+	}
 	glEnd();
+
+	for (std::list<Triangle>::iterator it = m_triangles.begin();
+			it != m_triangles.end(); it++)
+		(*it).Draw();
+
+	m_mesh.Draw();
 
 	glPopMatrix();
 }
@@ -357,10 +347,11 @@ void World::camera_dolly(double x, double y)
 		x /= 10;
 		y /= 10;
 	}
-	glm::vec3 direction = m_camera.View() - m_camera.Position();
+	/*glm::vec3 direction = m_camera.View() - m_camera.Position();
 	direction = glm::normalize(direction);
-	m_camera.move_camera(direction * (GLfloat)y);
-	m_camera.set_view(m_camera.View() +(direction * (GLfloat)y));
+	m_camera.move_camera(direction * (GLfloat)y); */
+	m_camera.dolly_in(y);
+	//m_camera.set_view(m_camera.View() +(direction * (GLfloat)y));
 }
 
 void World::camera_strafe(vec2 mouse_point)
@@ -388,6 +379,7 @@ void World::camera_rotate(vec2 mouse_point)
 		x_rotate /= 10;
 		y_rotate /= 10;
 	}
+	// We want to scale it based on the distance from the lookat point
 	m_camera.rotate_horizontal(x_rotate);
 	m_camera.rotate_vertical(y_rotate);
 	m_old_mouse = mouse_point;
