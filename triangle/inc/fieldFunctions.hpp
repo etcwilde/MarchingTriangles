@@ -13,6 +13,5 @@
 // Outputs are in [0, 1]
 float geoffFunction(float r, float R);
 
-namespace Implicit {};
 
 #endif // FIELDFUNCTIONS_H

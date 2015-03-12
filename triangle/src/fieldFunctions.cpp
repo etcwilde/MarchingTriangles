@@ -8,8 +8,6 @@
 
 #include "fieldFunctions.hpp"
 
-using namespace Implicit;
-
 float geoffFunction(float r, float R)
 {
 	register const float rs = (r * r) / (R * R);
