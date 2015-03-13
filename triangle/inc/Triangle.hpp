@@ -1,3 +1,11 @@
+/*
+ * Triangle
+ *
+ * File: 	Triangle.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Mar 03 2015
+ */
+
 #ifndef TRIANGLE_H
 #define TRIANGLE_H
 

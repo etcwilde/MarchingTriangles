@@ -1,4 +1,4 @@
-/**
+/*
  * World
  *
  * File: 	World.hpp

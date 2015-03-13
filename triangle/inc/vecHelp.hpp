@@ -1,3 +1,11 @@
+/*
+ * vecHelp
+ *
+ * File: 	vecHelp.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Mar 06 2015
+ */
+
 #ifndef VECHELP_HPP
 #define VECHELP_HPP
 

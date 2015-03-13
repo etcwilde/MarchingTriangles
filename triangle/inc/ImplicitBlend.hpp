@@ -1,3 +1,11 @@
+/*
+ * ImplicitBlend
+ *
+ * File: 	ImplicitBlend.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Mar 06 2015
+ */
+
 #ifndef IMPLICIT_BLEND_HPP
 #define IMPLICIT_BLEND_HPP
 
@@ -12,7 +20,7 @@
 namespace Implicit
 {
 	/**
-	 * Blends multiple primitive objects into one blobject
+	 * \brief Blends multiple primitive objects into one blobject
 	 */
 	class Blend : public Object
 	{

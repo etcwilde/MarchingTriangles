@@ -1,4 +1,4 @@
-/**
+/*
  * Window
  *
  * File: 	Window.cpp

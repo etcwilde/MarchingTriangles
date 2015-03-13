@@ -1,4 +1,4 @@
-/**
+/*
  * Polygonizer
  *
  * File: 	Polygonizer.hpp

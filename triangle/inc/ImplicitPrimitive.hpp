@@ -1,3 +1,11 @@
+/*
+ * ImplicitPrimitive
+ *
+ * File: 	ImplicitPrimitive.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 26 2015
+ */
+
 #ifndef IMPLICIT_PRIMITIVE_HPP
 #define IMPLICIT_PRIMITIVE_HPP
 
@@ -12,8 +20,18 @@
 namespace Implicit
 {
 
+	// First float is the current radius, second float is max radius of
+	// function
 	typedef float(*FieldFunction)(float, float);
 
+	/**
+	 * \brief A blob with a defined field function and iso value
+	 *
+	 * A primitive is currently just a blob.
+	 * A blob is defined by a central point and a field falloff function
+	 * surrounding the point. Where the field falloff function evaluates to
+	 * a given iso value, the surface is defined.
+	 */
 	class Primitive : public Object
 	{
 	public:

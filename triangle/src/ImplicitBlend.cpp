@@ -1,3 +1,11 @@
+/*
+ * ImplicitBlend
+ *
+ * File: 	ImplicitBlend.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Mar 6 2015
+ */
+
 #include "ImplicitBlend.hpp"
 
 using namespace Implicit;

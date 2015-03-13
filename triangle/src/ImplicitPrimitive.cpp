@@ -1,3 +1,11 @@
+/*
+ * ImplicitPrimitive
+ *
+ * File: 	ImplicitPrimitive.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 26 2015
+ */
+
 #include "ImplicitPrimitive.hpp"
 
 using namespace Implicit;

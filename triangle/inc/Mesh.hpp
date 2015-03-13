@@ -1,4 +1,4 @@
-/**
+/*
  * Mesh
  *
  * File: 	Mesh.hpp
@@ -19,7 +19,10 @@
 
 #include "Triangle.hpp"
 
-
+/**
+ * \brief Sets of defined vertices, normals, and faces making up shapes
+ *
+ */
 namespace Explicit
 {
 	/**
@@ -34,6 +37,10 @@ namespace Explicit
 		unsigned int m_normal_index[3]; // normal of each vertex
 	};
 
+	/**
+	 * \brief Explicit Mesh
+	 * A set of vertices, normals, and Faces
+	 */
 	class Mesh
 	{
 	public:

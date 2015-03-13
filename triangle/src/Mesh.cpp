@@ -1,4 +1,4 @@
-/**
+/*
  * Mesh
  *
  * File: 	Mesh.cpp

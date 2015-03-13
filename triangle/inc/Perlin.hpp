@@ -1,3 +1,11 @@
+/*
+ * Perlin
+ *
+ * File: 	Perlin.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 26 2015
+ */
+
 #ifndef PERLINNOISE_H
 #define PERLINNOISE_H
 #include <cmath>

@@ -1,3 +1,11 @@
+/*
+ * Perlin
+ *
+ * File: 	Perlin.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 26 2015
+ */
+
 #include "Perlin.hpp"
 
 float NoiseGenerator::generateNoise(float x, float y, float z)

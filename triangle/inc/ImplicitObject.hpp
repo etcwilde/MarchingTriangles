@@ -1,3 +1,11 @@
+/*
+ * ImplicitObject
+ *
+ * File: 	ImplicitObject.hpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Feb 18 2015
+ */
+
 #ifndef IMPLICIT_OBJECT_HPP
 #define IMPLICIT_OBJECT_HPP
 
@@ -13,6 +21,11 @@
 
 namespace Implicit
 {
+	/**
+	 * \brief Any implicitly defined shape
+	 *
+	 * All objects must have a position where surface is defined
+	 */
 	class Object {
 	public:
 		/**

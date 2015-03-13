@@ -1,4 +1,4 @@
-/**
+/*
  * floatlibs
  *
  * File: 	floatlibs.hpp
