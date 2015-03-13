@@ -28,22 +28,26 @@ World::World()
 	blobs.AddObject(&blob1);
 	blobs.AddObject(&blob2);
 
-	Explicit::Face f;
-	f.m_vertex_index[0] = 1;
-	f.m_vertex_index[1] = 2;
-	f.m_vertex_index[2] = 3;
+	m_mesh.AddFace (glm::vec3(1, 0, 0),
+			glm::vec3(-3, 0, 0),
+			glm::vec3(4, 1, 5),
+			glm::vec3(0, 1, 0),
+			glm::vec3(0, 1, 0),
+			glm::vec3(0, 1, 0));
 
-	f.m_normal_index[0] = 1;
-	f.m_normal_index[1] = 1;
-	f.m_normal_index[2] = 1;
+	m_mesh.AddFace (glm::vec3(1, 0, 0),
+			glm::vec3(-3, 0, 0),
+			glm::vec3(4, 1, -5),
+			glm::vec3(0, 1, 0),
+			glm::vec3(0, 1, 0),
+			glm::vec3(0, 1, 0));
 
-	m_mesh.push_vertex(glm::vec3(3, 0, 0));
-	m_mesh.push_vertex(glm::vec3(-3, 0, 0));
-	m_mesh.push_vertex(glm::vec3(0, 1, 3));
-
-	m_mesh.push_normal(glm::vec3(0, 1, 0));
-
-	m_mesh.push_face(f);
+	m_mesh.AddFace (glm::vec3(1, 0, 0),
+			glm::vec3(4, 1, 5),
+			glm::vec3(4, 1, -5),
+			glm::vec3(0, 1, 0),
+			glm::vec3(0, 1, 0),
+			glm::vec3(0, 1, 0));
 
 
 	/*m_mesh.m_vertex_atlas.push_back();
@@ -67,7 +71,7 @@ World::World()
 			objs++)
 	{
 		m_grad_cloud.push_back(blobs.Project((*objs)));
-		std::cout << "Point " << (*objs) << " : " << 
+		std::cout << "Point " << (*objs) << " : " <<
 			blobs.Project((*objs)) <<  " : " <<
 			blobs.FieldValue(blobs.Project((*objs))) << '\n';
 	} */

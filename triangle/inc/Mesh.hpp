@@ -12,12 +12,15 @@
 #include <list>
 #include <iostream>
 #include <string>
+#include <stack>
 #include <fstream>
 #include <vector>
+#include <thread>
 
 #include <glm/vec3.hpp>
 
 #include "Triangle.hpp"
+#include "vecHelp.hpp"
 
 /**
  * \brief Sets of defined vertices, normals, and faces making up shapes
@@ -56,19 +59,20 @@ namespace Explicit
 		void Export();
 
 		/**
-		 * \brief Adds vertex to the vertex atlas
+		 * \brief Adds a new face to the mesh
+		 *
+		 * A face must be made of three vertices and three normals
+		 *
+		 * \param v1 Vertex 1
+		 * \param v2 Vertex 2
+		 * \param v3 Vertex 3
+		 *
+		 * \param n1 Normal 1
+		 * \param n2 Normal 2
+		 * \param n3 Normal 3
 		 */
-		void push_vertex(glm::vec3 vertex);
-
-		/**
-		 * \brief Adds normal to the normal atlas
-		 */
-		void push_normal(glm::vec3 normal);
-
-		/**
-		 * \brief Adds a face to the list of faces
-		 */
-		void push_face(Face face);
+		void AddFace(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3,
+				glm::vec3 n1, glm::vec3 n2, glm::vec3 n3);
 
 		/**
 		 * \brief Draws the mesh
@@ -78,7 +82,70 @@ namespace Explicit
 		void Draw();
 
 	protected:
+
+		/**
+		 * \brief Adds vertex to the vertex atlas
+		 * \param vertex Vertex to be added to the atlas
+		 */
+		void push_vertex(glm::vec3 vertex);
+
+		/**
+		 * \brief Adds normal to the normal atlas
+		 * \param normal Normal to be added to the atlas
+		 */
+		void push_normal(glm::vec3 normal);
+
+		/**
+		 * \brief Adds a face to the list of faces
+		 * \param face The face to be pushed to the list
+		 */
+		void push_face(Face face);
+
+		/**
+		 * \brief Returns the number of vertices stored in the mesh
+		 * \return size of vertex atlas
+		 */
+		unsigned int vertices() const;
+
+		/**
+		 * \brief Returns the number of normal stored in the mesh
+		 * \return size of normal atlas
+		 */
+		unsigned int normals() const;
+
+		/**
+		 * \brief Returns the number of faces stored in the mesh
+		 * \return number of faces
+		 */
+		unsigned int faces() const;
+
+		/**
+		 * \brief cleans Datastructures to ensure no duplicates
+		 *
+		 * This removes any duplicate vertices and fixes the index in
+		 * the face
+		 *
+		 * Removes duplicate normals and fixes the index in the face
+		 *
+		 * Removes any duplicate faces
+		 *
+		 * This is a very hard problem
+		 */
+		void clean();
+
 	private:
+		typedef struct
+		{
+			unsigned int i;
+			unsigned int j;
+		} int_tup;
+
+		void clean_verts();
+
+		void clean_norms();
+
+		void clean_faces();
+
 		std::vector<glm::vec3> m_vertex_atlas;
 		std::vector<glm::vec3> m_normal_atlas;
 		std::list<Face> m_faces;

@@ -9,5 +9,12 @@
 #ifndef POLYGONIZER_H
 #define POLYGONIZER_H
 
+#include "Mesh.hpp"
+#include "ImplicitSystem.hpp"
+
+class Polygonizer
+{
+
+};
 
 #endif //POLYGONIZER_H

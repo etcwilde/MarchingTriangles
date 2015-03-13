@@ -1,5 +1,5 @@
 /*
- * Mesh
+ * Mes
  *
  * File: 	Mesh.cpp
  * Author:	Evan Wilde		<etcwilde@uvic.ca>
@@ -27,20 +27,37 @@ Mesh::Mesh() :
 	m_faces()
 { }
 
-void Mesh::push_vertex(glm::vec3 vertex)
+void Mesh::AddFace(glm::vec3 v1, glm::vec3 v2, glm::vec3 v3, glm::vec3 n1,
+		glm::vec3 n2, glm::vec3 n3)
 {
-	m_vertex_atlas.push_back(vertex);
-}
 
-void Mesh::push_normal(glm::vec3 normal)
-{
-	m_normal_atlas.push_back(normal);
-}
+	// ensure that no two vertices are the same
+	// otherwise it is simply an edge and we don't want it
+	if (v1 == v2) return;
+	if (v1 == v3) return;
+	if (v2 == v3) return;
 
-void Mesh::push_face(Face f)
-{
+	Face f;
+
+	m_vertex_atlas.push_back(v1);
+	f.m_vertex_index[0] = m_vertex_atlas.size();
+	m_vertex_atlas.push_back(v2);
+	f.m_vertex_index[1] = m_vertex_atlas.size();
+	m_vertex_atlas.push_back(v3);
+	f.m_vertex_index[2] = m_vertex_atlas.size();
+
+	m_normal_atlas.push_back(n1);
+	f.m_normal_index[0] = m_normal_atlas.size();
+	if (n2 != n1) m_normal_atlas.push_back(n2);
+	f.m_normal_index[1] = m_normal_atlas.size();
+	if (n3 != n1 && n3 != n2) m_normal_atlas.push_back(n3);
+	f.m_normal_index[2] = m_normal_atlas.size();
 	m_faces.push_back(f);
+
+	// Perform cleanup
+	clean();
 }
+
 
 // Lol
 void Mesh::Draw()
@@ -66,6 +83,9 @@ void Mesh::Export()
 
 	os << comment;
 
+
+	os << "\n# Vertices\n";
+
 	// Write vertex data
 	for (unsigned int i = 0; i < m_vertex_atlas.size(); ++i)
 	{
@@ -82,6 +102,8 @@ void Mesh::Export()
 			m_vertex_atlas[i].z << '\n';
 	}
 
+	os << "\n# Normals\n";
+
 	// Write vertex normal data
 	for (unsigned int i = 0; i < m_normal_atlas.size(); ++i)
 	{
@@ -97,6 +119,8 @@ void Mesh::Export()
 			m_normal_atlas[i].y << " " <<
 			m_normal_atlas[i].z << '\n';
 	}
+
+	os << "\n# Faces\n";
 
 	// Write Face data
 	for (std::list<Face>::iterator face = m_faces.begin();
@@ -126,4 +150,227 @@ void Mesh::Export()
 	fb.close();
 }
 
+// Protected Methods
 
+unsigned int Mesh::vertices() const
+{
+	return m_vertex_atlas.size();
+}
+
+unsigned int Mesh::normals() const
+{
+	return m_normal_atlas.size();
+}
+
+unsigned int Mesh::faces() const
+{
+	return m_faces.size();
+}
+
+void Mesh::clean()
+{
+	std::thread vert(&Mesh::clean_verts, this);
+	std::thread norm(&Mesh::clean_norms, this);
+
+	vert.join();
+	norm.join();
+
+//	clean_faces();
+}
+
+
+void Mesh::push_vertex(glm::vec3 vertex)
+{
+	m_vertex_atlas.push_back(vertex);
+}
+
+void Mesh::push_normal(glm::vec3 normal)
+{
+	m_normal_atlas.push_back(normal);
+}
+
+void Mesh::push_face(Face f)
+{
+	m_faces.push_back(f);
+}
+
+// Private Methods
+
+void Mesh::clean_verts()
+{
+	// Make small
+	m_vertex_atlas.shrink_to_fit();
+
+	// Remove excess size
+	std::vector<glm::vec3> original_vertices;
+
+	// Duplicate
+	original_vertices = m_vertex_atlas;
+
+
+	std::stack<int_tup> remove_vertex;
+
+	unsigned int vc = 0; // Current Vertex
+	unsigned int vt = 1; // Test Vertex
+	for (vc = 0; vc < original_vertices.size() - 1 ; ++vc)
+	{
+		for (vt = vc + 1; vt < original_vertices.size(); ++vt)
+		{
+			if (original_vertices[vc] == original_vertices[vt])
+			{
+				m_vertex_atlas.erase( m_vertex_atlas.begin()
+						+ vt - remove_vertex.size());
+				remove_vertex.push(int_tup{.i = vc + 1, .j = vt + 1});
+			}
+		}
+	}
+	unsigned int removed_vertices = remove_vertex.size();
+	// We know that the removed indices are in order
+	while (remove_vertex.size() > 0)
+	{
+		int_tup removed = remove_vertex.top();
+		remove_vertex.pop();
+		for (std::list<Face>::iterator face = m_faces.begin();
+				face != m_faces.end(); face++)
+		{
+			Face *f = &(*face);
+			if (f->m_vertex_index[0] == removed.j)
+				f->m_vertex_index[0] = removed.i;
+
+			if (f->m_vertex_index[1] == removed.j)
+				f->m_vertex_index[1] = removed.i;
+
+			if (f->m_vertex_index[2] == removed.j)
+				f->m_vertex_index[2] = removed.i;
+		}
+	}
+
+	for (std::list<Face>::iterator face = m_faces.begin();
+			face != m_faces.end(); face++)
+	{
+		Face *f = &(*face);
+		if (f->m_vertex_index[0] - 1 > m_vertex_atlas.size())
+			f->m_vertex_index[0] -= removed_vertices;
+		else if (m_vertex_atlas[f->m_vertex_index[0] - 1] !=
+			original_vertices[f->m_vertex_index[0] - 1])
+			f->m_vertex_index[0] -= removed_vertices;
+
+		if (f->m_vertex_index[1] - 1 > m_vertex_atlas.size())
+			f->m_vertex_index[1] -= removed_vertices;
+		else if (m_vertex_atlas[f->m_vertex_index[1] - 1] !=
+			original_vertices[f->m_vertex_index[1] - 1])
+			f->m_vertex_index[1] -= removed_vertices;
+
+		if (f->m_vertex_index[2] - 1 > m_vertex_atlas.size())
+			f->m_vertex_index[2] -= removed_vertices;
+		else if (m_vertex_atlas[f->m_vertex_index[2] - 1] !=
+			original_vertices[f->m_vertex_index[2] - 1])
+			f->m_vertex_index[2] -= removed_vertices;
+	}
+}
+
+void Mesh::clean_norms()
+{
+	// Make small
+	m_normal_atlas.shrink_to_fit();
+
+
+	// Remove excess size
+	std::vector<glm::vec3> original_normals;
+
+	// Duplicate
+	original_normals = m_normal_atlas;
+
+
+	std::stack<int_tup> remove_normal;
+
+	unsigned int vc = 0; // Current Vertex
+	unsigned int vt = 1; // Test Vertex
+	for (vc = 0; vc < original_normals.size() - 1 ; ++vc)
+	{
+		for (vt = vc + 1; vt < original_normals.size(); ++vt)
+		{
+			if (original_normals[vc] == original_normals[vt])
+			{
+				m_normal_atlas.erase( m_normal_atlas.begin()
+						+ vt - remove_normal.size());
+				remove_normal.push(int_tup{.i = vc + 1, .j = vt + 1});
+			}
+		}
+	}
+	unsigned int removed_normals = remove_normal.size();
+	// We know that the removed indices are in order
+	while (remove_normal.size() > 0)
+	{
+		int_tup removed = remove_normal.top();
+		remove_normal.pop();
+		for (std::list<Face>::iterator face = m_faces.begin();
+				face != m_faces.end(); face++)
+		{
+			Face *f = &(*face);
+			if (f->m_normal_index[0] == removed.j)
+				f->m_normal_index[0] = removed.i;
+
+			if (f->m_normal_index[1] == removed.j)
+				f->m_normal_index[1] = removed.i;
+
+			if (f->m_normal_index[2] == removed.j)
+				f->m_normal_index[2] = removed.i;
+		}
+	}
+
+	for (std::list<Face>::iterator face = m_faces.begin();
+			face != m_faces.end(); face++)
+	{
+		Face *f = &(*face);
+		if (f->m_normal_index[0] - 1 > m_normal_atlas.size())
+			f->m_normal_index[0] -= removed_normals;
+		else if (m_normal_atlas[f->m_normal_index[0] - 1] !=
+			original_normals[f->m_normal_index[0] - 1])
+			f->m_normal_index[0] -= removed_normals;
+
+		if (f->m_normal_index[1] - 1 > m_normal_atlas.size())
+			f->m_normal_index[1] -= removed_normals;
+		else if (m_normal_atlas[f->m_normal_index[1] - 1] !=
+			original_normals[f->m_normal_index[1] - 1])
+			f->m_normal_index[1] -= removed_normals;
+
+		if (f->m_normal_index[2] - 1 > m_normal_atlas.size())
+			f->m_normal_index[2] -= removed_normals;
+		else if (m_normal_atlas[f->m_normal_index[2] - 1] !=
+			original_normals[f->m_normal_index[2] - 1])
+			f->m_normal_index[2] -= removed_normals;
+	}
+}
+
+void Mesh::clean_faces()
+{
+	bool p1_same = false;
+	bool p2_same = false;
+	bool p3_same = false;
+	for (std::list<Face>::iterator f = m_faces.begin(); f != m_faces.end(); f++)
+	{
+#ifdef DEBUG
+#endif
+		for (std::list<Face>::iterator f2 = f; f2 != m_faces.end(); f2++)
+		{
+			if (f2 == f) continue;
+			if ((*f).m_vertex_index[0] == (*f2).m_vertex_index[0] ||
+			(*f).m_vertex_index[0] == (*f2).m_vertex_index[1] ||
+			(*f).m_vertex_index[0] == (*f2).m_vertex_index[2])
+				p1_same = true;
+			if ((*f).m_vertex_index[1] == (*f2).m_vertex_index[0] ||
+			(*f).m_vertex_index[1] == (*f2).m_vertex_index[1] ||
+			(*f).m_vertex_index[1] == (*f2).m_vertex_index[2])
+				p2_same = true;
+			if ((*f).m_vertex_index[2] == (*f2).m_vertex_index[0] ||
+			(*f).m_vertex_index[2] == (*f2).m_vertex_index[1] ||
+			(*f).m_vertex_index[2] == (*f2).m_vertex_index[2])
+				p3_same = true;
+
+			if (p1_same && p2_same && p3_same)
+				m_faces.erase(f2);
+		}
+	}
+
+}
