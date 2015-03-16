@@ -175,7 +175,7 @@ void Mesh::clean()
 	vert.join();
 	norm.join();
 
-//	clean_faces();
+	clean_faces();
 }
 
 
@@ -345,15 +345,22 @@ void Mesh::clean_norms()
 
 void Mesh::clean_faces()
 {
+	if (m_faces.size() < 2) return;
 	bool p1_same = false;
 	bool p2_same = false;
 	bool p3_same = false;
-	for (std::list<Face>::iterator f = m_faces.begin(); f != m_faces.end(); f++)
+	//std::list<Face> original_faces = m_faces;
+	for (std::list<Face>::iterator f = m_faces.begin(); 
+			f != m_faces.end(); f++)
 	{
 #ifdef DEBUG
 #endif
-		for (std::list<Face>::iterator f2 = f; f2 != m_faces.end(); f2++)
+		for (std::list<Face>::iterator f2 = f; f2 !=
+				m_faces.end(); f2++)
 		{
+			p1_same = false;
+			p2_same = false;
+			p3_same = false;
 			if (f2 == f) continue;
 			if ((*f).m_vertex_index[0] == (*f2).m_vertex_index[0] ||
 			(*f).m_vertex_index[0] == (*f2).m_vertex_index[1] ||
@@ -369,7 +376,11 @@ void Mesh::clean_faces()
 				p3_same = true;
 
 			if (p1_same && p2_same && p3_same)
+			{
 				m_faces.erase(f2);
+				f2 = f;
+			}
+
 		}
 	}
 
