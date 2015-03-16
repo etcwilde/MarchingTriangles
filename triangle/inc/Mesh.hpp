@@ -81,6 +81,21 @@ namespace Explicit
 		 */
 		void Draw();
 
+		/**
+		 * \brief cleans Datastructures to ensure no duplicates
+		 *
+		 * This removes any duplicate vertices and fixes the index in
+		 * the face
+		 *
+		 * Removes duplicate normals and fixes the index in the face
+		 *
+		 * Removes any duplicate faces -- Difficult
+		 *
+		 * Do not call -- Results in segfaut
+		 * AddFace will clean for us for now
+		 */
+		void Clean();
+
 	protected:
 
 		/**

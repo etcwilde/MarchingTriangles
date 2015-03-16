@@ -8,3 +8,20 @@
 
 #include "Polygonizer.hpp"
 
+Polygonizer::Polygonizer(Implicit::Object *obj) :
+	m_object(obj),
+	m_mesh()
+{
+}
+
+Explicit::Mesh Polygonizer::GetMesh()
+{
+	return m_mesh;
+}
+
+void Polygonizer::SetObject(Implicit::Object *obj)
+{
+	m_object = obj;
+}
+
+

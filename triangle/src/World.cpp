@@ -28,12 +28,6 @@ World::World()
 	blobs.AddObject(&blob1);
 	blobs.AddObject(&blob2);
 
-	m_mesh.AddFace (glm::vec3(1, 0, 0),
-			glm::vec3(-3, 0, 0),
-			glm::vec3(4, 1, 5),
-			glm::vec3(0, 1, 0),
-			glm::vec3(0, 1, 0),
-			glm::vec3(0, 1, 0));
 
 	m_mesh.AddFace (glm::vec3(1, 0, 0),
 			glm::vec3(-3, 0, 0),
@@ -56,6 +50,7 @@ World::World()
 			glm::vec3(0, 1, 0),
 			glm::vec3(0, 1, 0));
 
+	//m_mesh.Clean();
 
 	/*m_mesh.m_vertex_atlas.push_back();
 	m_mesh.m_vertex_atlas.push_back(glm::vec3(-10, 0, 0));
