@@ -23,35 +23,55 @@
 class Polygonizer
 {
 public:
-	// Given an object, builds a mesh
+	/**
+	 * \brief Creates a new polygonizer instance
+	 *
+	 * \param obj Object to be polygonized
+	 */
 	Polygonizer(Implicit::Object *obj);
 
-	// Get the mesh
+	/**
+	 * \brief gets the converted mesh
+	 * \return Finalized mesh
+	 */
 	Explicit::Mesh GetMesh();
 
+	/**
+	 * \brief Set the instance object
+	 *
+	 * \param obj New object to polygonize
+	 */
 	void SetObject(Implicit::Object* obj);
 
 protected: // protected Methods
 	/**
 	 * Creates the mesh from the given object
+	 *
+	 * Updates the instance variable m_mesh
+	 * Any input is taken from m_object
+	 * m_object should not be changed by this method
+	 *
 	 */
 	virtual void Polygonize()=0;
 
-protected: // Protected Data structures
-		struct edge
-		{
-		public:
-			glm::vec3 pt1; glm::vec3 pt2;
-			inline float length()
-			{ return glm::length(pt1 - pt2); };
+	/**
+	 * \brief Generate Tangent space
+	 * Generates the tangent space of a given normal vector
+	 *
+	 * \param N The normal vector to find tangent space of
+	 * \param T Where the tangent will be stored
+	 * \param B Where the binormal will be stored
+	 */
+	void getTangentSpace(const glm::vec3& N, glm::vec3& T,
+			glm::vec3& B) const;
 
-			inline glm::vec3 direction()
-			{ return glm::normalize(pt1 - pt2); };
-		};
+protected: // Protected Data structures
 
 	Implicit::Object* m_object;
 	Explicit::Mesh m_mesh;
+
 private:
+	bool m_mesh_good;
 };
 
 #endif //POLYGONIZER_H

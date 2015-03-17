@@ -22,13 +22,22 @@ World::World()
 	Implicit::Primitive blob1(geoffFunction, glm::vec3(0, 0, 0.5), 0.5, 1);
 	Implicit::Primitive blob2(geoffFunction, glm::vec3(0, 1, 0), 0.5, 1);
 
-
 	Implicit::Blend blobs(0.5);
 	blobs.AddObject(&blob);
 	blobs.AddObject(&blob1);
 	blobs.AddObject(&blob2);
 
 
+	// Polygonize blob
+	MarchingTriangles mt(&blobs);
+	m_mesh = mt.GetMesh();
+
+	m_mesh.Export();
+
+	/*
+
+
+
 	m_mesh.AddFace (glm::vec3(1, 0, 0),
 			glm::vec3(-3, 0, 0),
 			glm::vec3(4, 1, 5),
@@ -48,7 +57,7 @@ World::World()
 			glm::vec3(4, 1, -5),
 			glm::vec3(0, 1, 0),
 			glm::vec3(0, 1, 0),
-			glm::vec3(0, 1, 0));
+			glm::vec3(0, 1, 0)); */
 
 	//m_mesh.Clean();
 
@@ -60,23 +69,26 @@ World::World()
 
 	m_mesh.m_faces.push_back(f); */
 
-	m_mesh.Export();
+
+	//m_mesh.Export();
 
 
-	/*m_point_cloud.push_back(glm::vec3(0, 0, 0));
+	m_point_cloud.push_back(glm::vec3(0, 0, 0));
 	m_point_cloud.push_back(glm::vec3(0, 0, 0.1));
 	m_point_cloud.push_back(glm::vec3(0.1, 0.1, 0));
 	m_point_cloud.push_back(glm::vec3(0.5, 0, 0));
-	m_point_cloud.push_back(glm::vec3(0.1, 0.3, 0.5)); */
+	m_point_cloud.push_back(glm::vec3(0.1, 0.3, 0.5));
 
-	/*for (auto objs = m_point_cloud.begin(); objs != m_point_cloud.end();
+	for (auto objs = m_point_cloud.begin(); objs != m_point_cloud.end();
 			objs++)
 	{
 		m_grad_cloud.push_back(blobs.Project((*objs)));
 		std::cout << "Point " << (*objs) << " : " <<
 			blobs.Project((*objs)) <<  " : " <<
 			blobs.FieldValue(blobs.Project((*objs))) << '\n';
-	} */
+	}
+
+
 
 }
 

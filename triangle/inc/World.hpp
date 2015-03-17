@@ -23,12 +23,10 @@
 #include "ImplicitPrimitive.hpp"
 #include "ImplicitBlend.hpp"
 
-
 #include "Mesh.hpp"
-
-
-
 #include "Triangle.hpp"
+
+#include "MarchingTriangles.hpp"
 
 
 // Camera movements
