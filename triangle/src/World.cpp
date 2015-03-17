@@ -29,7 +29,7 @@ World::World()
 
 
 	// Polygonize blob
-	MarchingTriangles mt(&blob);
+	polygonizer::MarchingTriangles mt(&blob);
 	m_mesh = mt.GetMesh();
 
 	m_mesh.Export();

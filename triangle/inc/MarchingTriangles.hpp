@@ -11,11 +11,24 @@
 
 #include "Polygonizer.hpp"
 
+#include <glm/glm.hpp>
+
+#include <vector>
+#include <list>
+#include <stack>
+
 #ifdef DEBUG
 #include <iostream>
 #endif
 
+namespace polygonizer
+{
 
+/**
+ * \brief A marching triangles advancing front polygonizer
+ * Uses the marching triangles algorithm to generate a mesh given an implicit 
+ * object.
+ */
 class MarchingTriangles : public Polygonizer
 {
 public:
@@ -34,8 +47,59 @@ protected:
 	float m_growth; //Default 1
 	float m_error; //The epsilon used for calculations
 	float m_max_curvature;
-	// If error == 0, then use growth exclusively
-	//
+	// If error == 0, then use growth exclusively -- Not sure what I'm
+	// talking about
+};
+
+/**
+ * \brief Edge
+ *
+ * An edge is defined by two points
+ */
+class Edge
+{
+public:
+	glm::vec3 pt1;
+	glm::vec3 pt2;
+
+	float length()
+	{
+		return glm::length(pt1 - pt2);
+	}
+
+	glm::vec3 midpoint()
+	{
+		return glm::vec3((pt1 + pt2) / 2.f);
+	}
+
+	glm::vec3 direction()
+	{
+		return glm::normalize(pt1 - pt2);
+	}
+};
+
+class Front
+{
+public:
+	std::list<Edge> edges;
+
+	unsigned int size()
+	{
+		return edges.size();
+	}
+
+	// TODO:
+	// self collisions
+	// Get point at minimal angle
+	// Front collision
+	// Expand
+	// Unify fronts
+	// split fronts
+	// triangulate mesh
+	// Delete Front
+};
+
+
 };
 
 #endif //MARCHING_TRIANGLES_HPP

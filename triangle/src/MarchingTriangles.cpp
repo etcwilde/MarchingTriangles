@@ -8,6 +8,8 @@
 
 #include "MarchingTriangles.hpp"
 
+using namespace polygonizer;
+
 MarchingTriangles::MarchingTriangles(Implicit::Object* obj) :
 	Polygonizer(obj),
 	m_size(),

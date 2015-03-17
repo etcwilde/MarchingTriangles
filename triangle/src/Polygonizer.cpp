@@ -8,6 +8,8 @@
 
 #include "Polygonizer.hpp"
 
+using namespace polygonizer;
+
 Polygonizer::Polygonizer(Implicit::Object *obj) :
 	m_object(obj),
 	m_mesh(),

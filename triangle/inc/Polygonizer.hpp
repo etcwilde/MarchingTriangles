@@ -19,6 +19,14 @@
 #include <stack>
 
 
+/**
+ * \brief Polygonizer
+ *
+ * Everything in this namespace works with the Polygonizer to convert an
+ * Implicit object to an Explicit mesh.
+ */
+namespace polygonizer
+{
 // Generalized Polygonizer
 class Polygonizer
 {
@@ -72,6 +80,8 @@ protected: // Protected Data structures
 
 private:
 	bool m_mesh_good;
+};
+
 };
 
 #endif //POLYGONIZER_H
