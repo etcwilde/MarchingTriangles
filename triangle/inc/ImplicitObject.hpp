@@ -115,7 +115,50 @@ namespace Implicit
 		 */
 		virtual glm::vec3 GetStartVertex();
 
+		/**
+		 * \brief Get Curvature of surface at a point
+		 *
+		 * Calculates the principle curvatures k1 k2
+		 *
+		 * Ron Goldman: Curvature formulas for implicit curves and
+		 * surfaces
+		 *
+		 * Also found in Curvature Dependent Polygonization of Implicit
+		 * Surfaces Page 3
+		 *
+		 * \param pt The point to find the curvature at
+		 *
+		 */
+		void Curvature(const glm::vec3& pt, float& k1, float& k2);
+
 	protected:
+		/**
+		 * \brief gets god deltas for minimizing roundoff error
+		 * Used for numerical differentiation
+		 * \param dx Where to store delta x
+		 * \param dy where to store delta y
+		 * \param dz where to store delta z
+		 * \param pt Position to get deltas of
+		 * \param eps Epsilon, defaults to FLT_EPSILON
+		 */
+		static inline void getDeltas(float& dx, float& dy, float& dz,
+				const glm::vec3& pt, float eps=FLT_EPSILON);
+
+		/**
+		 * \brief Calculate Hessian matrix at a given point
+		 * \param point The point to get the matrix at
+		 * \return The Hessian Function Curvature matrix
+		 */
+		glm::mat3 hessian(const glm::vec3& point);
+
+		/**
+		 * \brief Converts the Hessian to the Curvature of the surface
+		 * -- As shown in Curvature dependent polygonizers
+		 *
+		 * \param H Hessian matrix for the desired point
+		 * \return Curvature of the surface
+		 */
+		glm::mat3 surfaceCurvature(const glm::mat3& H);
 
 		/**
 		 * \brief Secant method root finder

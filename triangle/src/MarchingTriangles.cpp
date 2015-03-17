@@ -39,14 +39,22 @@ void MarchingTriangles::SeedTriangle()
 {
 	// Generate three vertices
 	glm::vec3 start_vertex = m_object->GetStartVertex();
+
+	// Find curvatures at the point
 	glm::vec3 start_normal = m_object->Normal(start_vertex);
+
+	float k1, k2;
+	m_object->Curvature(start_vertex, k1, k2);
+
 	glm::vec3 T;
 	glm::vec3 B;
 
 	getTangentSpace(start_normal, T, B);
 
+
 	glm::vec3 p2 = m_object->Project(start_vertex + (T * 0.2f));
-	glm::vec3 p3 = m_object->Project(start_vertex + (B * 0.2f));
+	glm::vec3 p3 = m_object->Project(((start_vertex + p2) / 2.f) + B * 0.2f);
+	glm::vec3 p4 = m_object->Project(((start_vertex + p2) / 2.f) - B * 0.2f);
 
 #ifdef DEBUG
 	std::cout
@@ -57,13 +65,10 @@ void MarchingTriangles::SeedTriangle()
 
 
 	glm::vec3 n2 = m_object->Normal(p2);
-
 	glm::vec3 n3 = m_object->Normal(p3);
-
-	m_mesh.AddFace(start_vertex,
-			p2, p3,
-			start_normal,
-			n2, n3);
+	glm::vec3 n4 = m_object->Normal(p4);
+	m_mesh.AddFace(start_vertex, p2, p3, start_normal, n2, n3);
+	m_mesh.AddFace(start_vertex, p2, p4, start_normal, n2, n4);
 }
 
 

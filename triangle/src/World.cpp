@@ -29,7 +29,7 @@ World::World()
 
 
 	// Polygonize blob
-	MarchingTriangles mt(&blobs);
+	MarchingTriangles mt(&blob);
 	m_mesh = mt.GetMesh();
 
 	m_mesh.Export();
@@ -82,10 +82,10 @@ World::World()
 	for (auto objs = m_point_cloud.begin(); objs != m_point_cloud.end();
 			objs++)
 	{
-		m_grad_cloud.push_back(blobs.Project((*objs)));
+		m_grad_cloud.push_back(blob.Project((*objs)));
 		std::cout << "Point " << (*objs) << " : " <<
-			blobs.Project((*objs)) <<  " : " <<
-			blobs.FieldValue(blobs.Project((*objs))) << '\n';
+			blob.Project((*objs)) <<  " : " <<
+			blob.FieldValue(blob.Project((*objs))) << '\n';
 	}
 
 
