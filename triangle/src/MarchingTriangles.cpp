@@ -35,6 +35,30 @@ MarchingTriangles::MarchingTriangles(Implicit::Object* obj, float error,
 void MarchingTriangles::Polygonize()
 {
 	SeedTriangle();
+
+	unsigned int depth = 0;
+	while(depth <= DEPTH && m_front.size() > 0)
+	{
+#ifdef DEBUG
+		std::cout << depth << '\n';
+		std::cout << "Front size: " << m_front.size() << '\n';
+#endif
+		Edge e = m_front.pop_edge();
+		std::cout << "Edge: " << e.pt1 << ", " << e.pt2 << '\n';
+
+		glm::vec3 nextpt = e.midpoint();
+		glm::vec3 T, B;
+		getTangentSpace(m_object->Normal(nextpt), T, B);
+		nextpt = m_object->Project(T * -0.2f * e.length() + nextpt);
+
+		glm::vec3 n = m_object->Normal(nextpt);
+		glm::vec3 n2 = m_object->Normal(e.pt1);
+		glm::vec3 n3 = m_object->Normal(e.pt2);
+
+		m_mesh.AddFace(nextpt, e.pt1, e.pt2, n, n2, n3);
+
+		depth++;
+	}
 }
 
 void MarchingTriangles::SeedTriangle()
@@ -64,7 +88,26 @@ void MarchingTriangles::SeedTriangle()
 		<< m_object->FieldValue(p2) << '\t'
 		<< m_object->FieldValue(p3) << '\n';
 #endif
+	Edge e1;
+	e1.pt1 = start_vertex;
+	e1.pt2 = p3;
 
+	Edge e2;
+	e2.pt1 = p2;
+	e2.pt2 = p3;
+
+	Edge e3;
+	e3.pt1 = start_vertex;
+	e3.pt2 = p4;
+
+	Edge e4;
+	e4.pt1 = p2;
+	e4.pt2 = p4;
+
+	m_front.push_edge(e1);
+	m_front.push_edge(e2);
+	m_front.push_edge(e3);
+	m_front.push_edge(e4);
 
 	glm::vec3 n2 = m_object->Normal(p2);
 	glm::vec3 n3 = m_object->Normal(p3);
