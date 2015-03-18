@@ -21,7 +21,6 @@
 #include <iostream>
 #endif
 
-#define DEPTH 10
 
 namespace polygonizer
 {
@@ -37,6 +36,9 @@ class Edge
 public:
 	glm::vec3 pt1;
 	glm::vec3 pt2;
+
+	Edge() : pt1(), pt2() {}
+	Edge(glm::vec3 p1, glm::vec3 p2) : pt1(p1), pt2(p2) {}
 
 	float length()
 	{

@@ -6,6 +6,8 @@
  * Date:	Mar 16 2015
  */
 
+#define DEPTH 3
+
 #include "MarchingTriangles.hpp"
 
 using namespace polygonizer;
@@ -40,23 +42,35 @@ void MarchingTriangles::Polygonize()
 	while(depth <= DEPTH && m_front.size() > 0)
 	{
 #ifdef DEBUG
-		std::cout << depth << '\n';
+		std::cout << "Polygonization Depth: " << depth << '\n';
 		std::cout << "Front size: " << m_front.size() << '\n';
 #endif
 		Edge e = m_front.pop_edge();
 		std::cout << "Edge: " << e.pt1 << ", " << e.pt2 << '\n';
 
-		glm::vec3 nextpt = e.midpoint();
+		glm::vec3 p1 = e.pt1;
+		glm::vec3 p2 = e.pt2;
+		glm::vec3 n1 = m_object->Normal(p1);
+		glm::vec3 n2 = m_object->Normal(p2);
 		glm::vec3 T, B;
-		getTangentSpace(m_object->Normal(nextpt), T, B);
-		nextpt = m_object->Project(T * -0.2f * e.length() + nextpt);
+		getTangentSpace(n1, T, B);
+		glm::vec3 p3;
+		if (glm::dot(T, e.direction()) > 0)
+			p3 = m_object->Project(((p1 + p2) / 2.f) + T * 0.2f);
+		else
+			p3 = m_object->Project(((p1 + p2) / 2.f) + T * -0.2f);
 
-		glm::vec3 n = m_object->Normal(nextpt);
-		glm::vec3 n2 = m_object->Normal(e.pt1);
-		glm::vec3 n3 = m_object->Normal(e.pt2);
+		m_mesh.AddFace(p1, p2, p3, n1, n2, m_object->Normal(p3));
 
-		m_mesh.AddFace(nextpt, e.pt1, e.pt2, n, n2, n3);
+		m_front.push_edge(Edge(p1, p3));
+		m_front.push_edge(Edge(p2, p3));
 
+#ifdef DEBUG
+	std::cout
+		<< m_object->FieldValue(p1) << '\t'
+		<< m_object->FieldValue(p2) << '\t'
+		<< m_object->FieldValue(p3) << '\n';
+#endif
 		depth++;
 	}
 }
