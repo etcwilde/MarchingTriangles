@@ -8,9 +8,9 @@
 
 #include "Mesh.hpp"
 
-using namespace Explicit;
+//using namespace Explicit;
 
-Face::Face()
+/*Face::Face()
 {
 	m_vertex_index[0] = 0;
 	m_vertex_index[1] = 0;
@@ -19,9 +19,9 @@ Face::Face()
 	m_normal_index[0] = 0;
 	m_normal_index[1] = 0;
 	m_normal_index[2] = 0;
-}
+} */
 
-Mesh::Mesh() :
+/*Mesh::Mesh() :
 	m_vertex_atlas(),
 	m_normal_atlas(),
 	m_faces()
@@ -396,6 +396,6 @@ void Mesh::clean_faces()
 			}
 
 		}
-	} */
+	} 
 
-}
+} */

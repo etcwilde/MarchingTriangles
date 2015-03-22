@@ -27,57 +27,18 @@ World::World()
 	blobs.AddObject(&blob1);
 	blobs.AddObject(&blob2);
 
-
 	// Polygonize blob
-	polygonizer::MarchingTriangles mt(&blob);
-	m_mesh = mt.GetMesh();
+	//polygonizer::MarchingTriangles mt(&blob);
+	/*m_mesh = mt.GetMesh();
 
-	m_mesh.Export();
-
-	/*
-
-
-
-	m_mesh.AddFace (glm::vec3(1, 0, 0),
-			glm::vec3(-3, 0, 0),
-			glm::vec3(4, 1, 5),
-			glm::vec3(0, 1, 0),
-			glm::vec3(0, 1, 0),
-			glm::vec3(0, 1, 0));
-
-	m_mesh.AddFace (glm::vec3(1, 0, 0),
-			glm::vec3(-3, 0, 0),
-			glm::vec3(4, 1, -5),
-			glm::vec3(0, 1, 0),
-			glm::vec3(0, 1, 0),
-			glm::vec3(0, 1, 0));
-
-	m_mesh.AddFace (glm::vec3(1, 0, 0),
-			glm::vec3(4, 1, 5),
-			glm::vec3(4, 1, -5),
-			glm::vec3(0, 1, 0),
-			glm::vec3(0, 1, 0),
-			glm::vec3(0, 1, 0)); */
-
-	//m_mesh.Clean();
-
-	/*m_mesh.m_vertex_atlas.push_back();
-	m_mesh.m_vertex_atlas.push_back(glm::vec3(-10, 0, 0));
-	m_mesh.m_vertex_atlas.push_back(glm::vec3(0, 0, 10));
-
-	m_mesh.m_normal_atlas.push_back(glm::vec3(0, 1, 0));
-
-	m_mesh.m_faces.push_back(f); */
-
-
-	//m_mesh.Export();
-
+	m_mesh.Export(); */
 
 	m_point_cloud.push_back(glm::vec3(0, 0, 0));
 	m_point_cloud.push_back(glm::vec3(0, 0, 0.1));
 	m_point_cloud.push_back(glm::vec3(0.1, 0.1, 0));
-	m_point_cloud.push_back(glm::vec3(0.5, 0, 0));
-	m_point_cloud.push_back(glm::vec3(0.1, 0.3, 0.5));
+	//m_point_cloud.push_back(glm::vec3(0.48, 0, 0));
+	//m_point_cloud.push_back(glm::vec3(0.1, 0.3, 0.5));
+	m_point_cloud.push_back(glm::vec3(-0.4, 0.f, 0.f));
 
 	for (auto objs = m_point_cloud.begin(); objs != m_point_cloud.end();
 			objs++)
@@ -89,9 +50,7 @@ World::World()
 			blobs.FieldValue(blobs.Project((*objs))) << '\n';
 #endif
 	}
-
-
-
+	m_box.compute(m_grad_cloud);
 }
 
 void World::initGL()
@@ -232,13 +191,13 @@ void World::Draw()
 	if (m_drawGrid) draw_coordinates();
 
 	glColor3f(1.f, 0.f, 0.f);
-	/*glBegin(GL_POINTS);
+	glBegin(GL_POINTS);
 	for (std::list<glm::vec3>::iterator it = m_point_cloud.begin();
 			it != m_point_cloud.end(); it++)
 	{
 		glVertex3f((*it).x, (*it).y, (*it).z);
 	}
-	glEnd();*/
+	glEnd();
 
 	glColor3f(0.f, 5.f, 7.f);
 	glBegin(GL_POINTS);
@@ -253,8 +212,8 @@ void World::Draw()
 			it != m_triangles.end(); it++)
 		(*it).Draw();
 
-	m_mesh.Draw();
-
+	glColor3f(0.95f, 0.92f, 0.266f);
+	m_box.draw();
 	glPopMatrix();
 }
 

@@ -42,7 +42,7 @@ public:
 	 * \brief gets the converted mesh
 	 * \return Finalized mesh
 	 */
-	Explicit::Mesh GetMesh();
+	Geometry::Mesh GetMesh();
 
 	/**
 	 * \brief Set the instance object
@@ -76,7 +76,7 @@ protected: // protected Methods
 protected: // Protected Data structures
 
 	Implicit::Object* m_object;
-	Explicit::Mesh m_mesh;
+	Geometry::Mesh m_mesh;
 
 private:
 	bool m_mesh_good;

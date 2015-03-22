@@ -18,7 +18,7 @@ Polygonizer::Polygonizer(Implicit::Object *obj) :
 {
 }
 
-Explicit::Mesh Polygonizer::GetMesh()
+Geometry::Mesh Polygonizer::GetMesh()
 {
 	if (!m_mesh_good)
 		Polygonize();

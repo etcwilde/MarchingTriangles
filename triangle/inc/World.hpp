@@ -28,6 +28,10 @@
 
 #include "MarchingTriangles.hpp"
 
+#include "DrawUtils.hpp"
+
+#include "Aabb.hpp"
+
 
 // Camera movements
 #define CAM_ROTATE	0b0001
@@ -189,7 +193,9 @@ private:
 	std::list<Triangle> m_triangles;
 
 	// TEST
-	Explicit::Mesh m_mesh;
+	Geometry::Mesh m_mesh;
+	Aabb m_box;
+
 };
 
 #endif //WORLD_H
