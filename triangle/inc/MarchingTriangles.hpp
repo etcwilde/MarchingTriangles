@@ -10,8 +10,9 @@
 #define MARCHING_TRIANGLES_HPP
 
 #include "Polygonizer.hpp"
-
 #include "floatlibs.hpp"
+#include "Mesh.hpp"
+
 
 #include <glm/glm.hpp>
 
@@ -43,6 +44,39 @@
 
 namespace polygonizer
 {
+
+
+
+class Vertex
+{
+public:
+	bool operator <(const Vertex& other) const
+	{ return m_opening_angle < other.m_opening_angle; }
+
+private:
+	unsigned int m_index;
+	bool m_active;
+	float m_opening_angle;
+	unsigned int m_triangle_index;
+};
+
+class Edge
+{
+public:
+	Edge() : m_a(-1), m_b(-1) {}
+	Edge(unsigned int a, unsigned int b, const Geometry::Mesh& m);
+private:
+	unsigned int m_a, m_b;
+	glm::vec3 m_A, m_B;
+	Aabb m_bbox; // Bounding box
+
+};
+
+class Front
+{
+public:
+
+};
 
 /**
  * \brief A marching triangles advancing front polygonizer
