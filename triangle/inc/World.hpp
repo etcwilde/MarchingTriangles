@@ -18,17 +18,10 @@
 #include <list>
 
 #include "Camera.hpp"
-
-#include "fieldFunctions.hpp"
-#include "ImplicitPrimitive.hpp"
-#include "ImplicitBlend.hpp"
+#include "DrawUtils.hpp"
 
 #include "Mesh.hpp"
 #include "Triangle.hpp"
-
-#include "MarchingTriangles.hpp"
-
-#include "DrawUtils.hpp"
 
 #include "Aabb.hpp"
 

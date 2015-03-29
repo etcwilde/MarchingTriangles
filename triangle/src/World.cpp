@@ -17,40 +17,6 @@ World::World()
 	m_background_color = glm::vec3(.0, .1, .1);
 	m_grid_color = glm::vec3(1, 1, 1);
 	initGL();
-
-	Implicit::Primitive blob(geoffFunction, glm::vec3(0, 0, 0), 0.5, 1);
-	Implicit::Primitive blob1(geoffFunction, glm::vec3(0, 0, 0.5), 0.5, 1);
-	Implicit::Primitive blob2(geoffFunction, glm::vec3(0, 1, 0), 0.5, 1);
-
-	Implicit::Blend blobs(0.5);
-	blobs.AddObject(&blob);
-	blobs.AddObject(&blob1);
-	blobs.AddObject(&blob2);
-
-	// Polygonize blob
-	//polygonizer::MarchingTriangles mt(&blob);
-	/*m_mesh = mt.GetMesh();
-
-	m_mesh.Export(); */
-
-	m_point_cloud.push_back(glm::vec3(0, 0, 0));
-	m_point_cloud.push_back(glm::vec3(0, 0, 0.1));
-	m_point_cloud.push_back(glm::vec3(0.1, 0.1, 0));
-	//m_point_cloud.push_back(glm::vec3(0.48, 0, 0));
-	//m_point_cloud.push_back(glm::vec3(0.1, 0.3, 0.5));
-	m_point_cloud.push_back(glm::vec3(-0.4, 0.f, 0.f));
-
-	for (auto objs = m_point_cloud.begin(); objs != m_point_cloud.end();
-			objs++)
-	{
-		m_grad_cloud.push_back(blob.Project((*objs)));
-#ifdef DEBUG
-		std::cout << "Point " << (*objs) << " : " <<
-			blobs.Project((*objs)) <<  " : " <<
-			blobs.FieldValue(blobs.Project((*objs))) << '\n';
-#endif
-	}
-	m_box.compute(m_grad_cloud);
 }
 
 void World::initGL()
@@ -208,12 +174,12 @@ void World::Draw()
 	}
 	glEnd();
 
-	for (std::list<Triangle>::iterator it = m_triangles.begin();
+	/*for (std::list<Triangle>::iterator it = m_triangles.begin();
 			it != m_triangles.end(); it++)
-		(*it).Draw();
+		(*it).Draw(); */
 
 	glColor3f(0.95f, 0.92f, 0.266f);
-	m_box.draw();
+	//m_box.draw();
 	glPopMatrix();
 }
 

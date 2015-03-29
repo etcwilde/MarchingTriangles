@@ -10,7 +10,7 @@
 #define POLYGONIZER_H
 
 #include "Mesh.hpp"
-#include "ImplicitSystem.hpp"
+#include "implicit/ImplicitSystem.hpp"
 
 #include <glm/glm.hpp>
 
