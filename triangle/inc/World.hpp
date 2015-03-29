@@ -1,4 +1,4 @@
-/**
+/*
  * World
  *
  * File: 	World.hpp
@@ -18,17 +18,12 @@
 #include <list>
 
 #include "Camera.hpp"
-
-#include "fieldFunctions.hpp"
-#include "ImplicitPrimitive.hpp"
-#include "ImplicitBlend.hpp"
-
+#include "DrawUtils.hpp"
 
 #include "Mesh.hpp"
-
-
-
 #include "Triangle.hpp"
+
+#include "Aabb.hpp"
 
 
 // Camera movements
@@ -191,7 +186,9 @@ private:
 	std::list<Triangle> m_triangles;
 
 	// TEST
-	Explicit::Mesh m_mesh;
+	Geometry::Mesh m_mesh;
+	Aabb m_box;
+
 };
 
 #endif //WORLD_H

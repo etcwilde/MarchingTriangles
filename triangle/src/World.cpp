@@ -1,4 +1,4 @@
-/**
+/*
  * World
  *
  * File: 	World.cpp
@@ -17,61 +17,6 @@ World::World()
 	m_background_color = glm::vec3(.0, .1, .1);
 	m_grid_color = glm::vec3(1, 1, 1);
 	initGL();
-
-	Implicit::Primitive blob(geoffFunction, glm::vec3(0, 0, 0), 0.5, 1);
-	Implicit::Primitive blob1(geoffFunction, glm::vec3(0, 0, 0.5), 0.5, 1);
-	Implicit::Primitive blob2(geoffFunction, glm::vec3(0, 1, 0), 0.5, 1);
-
-
-	Implicit::Blend blobs(0.5);
-	blobs.AddObject(&blob);
-	blobs.AddObject(&blob1);
-	blobs.AddObject(&blob2);
-
-	Explicit::Face f;
-	f.m_vertex_index[0] = 1;
-	f.m_vertex_index[1] = 2;
-	f.m_vertex_index[2] = 3;
-
-	f.m_normal_index[0] = 1;
-	f.m_normal_index[1] = 1;
-	f.m_normal_index[2] = 1;
-
-	m_mesh.push_vertex(glm::vec3(3, 0, 0));
-	m_mesh.push_vertex(glm::vec3(-3, 0, 0));
-	m_mesh.push_vertex(glm::vec3(0, 1, 3));
-
-	m_mesh.push_normal(glm::vec3(0, 1, 0));
-
-	m_mesh.push_face(f);
-
-
-	/*m_mesh.m_vertex_atlas.push_back();
-	m_mesh.m_vertex_atlas.push_back(glm::vec3(-10, 0, 0));
-	m_mesh.m_vertex_atlas.push_back(glm::vec3(0, 0, 10));
-
-	m_mesh.m_normal_atlas.push_back(glm::vec3(0, 1, 0));
-
-	m_mesh.m_faces.push_back(f); */
-
-	m_mesh.Export();
-
-
-	/*m_point_cloud.push_back(glm::vec3(0, 0, 0));
-	m_point_cloud.push_back(glm::vec3(0, 0, 0.1));
-	m_point_cloud.push_back(glm::vec3(0.1, 0.1, 0));
-	m_point_cloud.push_back(glm::vec3(0.5, 0, 0));
-	m_point_cloud.push_back(glm::vec3(0.1, 0.3, 0.5)); */
-
-	/*for (auto objs = m_point_cloud.begin(); objs != m_point_cloud.end();
-			objs++)
-	{
-		m_grad_cloud.push_back(blobs.Project((*objs)));
-		std::cout << "Point " << (*objs) << " : " << 
-			blobs.Project((*objs)) <<  " : " <<
-			blobs.FieldValue(blobs.Project((*objs))) << '\n';
-	} */
-
 }
 
 void World::initGL()
@@ -212,13 +157,13 @@ void World::Draw()
 	if (m_drawGrid) draw_coordinates();
 
 	glColor3f(1.f, 0.f, 0.f);
-	/*glBegin(GL_POINTS);
+	glBegin(GL_POINTS);
 	for (std::list<glm::vec3>::iterator it = m_point_cloud.begin();
 			it != m_point_cloud.end(); it++)
 	{
 		glVertex3f((*it).x, (*it).y, (*it).z);
 	}
-	glEnd();*/
+	glEnd();
 
 	glColor3f(0.f, 5.f, 7.f);
 	glBegin(GL_POINTS);
@@ -229,12 +174,12 @@ void World::Draw()
 	}
 	glEnd();
 
-	for (std::list<Triangle>::iterator it = m_triangles.begin();
+	/*for (std::list<Triangle>::iterator it = m_triangles.begin();
 			it != m_triangles.end(); it++)
-		(*it).Draw();
+		(*it).Draw(); */
 
-	m_mesh.Draw();
-
+	glColor3f(0.95f, 0.92f, 0.266f);
+	//m_box.draw();
 	glPopMatrix();
 }
 

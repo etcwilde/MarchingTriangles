@@ -1,4 +1,4 @@
-/**
+/*
  * Color
  *
  * File: 	Color.cpp

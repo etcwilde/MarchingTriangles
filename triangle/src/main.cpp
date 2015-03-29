@@ -1,4 +1,4 @@
-/**
+/*
  * main
  *
  * File: 	main.cpp
@@ -12,7 +12,6 @@
 #include <glm/glm.hpp>
 
 #include "Window.hpp"
-#include "fieldFunctions.hpp"
 #include "floatlibs.hpp"
 
 #ifdef TEST

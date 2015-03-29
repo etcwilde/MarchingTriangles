@@ -13,6 +13,7 @@ RMD	= $(RM) -r
 CC	= gcc
 CXX	= g++
 TAR	= tar
+AR	= ar
 MKDIR	= mkdir -p
 CP	= cp
 
@@ -20,14 +21,14 @@ CP	= cp
 D_SRC	= src/
 D_BUILD	= build/
 D_BIN	= bin/
-D_LIB	= libs/
+D_LIB	= lib/
 D_INC	= inc/
 D_TEST	= tests/
 D_DOCS	= docs/
 
 # Flags
 CFLAGS	= -c -iquote $(D_INC) -march=native -mfpmath=sse
-LIBS	= -pthread -lGL -lglfw
+LIBS	= -pthread -lGL -lglfw lib/libImplicit.a
 CXFLAGS = $(CFLAGS) -std=c++11
 
 # Generate Object file names
@@ -55,9 +56,6 @@ TEST_OBJS	= \
 	  $(patsubst $(D_TEST)%.C, $(D_BUILD)%.o, \
 	  $(patsubst $(D_TEST)%.cc, $(D_BUILD)%.o, $(TEST_SRCS)))))
 
-# $(warning( $(SRCS))
-# $(warning( $(OBJS))
-
 .PHONY:	all release debug test clean rebuild docs
 # No optimizations
 all: $(D_BIN)$(EXEC)
@@ -72,7 +70,7 @@ debug: all
 
 # Unit testing enabled
 test: CFLAGS += -Wall -DTEST
-test: LIBS += -lcppunit -ldl 
+test: LIBS += -lcppunit -ldl
 test: clean  $(TEST_OBJS) all
 
 clean:
@@ -135,5 +133,5 @@ $(D_BUILD)%.o : $(D_TEST)%.C
 	$(CXX) $(CXFLAGS) $< -o $@
 
 # Link Objects
-$(D_BIN)$(EXEC): $(D_BIN) $(D_BUILD) $(OBJS)
+$(D_BIN)$(EXEC): $(D_BIN) $(D_BUILD) $(OBJS) lib/libImplicit.a
 	$(CXX) -o $(D_BIN)$(EXEC) $(OBJS) $(LIBS)

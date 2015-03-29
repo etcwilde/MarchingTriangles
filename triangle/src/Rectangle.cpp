@@ -1,4 +1,4 @@
-/**
+/*
  * Rectangle
  *
  * File: 	Rectangle.cpp

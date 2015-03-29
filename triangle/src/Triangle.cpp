@@ -1,3 +1,11 @@
+/*
+ * Triangle
+ *
+ * File: 	Triangle.cpp
+ * Author:	Evan Wilde		<etcwilde@uvic.ca>
+ * Date:	Mar 03 2015
+ */
+
 #include "Triangle.hpp"
 
 std::list<glm::vec3> Triangle::get_vertices()
