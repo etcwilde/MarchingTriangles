@@ -1,0 +1,17 @@
+\ifdraft
+	\usepackage[colorinlistoftodos]{todonotes}
+		\newcommand{\evan}[1]{{\color{cyan}\emph{Evan Says:
+		#1}}\xspace}
+		\newcommand{\evanTodo}[1]{{\color{blue}\emph{Evan Todo:
+		#1}}\xspace}
+\else
+	\usepackage[disable]{todonotes}
+	\newcommand{\evan}[1]{}
+	\newcommand{\evanTodo}[1]{}
+\fi
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: "marching-triangles"
+%%% End:

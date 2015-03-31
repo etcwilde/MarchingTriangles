@@ -1,0 +1,14 @@
+\begin{thebibliography}{\protect\citename{{De Ara\'{u}jo} and Jorge }2004}
+
+\bibitem[\protect\citename{{De Ara\'{u}jo} and Jorge }2004]{DeAraujo2004}
+{\sc {De Ara\'{u}jo}, B.~R., and Jorge, J. A.~P.}
+\newblock 2004.
+\newblock {Curvature dependent polygonization of implicit surfaces}.
+\newblock {\em Brazilian Symposium of Computer Graphic and Image Processing\/},
+  266--273.
+
+\bibitem[\protect\citename{Wyvill et~al\mbox{.} }]{Wyvill}
+{\sc Wyvill, B., Guy, A., and Galin, E.}
+\newblock {The BlobTree}.
+
+\end{thebibliography}

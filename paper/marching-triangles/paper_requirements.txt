@@ -1,0 +1,11 @@
+Title
+Abstract ~ 100 words
+Introduction: Problem statement (what is the problem?)
+Previous work: What has been done before?
+Background: 
+Your Solution: Data structures, algoruthms
+Results: What happened
+Conclusions: What did I find?
+References: Archive-able
+	Bibtex
+
