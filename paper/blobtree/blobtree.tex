@@ -83,6 +83,22 @@ Blob trees are a data-structure for containing and evaluating the geometric
 information stored by blobs.
 \section{Related Work}
 \section{Implementation Details}
+\subsection{Finding Surface}
+Finding the point where the surface exists proves to be challenging, as the
+\fff\ is not necessarily invertible. To find the surface, a numerical
+root-finding method is required. I used the following secant method.
+$$x_i = x_{i-1} - f(x_{i-1}) \times {x_{i-1} - x_{i-2} \over f(x_{i-1}) -
+f(x_{i-2})}$$
+
+The secant method was chosen due to the relative speed of convergence while not
+requiring derivations. The bisection method guarantees convergence and does not
+require differentiation; however, it requires a bracket to be placed on the
+surface, and has linear convergence. The Newton-Raphson method is an open
+method that has order $n^2$ convergence, but requires derivations and cannot
+guarantee convergence. The secant method is another open method that has order
+$n^1.618$ convergence and does not require derivations, but cannot guarantee
+convergence. Furthermore, as an open interval method, the initial point must be
+close enough to the shape that the \fff\ has an effect.
 \subsection{Transforms}
 \subsection{Operations}
 \subsubsection{Blend}
