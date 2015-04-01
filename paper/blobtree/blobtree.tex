@@ -34,6 +34,7 @@
         pdfsubject={\Subject},
         urlcolor=blue,citecolor=black}
 
+
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
     T\kern-.1667em\lower.7ex\hbox{E}\kern-.125emX}}
 
@@ -96,6 +97,15 @@ implementation of the raytracer is also
 available\footnote{\url{https://github.com/etcwilde/ImplictRaytacer}}.
 
 \section{Related Work}
+Jim Blinn used blobs, or blobby molecules as a way of representing electron
+density fields \cite{Blinn}. Using blobs as a way of modeling has interesting
+advantages to simply working with algebraic implicit surfaces. Brian Wyvill
+worked to combine the power of CSG trees and blending of blobs to create a new
+implicit system, the blob tree. Blob trees are capable of all the basic CSG
+operations, such as union, intersect, difference, and warp, but also include
+the blend operation which will blend the blobs together when they get within a
+certain distance of each other. That is, the blobs can effect the shape of the
+blobs surrounding it.
 
 \section{Implementation Details}
 In this section, we describe the methods of implementing the blob tree, and why
@@ -138,6 +148,11 @@ object are beyond the maximum radius of the \fff\ and the secant method is
 unable to converge. For this, we implemented a simple bounding volume
 hierarchy, which is able to quickly determine which rays get close enough to
 the surface that the \fff\ will have values different than zero.
+
+\subsection{Primitives}
+I have only implemented one primitive object, the spherical blob. The primitive
+node will always be a leaf node on the blob-tree, halting further traversal.
+Evaluating the field function and normal of the primitive object is simple:
 
 \subsection{Transforms}
 We implemented the three basic transforms: translation, rotation, and scaling.
@@ -251,7 +266,7 @@ The matrix C can be defined using the hessian matrix and the normal vector.
 We implemented the bounding volume hierarchy (bvh) using axis-aligned bounding
 boxes(AABB). We used this construction due to the simplicity and speed of the
 intersection testing. A paper XXX describes an optimized method of determining
-the point of intersection of a ray with the AABB.
+the point of intersection of a ray with the AABB \cite{Williams}.
 
 Axis-aligned bounding-boxes (AABB).
 
@@ -266,7 +281,6 @@ twenty iterations without, and increased the number of locations where it did
 converge, we did not find that our naive approach had any effect on the overall
 speed of the ray tracing program, which should have received the most benefit
 from such a structure.
-
 
 \bibliographystyle{acmsiggraph}
 \bibliography{references}
