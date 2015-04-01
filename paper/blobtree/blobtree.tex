@@ -80,44 +80,193 @@
 
 \section{Introduction}
 Blob trees are a data-structure for containing and evaluating the geometric
-information stored by blobs.
+information stored by blobs. A blob tree represents an object stored as
+primitive objects stored in a hierarchy to build more complex geometries. The
+nodes represent the various transformations, binary operations, and primitive
+shapes that are combined in the hierarchy, allowing the design of more complex
+objects.
+
+In this paper, we explore the implementation details of a simple blob tree
+structure and various additions to increase the performance and robustness of
+the tree.
+
+The implementation of the implicit system is available on my
+github\footnote{\url{https://github.com/etcwilde/ImplicitSystem}}, and the
+implementation of the raytracer is also
+available\footnote{\url{https://github.com/etcwilde/ImplictRaytacer}}.
+
 \section{Related Work}
+
 \section{Implementation Details}
+In this section, we describe the methods of implementing the blob tree, and why
+we made a given decision.
 \subsection{Finding Surface}
 Finding the point where the surface exists proves to be challenging, as the
 \fff\ is not necessarily invertible. To find the surface, a numerical
-root-finding method is required. I used the following secant method.
+root-finding method is required. I used the secant method, described as
+follows:
 $$x_i = x_{i-1} - f(x_{i-1}) \times {x_{i-1} - x_{i-2} \over f(x_{i-1}) -
 f(x_{i-2})}$$
 
-The secant method was chosen due to the relative speed of convergence while not
-requiring derivations. The bisection method guarantees convergence and does not
-require differentiation; however, it requires a bracket to be placed on the
-surface, and has linear convergence. The Newton-Raphson method is an open
-method that has order $n^2$ convergence, but requires derivations and cannot
-guarantee convergence. The secant method is another open method that has order
-$n^1.618$ convergence and does not require derivations, but cannot guarantee
-convergence. Furthermore, as an open interval method, the initial point must be
-close enough to the shape that the \fff\ has an effect.
+The secant method was chosen due to the relative speed of convergence, not
+requiring bracketing, and not requiring derivations. The bisection method
+guarantees convergence and does not require differentiation; however, it
+requires a bracket to be placed on the surface, and has linear convergence. The
+Newton-Raphson method is an open method that has order $n^2$ convergence, but
+requires derivations and cannot guarantee convergence. The secant method is
+another open method that has order $n^{1.618}$ convergence and does not require
+derivations, but cannot guarantee convergence. Furthermore, as an open interval
+method, the initial point must be close enough to the shape that the \fff\ has
+an effect.
+
+For the purpose of polygonization, it is possible to use the centre point of a
+given primitive, which will be at the centre of the field function. In most
+cases, given the Geoff \fff, the secant method will converge within 6
+iterations. For this purpose, no extra measures are necessary to ensure
+convergence.
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[height=1.5in] {images/sphere_no_bvh.png}
+	\caption{Ray-traced blob without bvh}
+	\includegraphics[height=1.5in] {images/sphere_bvh.png}
+	\caption{Ray-traced blob with bvh}
+\end{figure}
+
+For the purpose of raytracing, in most cases the rays being sent toward the
+object are beyond the maximum radius of the \fff\ and the secant method is
+unable to converge. For this, we implemented a simple bounding volume
+hierarchy, which is able to quickly determine which rays get close enough to
+the surface that the \fff\ will have values different than zero.
+
 \subsection{Transforms}
+We implemented the three basic transforms: translation, rotation, and scaling.
+The transform class simply takes any 3-dimensional homogeneous matrix, making
+the implementation of the translation, rotation, and scaling operations
+trivial. The use of an over-arching transform class simplifies.
+
+\begin{figure}[htb]
+	\centering
+	\includegraphics[height=1.5in]{images/intersect_rotate.png}
+	\caption{Intersected Spheres Rotated then Translated}
+\end{figure}
+
 \subsection{Operations}
-\subsubsection{Blend}
-\subsubsection{Union}
-\subsubsection{Intersect}
+Blob-trees are able to perform various binary operations between two
+sub-trees. Our implementation provides three of the five possible operations;
+the blend, union, and intersect operations. The two remaining operations are
+the warp, which is not a binary operation, but includes tapers and twisting,
+and difference, allowing blobs to remove volume from another blob.
+
+We describe the method of calculating the field value and normal vector for
+each given operation.
+
+The method for calculating the field values of the various operations is
+described thoroughly in \textit{The BlobTree} \cite{Wyvill}.
+
+\begin{enumerate}
+	\item Primitive:\\
+		$F(p)$\\
+		$N(p) = {center - p \over | center - p |}$
+	\item Blend:\\
+		$F(L(o), p) + F(R(o), p)$\\
+		$N( $
+
+	\item Union:\\
+		$max(F(L(o), p), F(R(o), p))$
+	\item Intersect:\\
+		$min(F(L(o), p), F(R(o), p))$
+\end{enumerate}
+
+The primitive does not contain any children, and therefore will simply
+evaluate the field value with respect to the distance from the centre point.
+Similarly for calculating the normal vector, the primitive has no children, so
+the normal will be calculated as follows.
+
 \subsection{Instancing}
+By using instancing, we are able to minimize the memory usage by not
+duplicating simpler geometry to build more complex geometry. As an example, a
+union object can be made of a single primitive $p$, translated by some
+distance. We get the effect of two separate primitive instances, but we only
+use the memory of a single instance.
+
+In implicit systems, instancing has further performance benefits as it
+introduces the concept of local and world coordinates. An example of where this
+is particularly useful is when scaling the sphere. It is a lot simpler to
+perform a ray-sphere intersection than to perform the intersection test on a
+ellipsoid. By mapping the ray into the local coordinate system, we are able to
+leave the object as a sphere by bending the world and rays around it.
 \subsection{Normal Data}
 Normal is defined by the normalized weighted linear combination of the normal
 vectors of the contributing component spheres, where the weights are defined by
-the contribution to the iso value of the corresponding component
+the contribution to the iso-value of the corresponding component
 sphere\cite{Wyvill}.
 \subsection{Curvature}
 We are looking for the principal curvatures at a given point on the surface.
 The principal curvatures $k1$ and $k2$, define the curvature along the tangent
-and bi-normal vectors to the given point.
-Given a point $p \in \mathbb{R}^3$. Magic with matrices
-happens\cite{DeAraujo2004}.
+and bi-normal vectors to the given point. The method for finding the curvature
+is described in section four of \textit{Curvature Formulas for Implicit
+Surfaces} \cite{Goldman2005}. By using a cofactor approach, we can find the adjoint matrix to the
+hessian, $H'$. 
+
+$$
+H'(F) =
+\begin{bmatrix}
+	F_{yy}F_{zz} - F_{yz}F_{zy} & F_{yz}F_{zx} - F_{yx}F_{zz} & F_{yx}F_{zy} - F_{yy}F_{zx} \\
+	F_{xz}F_{zy} - F_{xy}F_{zz} & F_{xx}F_{zz} - F_{xz}F_{zx} & F_{xy}F_{zx} - F_{xx}F_{zy} \\
+	F_{xy}F_{yz} - F_{xz}F_{yy} & F_{yx}F_{xz} - F_{xx}F_{yz} & F_{xx}F_{yy} - F_{xy}F_{yx}
+\end{bmatrix}
+$$
+By performing the adjoint operation on $H'$, we can get the
+hessian matrix $H$. Then we can use the mean $k_M$ and gaussian $k_G$
+curvatures to find
+the principal curvatures $k1$ and $k2$ with the formula:
+$$k1, k2 = k_M \pm \sqrt{k^2_{M} - k_G}$$
+
+
+$$k_M = {\nabla F * H'(F) * \nabla F^T \over |\nabla F|^4}$$
+
+$$k_G = {\nabla F * H(F) * \nabla F^T - |\nabla F|^2 * H_{diagonal} \over 2 *
+|\nabla F|^3}$$
+
+I would like to investigate a method for finding curvature described in another
+paper\cite{DeAraujo2004} to see which handles sharp-edges and discontinuities
+better, and which method can be evaluated more quickly.
+
+The method described by De Ara\'{u}jo uses the partial derivatives of the
+normal vector in a single matrix, rather than computing multiple matrices.
+
+$$
+C=
+\begin{bmatrix}
+	{\partial N_x \over \partial x}&{\partial N_x \over \partial y}&{\partial N_x \over \partial z}\\
+	{\partial N_y \over \partial x}&{\partial N_y \over \partial y}&{\partial N_y \over \partial z}\\
+	{\partial N_z \over \partial x}&{\partial N_z \over \partial y}&{\partial N_z \over \partial z}
+\end{bmatrix}
+$$
+
+The matrix C can be defined using the hessian matrix and the normal vector.
+
 \subsection{Bounding Volume Hierarchies}
+We implemented the bounding volume hierarchy (bvh) using axis-aligned bounding
+boxes(AABB). We used this construction due to the simplicity and speed of the
+intersection testing. A paper XXX describes an optimized method of determining
+the point of intersection of a ray with the AABB.
+
 Axis-aligned bounding-boxes (AABB).
+
+\section{Findings}
+In this section, we describe how the decisions made effected the resulting
+speed and robustness of the blob tree.
+
+\subsection{Bounding Volume Hierarchies}
+We found that while the bvh greatly improved the rate of convergence of the
+secant method, taking an average of four iterations with the bvh versus the
+twenty iterations without, and increased the number of locations where it did
+converge, we did not find that our naive approach had any effect on the overall
+speed of the ray tracing program, which should have received the most benefit
+from such a structure.
+
 
 \bibliographystyle{acmsiggraph}
 \bibliography{references}
