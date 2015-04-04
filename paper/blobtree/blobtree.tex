@@ -150,6 +150,14 @@ hierarchy, which is able to quickly determine which rays get close enough to
 the surface that the \fff\ will have values different than zero.
 
 \subsection{Primitives}
+Currently, we have implemented the spherical blob, which simply consists of a
+centre point, an \fff, and an iso value where the surface is defined.
+
+The \fff we have implemented is the Geoff function: $r$ is the distance from
+the central point, $R$ is the maximum effective distance of the \fff.
+$$f(r) = 1 - {4\over9} {r^6 \over R^6} + {17 \over 9} {r^4 \over R ^ 4} -
+{22\over 9} {r^2 \over R^2}$$
+
 I have only implemented one primitive object, the spherical blob. The primitive
 node will always be a leaf node on the blob-tree, halting further traversal.
 Evaluating the field function and normal of the primitive object is simple:
@@ -211,11 +219,13 @@ is particularly useful is when scaling the sphere. It is a lot simpler to
 perform a ray-sphere intersection than to perform the intersection test on a
 ellipsoid. By mapping the ray into the local coordinate system, we are able to
 leave the object as a sphere by bending the world and rays around it.
+
 \subsection{Normal Data}
 Normal is defined by the normalized weighted linear combination of the normal
 vectors of the contributing component spheres, where the weights are defined by
 the contribution to the iso-value of the corresponding component
 sphere\cite{Wyvill}.
+
 \subsection{Curvature}
 We are looking for the principal curvatures at a given point on the surface.
 The principal curvatures $k1$ and $k2$, define the curvature along the tangent
@@ -268,8 +278,6 @@ boxes(AABB). We used this construction due to the simplicity and speed of the
 intersection testing. A paper XXX describes an optimized method of determining
 the point of intersection of a ray with the AABB \cite{Williams}.
 
-Axis-aligned bounding-boxes (AABB).
-
 \section{Findings}
 In this section, we describe how the decisions made effected the resulting
 speed and robustness of the blob tree.
@@ -281,6 +289,28 @@ twenty iterations without, and increased the number of locations where it did
 converge, we did not find that our naive approach had any effect on the overall
 speed of the ray tracing program, which should have received the most benefit
 from such a structure.
+
+\subsection{Limitations}
+By the description of the normal calculation, our implicit system is only
+capable of working with primitive spheres.
+
+\section{Future Work}
+\subsection{BVH}
+We would like to look into utilizing the bounding volume hierarchy to get more
+performance from the system. While optimized methods were used for testing and
+locating intersection points, we would like to use the bvh to determine when we
+need to evaluate a branch of the subtree.
+
+\subsection{Primitives}
+Another area on extending the blob tree is implementing more primitive skeletal
+objects, such as a: torus, cube, and line primitive. The implementation of the
+normal calculation could remain the same, but the normal calculations for the
+other primitives would either have to be sampled, as described in the Autodesk
+paper, or specific methods for the desired shape could be implemented.
+
+\subsection{Field falloff functions}
+As of this time, we have implemented and worked with the Geoff function. Future
+work could include observing the effects of other \fff s.
 
 \bibliographystyle{acmsiggraph}
 \bibliography{references}
