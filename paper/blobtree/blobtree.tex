@@ -80,21 +80,59 @@
 \copyrightspace
 
 \section{Introduction}
-Blob trees are a data-structure for containing and evaluating the geometric
-information stored by blobs. A blob tree represents an object stored as
-primitive objects stored in a hierarchy to build more complex geometries. The
-nodes represent the various transformations, binary operations, and primitive
-shapes that are combined in the hierarchy, allowing the design of more complex
-objects.
+
+Implicit surfaces are a mathematical representation of geometric information;
+storing complex geometric information with minimal memory requirements.
+Implicit surfaces can be represented with implicit equations or as blobs. The
+implicit equation form uses algebraic formulas to define shapes, for example a
+sphere is represented by the equations $x^2 + y^2 + z^2 = R^2$, where $R$ is
+the radius of the sphere. A more complex shape defined by an implicit equation
+is a jack,
+
+\begin{multline}
+	{1 \over ({x^2 \over 9} +  4y^2 + 4z^2)^4} +
+	{1 \over ({y^2 \over 9} +  4x^2 + 4z^2)^4} +
+	{1 \over (({4x \over 3} - 4)^2 + {16y^2 \over 9} +  {16z^2 \over 9})^4} +
+	{1 \over (({4x \over 3} + 4)^2 + {16y^2 \over 9} +  {16z^2 \over 9})^4} +
+	{1 \over (({4y \over 3} - 4)^2 + {16x^2 \over 9} +  {16z^2 \over 9})^4} +
+	{1 \over (({4y \over 3} + 4)^2 + {16x^2 \over 9} +  {16z^2 \over 9})^4} -
+	{1\over 4} - 1
+\end{multline}
+
+\evan{Cite this}
+
+Due to the complexity of the algebraic equations for complex models, a model
+was proposed which constructed complex geometry from simpler primitives using
+the operations union, different, and intersect.
+
+A separate branch of implicit surfaces is the blob, or the blobby molecule
+defined by Jim Blinn \evan{cite} for observing the behaviour of electron
+density fields. Blobs are defined in three parts: a center point, a filter
+field falloff function, and an iso value. The central point is the point around
+which the blob exists. The filter field falloff function is a function where at
+the center point is at its highest value, and at some maximum radius $R$ is 0.
+The iso value specifies the value of the evaluated filter field falloff
+function to define surface. That is, at some distance $r$, if the filter field
+falloff function evaluates to the iso value, then the surface is defined at the
+radius $r$.
+
+Brian Wyvill proposed a new structure combining the power of CSG trees and
+blobs into one structure, the blob tree. Blob trees are a data structure for
+containing and evaluating geometric information stored as blobs. A blob tree
+represents the complex geometry in a hierarchy where the root node is the
+intended shape and the leaf nodes are the primitive objects. The interior nodes
+are the various operations that can be performed on the primitives and simpler
+objects. These operations can be combined in various ways to design more
+complex objects.
 
 In this paper, we explore the implementation details of a simple blob tree
-structure and various additions to increase the performance and robustness of
-the tree.
+structure and the various additions that can be implemented to increase the
+performance and robustness of the tree for various uses.
 
-The implementation of the implicit system is available on my
-github\footnote{\url{https://github.com/etcwilde/ImplicitSystem}}, and the
-implementation of the raytracer is also
-available\footnote{\url{https://github.com/etcwilde/ImplictRaytacer}}.
+The implementation of the tree is available on github\evan{Implicit system
+GitHub Link}, with the accommodating implementation of the raytracer used to
+generate the images in the papers\evan{Github raytracer link}
+
 
 \section{Related Work}
 Jim Blinn used blobs, or blobby molecules as a way of representing electron
