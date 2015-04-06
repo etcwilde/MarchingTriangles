@@ -269,19 +269,23 @@ each given operation.
 The method for calculating the field values of the various operations is
 described thoroughly in \textit{The BlobTree} \cite{Wyvill}.
 
-\begin{enumerate}
-	\item Primitive:\\
-		$F(p)$\\
-		$N(p) = {center - p \over | center - p |}$
-	\item Blend:\\
-		$F(L(o), p) + F(R(o), p)$\\
-		$N( $
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[height=1.5in]{images/blend.png}
+	\caption{Blend operation}
+\end{figure}
 
-	\item Union:\\
-		$max(F(L(o), p), F(R(o), p))$
-	\item Intersect:\\
-		$min(F(L(o), p), F(R(o), p))$
-\end{enumerate}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[height=1.5in]{images/union.png}
+	\caption{Union operation}
+\end{figure}
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[height=1.5in]{images/intersect.png}
+	\caption{Intersect operation}
+\end{figure}
 
 The primitive does not contain any children, and therefore will simply
 evaluate the field value with respect to the distance from the centre point.
