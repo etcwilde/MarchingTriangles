@@ -26,6 +26,7 @@
 \usepackage{xspace}
 \usepackage{amssymb}
 \usepackage{amsmath}
+\usepackage{breqn}
 \usepackage{svg}
 
 \hypersetup{pdftitle={\Title},
@@ -89,17 +90,16 @@ sphere is represented by the equations $x^2 + y^2 + z^2 = R^2$, where $R$ is
 the radius of the sphere. A more complex shape defined by an implicit equation
 is a jack,
 
-\begin{multline}
-	{1 \over ({x^2 \over 9} +  4y^2 + 4z^2)^4} +
-	{1 \over ({y^2 \over 9} +  4x^2 + 4z^2)^4} +
-	{1 \over (({4x \over 3} - 4)^2 + {16y^2 \over 9} +  {16z^2 \over 9})^4} +
-	{1 \over (({4x \over 3} + 4)^2 + {16y^2 \over 9} +  {16z^2 \over 9})^4} +
-	{1 \over (({4y \over 3} - 4)^2 + {16x^2 \over 9} +  {16z^2 \over 9})^4} +
-	{1 \over (({4y \over 3} + 4)^2 + {16x^2 \over 9} +  {16z^2 \over 9})^4} -
-	{1\over 4} - 1
-\end{multline}
-
-\evan{Cite this}
+\begin{dmath*}
+\left({1 \over ({x^2 \over 9} +  4y^2 + 4z^2)^4} +
+{1 \over ({y^2 \over 9} +  4x^2 + 4z^2)^4} +
+{1 \over (({4x \over 3} - 4)^2 + {16y^2 \over 9} +  {16z^2 \over 9})^4} +
+{1 \over (({4x \over 3} + 4)^2 + {16y^2 \over 9} +  {16z^2 \over 9})^4} +
+{1 \over (({4y \over 3} - 4)^2 + {16x^2 \over 9} +  {16z^2 \over 9})^4} +
+{1 \over (({4y \over 3} + 4)^2 + {16x^2 \over 9} +  {16z^2 \over 9})^4}\right)^ {-
+	{1\over 4}} - 1
+\end{dmath*}
+\cite{Bloomenthal1994}
 
 Due to the complexity of the algebraic equations for complex models, a model
 was proposed which constructed complex geometry from simpler primitives using
@@ -136,7 +136,7 @@ generate the images in the papers\evan{Github raytracer link}
 
 \section{Related Work}
 Jim Blinn used blobs, or blobby molecules as a way of representing electron
-density fields \cite{Blinn}. Using blobs as a way of modeling has interesting
+density fields\cite{Blinn}. Using blobs as a way of modeling has interesting
 advantages to simply working with algebraic implicit surfaces. Brian Wyvill
 worked to combine the power of CSG trees and blending of blobs to create a new
 implicit system, the blob tree. Blob trees are capable of all the basic CSG
@@ -148,13 +148,18 @@ blobs surrounding it.
 \section{Implementation Details}
 In this section, we describe the methods of implementing the blob tree, and why
 we made a given decision.
+
+
 \subsection{Finding Surface}
 Finding the point where the surface exists proves to be challenging, as the
 \fff\ is not necessarily invertible. To find the surface, a numerical
 root-finding method is required. I used the secant method, described as
 follows:
-$$x_i = x_{i-1} - f(x_{i-1}) \times {x_{i-1} - x_{i-2} \over f(x_{i-1}) -
-f(x_{i-2})}$$
+\begin{equation}
+x_i = x_{i-1} - f(x_{i-1}) \times {x_{i-1} - x_{i-2} \over f(x_{i-1}) -
+f(x_{i-2})}
+\label{eq:SecantMethod}
+\end{equation}
 
 The secant method was chosen due to the relative speed of convergence, not
 requiring bracketing, and not requiring derivations. The bisection method
@@ -188,17 +193,56 @@ hierarchy, which is able to quickly determine which rays get close enough to
 the surface that the \fff\ will have values different than zero.
 
 \subsection{Primitives}
-Currently, we have implemented the spherical blob, which simply consists of a
-centre point, an \fff, and an iso value where the surface is defined.
+The current implementation has the spherical blob primitive. This is the
+simplest primitive for blobs to represent. A spherical blob consists of a
+centre point $center$, a filter field falloff function $f(r)$, and an iso value
+$iso$ where the surface is defined.
 
-The \fff we have implemented is the Geoff function: $r$ is the distance from
-the central point, $R$ is the maximum effective distance of the \fff.
-$$f(r) = 1 - {4\over9} {r^6 \over R^6} + {17 \over 9} {r^4 \over R ^ 4} -
-{22\over 9} {r^2 \over R^2}$$
+The \fff we have implemented is the Geoff function: $r$ is the defined by the
+distance from the central point, $R$ is the maximum effective distance of the
+\fff.
+\begin{equation}
+f(r) = 1 - {4\over9} {r^6 \over R^6} + {17 \over 9} {r^4 \over R ^ 4} -
+{22\over 9} {r^2 \over R^2}
+\label{eq:GeoffFunction}
+\end{equation}
 
-I have only implemented one primitive object, the spherical blob. The primitive
-node will always be a leaf node on the blob-tree, halting further traversal.
-Evaluating the field function and normal of the primitive object is simple:
+In the blob tree, primitive objects are the simplest object and therefore are
+always leaf nodes.
+
+\textbf{Evaluating the field function}\\
+Given $p$ and a sphere primitive, the field value is evaluated as:
+
+\begin{equation}
+F(p) = f(\lvert p - center \rvert)\\
+\label{eq:FieldValue}
+\end{equation}
+\begin{equation}
+E(p) = f(\lvert p - center \rvert) - iso
+\label{eq:SurfaceEvaluate}
+\end{equation}
+
+
+
+In equation \ref{eq:FieldValue}, the result of the function must be compared with
+the iso value to determine where the surface is. For this reason, it is helpful
+to simply define another function \ref{eq:SurfaceEvaluate} which subtracts the
+iso value from the evalutated field value. To distinguish the two functions I
+call function \ref{eq:FieldValue} ``Field evaluation'', and function
+\ref{eq:SurfaceEvaluate} ``Surface evaluation''.
+
+Equation  \ref{eq:FieldValue} is called during the traversal of the tree. This
+is useful for performing the various operations on the primitive objects.
+Equation \ref{eq:SurfaceEvaluate} is used primarily for the purpose of root
+finding, since the root-finding method will tend to zero rather than an
+arbitrary value. Furthermore, the surface evaluation function
+\ref{eq:SurfaceEvaluate} behaves more like the algebraic form of implicit
+surfaces over the blob-form of implicit surfaces.
+
+
+\textbf{Evaluating the normal}\\
+Given $p$ and a sphere primitive, the normal is evaluated as:
+$$ \overleftarrow{N}(p) = {p - center \over \lvert p - center \rvert}$$
 
 \subsection{Transforms}
 We implemented the three basic transforms: translation, rotation, and scaling.
@@ -313,8 +357,10 @@ The matrix C can be defined using the hessian matrix and the normal vector.
 \subsection{Bounding Volume Hierarchies}
 We implemented the bounding volume hierarchy (bvh) using axis-aligned bounding
 boxes(AABB). We used this construction due to the simplicity and speed of the
-intersection testing. A paper XXX describes an optimized method of determining
-the point of intersection of a ray with the AABB \cite{Williams}.
+intersection testing. From the use of AABB for rendering and collision
+detection in video games, many optimized methods of intersection have been
+developed\cite{Williams}.
+
 
 \section{Findings}
 In this section, we describe how the decisions made effected the resulting
