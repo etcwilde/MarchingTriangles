@@ -106,7 +106,7 @@ was proposed which constructed complex geometry from simpler primitives using
 the operations union, different, and intersect.
 
 A separate branch of implicit surfaces is the blob, or the blobby molecule
-defined by Jim Blinn \evan{cite} for observing the behaviour of electron
+defined by Jim Blinn\cite{Blinn} for observing the behaviour of electron
 density fields. Blobs are defined in three parts: a center point, a filter
 field falloff function, and an iso value. The central point is the point around
 which the blob exists. The filter field falloff function is a function where at
@@ -129,9 +129,10 @@ In this paper, we explore the implementation details of a simple blob tree
 structure and the various additions that can be implemented to increase the
 performance and robustness of the tree for various uses.
 
-The implementation of the tree is available on github\evan{Implicit system
-GitHub Link}, with the accommodating implementation of the raytracer used to
-generate the images in the papers\evan{Github raytracer link}
+The implementation of the tree is available on
+GitHub\footnote{\url{https://github.com/etcwilde/ImplicitSystem}}, with the
+accommodating implementation of the raytracer used to generate the images in
+this papers\footnote{\url{https://github.com/etcwilde/ImplictRaytacer}}.
 
 
 \section{Related Work}
@@ -224,25 +225,25 @@ E(p) = f(\lvert p - center \rvert) - iso
 
 
 
-In equation \ref{eq:FieldValue}, the result of the function must be compared with
+In equation (\ref{eq:FieldValue}), the result of the function must be compared with
 the iso value to determine where the surface is. For this reason, it is helpful
-to simply define another function \ref{eq:SurfaceEvaluate} which subtracts the
+to simply define another function (\ref{eq:SurfaceEvaluate}) which subtracts the
 iso value from the evalutated field value. To distinguish the two functions I
-call function \ref{eq:FieldValue} ``Field evaluation'', and function
-\ref{eq:SurfaceEvaluate} ``Surface evaluation''.
+call function (\ref{eq:FieldValue}) ``Field evaluation'', and function
+(\ref{eq:SurfaceEvaluate}) ``Surface evaluation''.
 
-Equation  \ref{eq:FieldValue} is called during the traversal of the tree. This
+Equation  (\ref{eq:FieldValue}) is called during the traversal of the tree. This
 is useful for performing the various operations on the primitive objects.
-Equation \ref{eq:SurfaceEvaluate} is used primarily for the purpose of root
+Equation (\ref{eq:SurfaceEvaluate}) is used primarily for the purpose of root
 finding, since the root-finding method will tend to zero rather than an
 arbitrary value. Furthermore, the surface evaluation function
-\ref{eq:SurfaceEvaluate} behaves more like the algebraic form of implicit
+(\ref{eq:SurfaceEvaluate}) behaves more like the algebraic form of implicit
 surfaces over the blob-form of implicit surfaces.
 
 
 \textbf{Evaluating the normal}\\
 Given $p$ and a sphere primitive, the normal is evaluated as:
-$$ \overleftarrow{N}(p) = {p - center \over \lvert p - center \rvert}$$
+$$ \overrightarrow{N}(p) = {p - center \over \lvert p - center \rvert}$$
 
 \subsection{Transforms}
 We implemented the three basic transforms: translation, rotation, and scaling.
@@ -358,6 +359,18 @@ $$
 
 The matrix C can be defined using the hessian matrix and the normal vector.
 
+$$
+C_{ij} = {H_{ij} * ||\overrightarrow{G}|| - {G_i * dot_j \over
+	||\overrightarrow{G}||} \over ||\overrightarrow{G}||^2}
+$$
+In a polygonizer, the curvature information can be used to determine how a
+triangle should scale to accommodate the changes in the topology of the
+underlying implicit surface. As the curvature approaches zero in absolute value,
+the size of the triangle can grow, as it increases in absolute value, the size
+of the triangle can shrink. The curvature can also be used to determine where
+sharp edges occur, which will allow give the polygonizer more information about
+what is happening at the given location where the normal vector may be wrong.
+
 \subsection{Bounding Volume Hierarchies}
 We implemented the bounding volume hierarchy (bvh) using axis-aligned bounding
 boxes(AABB). We used this construction due to the simplicity and speed of the
@@ -380,7 +393,12 @@ from such a structure.
 
 \subsection{Limitations}
 By the description of the normal calculation, our implicit system is only
-capable of working with primitive spheres.
+capable of working with primitive spheres. So long as an arbitrary  primitive
+object provides a method for calculating the normal of that primitive at a
+given point $p$, any primitive should work with the system, and the normal
+calculation can be generalized to being a weighted linear combination of the
+normals of the component primitive objects. This would of course need to be
+tested.
 
 \section{Future Work}
 \subsection{BVH}
@@ -394,11 +412,23 @@ Another area on extending the blob tree is implementing more primitive skeletal
 objects, such as a: torus, cube, and line primitive. The implementation of the
 normal calculation could remain the same, but the normal calculations for the
 other primitives would either have to be sampled, as described in the Autodesk
-paper, or specific methods for the desired shape could be implemented.
+paper, or specific methods for the desired shape could be implemented. If the
+second approach is taken, further testing would be required to ensure that the
+normal remains a weighted linear combination of the normal vectors for a given
+point over the component primitive objects.
 
 \subsection{Field falloff functions}
-As of this time, we have implemented and worked with the Geoff function. Future
-work could include observing the effects of other \fff s.
+As of this time, we have implemented and worked with the Geoff
+function (\ref{eq:GeoffFunction}). Future work could include observing the effects
+of other \fff s, or simply implementing more for extended functionality.
+
+\subsection{Operations}
+There are two remaining operations that have yet to be implemented: difference
+operation and warp. The difference operation allows the removal of volume from
+one object defined by another object.
+
+The warp operation is a group of deformations. In particular Barr deformations,
+such as \textit{twist}, \textit{taper}, and \textit{bend}.
 
 \bibliographystyle{acmsiggraph}
 \bibliography{references}
