@@ -276,11 +276,7 @@ described thoroughly in \textit{The BlobTree} \cite{Wyvill}.
 	\caption{Blend operation}
 \end{figure}
 
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[height=1.5in]{images/union.png}
-	\caption{Union operation}
-\end{figure}
+
 
 \begin{figure}[htbp]
 	\centering
@@ -292,6 +288,69 @@ The primitive does not contain any children, and therefore will simply
 evaluate the field value with respect to the distance from the centre point.
 Similarly for calculating the normal vector, the primitive has no children, so
 the normal will be calculated as follows.
+
+\subsubsection{Union}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[height=1.5in]{images/union.png}
+	\caption{Union operation}
+\end{figure}
+
+The union simply unions the two simpler objects into a single more complex
+object. No blending or warping should occur to either child shape.
+
+
+\subsection{Tree Traversal}
+
+In this section we describe how the normal vector, field value, and surface
+values are evaluated for each operation.
+We will use notation similar to the object-oriented paradigm. For a given
+object $O$, we will use $O.center$ to represent the center of the object,
+$O.iso$ to represent the iso value of the object, and $O.f()$ to represent the
+field function of the object. Furthermore we will represent the right and left
+children of the object as $O.r$ and $O.l$ respectively. $F(O, p)$ returns the
+field function evaluation of object $O$ at point $p$, $E(O, p)$ returns the
+surface evaluation of object $O$ at point $p$, and
+$\overrightarrow{N}(O, p)$ returns the normal vector of object $O$ at point
+$p$.
+
+Let $O$ be a
+\begin{itemize}
+	\item Primitive\\
+		$F(O, p) = O.f(\lvert p - O.center \rvert)$\\
+		$E(O, p) = F(O, p) - O.iso$\\
+		$\overrightarrow{N}(O, p) = {p - O.center \over \lvert p -
+		O.center \rvert}$
+	\item Union\\
+		$F(O, p) = max(F(O.l, p), F(O.r, p))$\\
+		$E(O, p) = F(O, p) - O.iso$\\
+		$
+		\overrightarrow{N}(O, p) = \left\{
+			\begin{array}{lcl}
+				N(O.r, p) & : &  F(O.r, p) >= F(O.l, p)\\
+				N(O.l, p) & : &  F(O.l, p) >  F(O.r, p)\\
+			\end{array}
+		\right.
+		$
+	\item Intersect\\
+		$F(O, p) = min(F(O.l, p), F(O.r, p))$\\
+		$E(O, p) = F(O, p) - O.iso$\\
+		$
+		\overrightarrow{N}(O, p) = \left\{
+			\begin{array}{lcl}
+				N(O.r, p) & : &  F(O.r, p) <= F(O.l, p)\\
+				N(O.l, p) & : &  F(O.l, p) <  F(O.r, p)\\
+			\end{array}
+		\right.
+		$
+	\item Blend\\
+		$F(O, p) = F(O.l, p) + F(O.r, p)$\\
+		$E(O, p) = F(O, p) - O.iso$\\
+		$\overrightarrow{N}(O, p) = {\overrightarrow{N}(O.l, p) +
+		\overrightarrow{N}(O.r, p) \over
+		\lvert \overrightarrow{N}(O.l, p) + \overrightarrow{N}(O.r, p)
+		\rvert}$\\
+\end{itemize}
 
 \subsection{Instancing}
 By using instancing, we are able to minimize the memory usage by not
@@ -319,7 +378,7 @@ The principal curvatures $k1$ and $k2$, define the curvature along the tangent
 and bi-normal vectors to the given point. The method for finding the curvature
 is described in section four of \textit{Curvature Formulas for Implicit
 Surfaces} \cite{Goldman2005}. By using a cofactor approach, we can find the adjoint matrix to the
-hessian, $H'$. 
+hessian, $H'$.
 
 $$
 H'(F) =
