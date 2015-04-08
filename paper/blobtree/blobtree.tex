@@ -29,11 +29,21 @@
 \usepackage{breqn}
 \usepackage{svg}
 
-\hypersetup{pdftitle={\Title},
-        pdfauthor={\Author},
-        pdfkeywords={\Keywords},
-        pdfsubject={\Subject},
-        urlcolor=blue,citecolor=black}
+\ifdraft
+	\hypersetup{pdftitle={\Title},
+		pdfauthor={\Author},
+		pdfkeywords={\Keywords},
+		pdfsubject={\Subject},
+		urlcolor=blue,citecolor=red}
+\else
+	\hypersetup{pdftitle={\Title},
+		pdfauthor={\Author},
+		pdfkeywords={\Keywords},
+		pdfsubject={\Subject},
+		urlcolor=black,citecolor=black}
+\fi
+
+
 
 
 \def\BibTeX{{\rm B\kern-.05em{\sc i\kern-.025em b}\kern-.08em
@@ -249,13 +259,23 @@ $$ \overrightarrow{N}(p) = {p - center \over \lvert p - center \rvert}$$
 We implemented the three basic transforms: translation, rotation, and scaling.
 The transform class simply takes any 3-dimensional homogeneous matrix, making
 the implementation of the translation, rotation, and scaling operations
-trivial. The use of an over-arching transform class simplifies.
+trivial. The use of an over-arching transform class simplifies the
+implementation.
 
 \begin{figure}[htb]
 	\centering
 	\includegraphics[height=1.5in]{images/intersect_rotate.png}
 	\caption{Intersected Spheres Rotated then Translated}
 \end{figure}
+
+Using the translation matrix we find the inverse translation matrix and the
+inverse transpose matrix. The inverse translation matrix is used to map from
+the translated object coordinates to the global coordinate system. The inverse
+transpose matrix is used to convert the normal vector of the child object to
+match the effects of the translation. \evan{I think that something about this
+is wrong. It should only have an effect if the transform is a scale.
+Translation and rotation don't do anything to the normals.}
+
 
 \subsection{Operations}
 Blob-trees are able to perform various binary operations between two
@@ -276,14 +296,6 @@ described thoroughly in \textit{The BlobTree} \cite{Wyvill}.
 	\caption{Blend operation}
 \end{figure}
 
-
-
-\begin{figure}[htbp]
-	\centering
-	\includegraphics[height=1.5in]{images/intersect.png}
-	\caption{Intersect operation}
-\end{figure}
-
 The primitive does not contain any children, and therefore will simply
 evaluate the field value with respect to the distance from the centre point.
 Similarly for calculating the normal vector, the primitive has no children, so
@@ -297,30 +309,67 @@ the normal will be calculated as follows.
 \end{figure}
 
 The union simply unions the two simpler objects into a single more complex
-object. No blending or warping should occur to either child shape.
+object. No blending or warping should occur to either child shape. A sharp edge
+may occur of the two objects being unioned are touching. The valley formed
+where they touch is a sharp edge and looses curvature and normal information,
+as shown in figure \ref{fig:UnionSharpEdge}. The union is found by taking the
+maximum field values of both child objects.
+
+
+\subsubsection{Intersect}
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[height=1.5in]{images/intersect.png}
+	\caption{Intersect operation}
+	\label{fig:Intersection}
+\end{figure}
+
+The intersection operations leaves geometry where the two objects overlap. A
+sharp edge may occur as shown in \ref{fig:IntersectSharpEdge}. The intersection
+is found by taking the minimum of the field values
+
+\begin{figure}[htbp]
+	\centering
+	\includegraphics[height=1.5in]{images/intersect_sharp.png}
+	\caption{Detected sharp edge on an intersection}
+	\label{fig:IntersectSharpEdge}
+\end{figure}
+
 
 
 \subsection{Tree Traversal}
 
-In this section we describe how the normal vector, field value, and surface
-values are evaluated for each operation.
+In this section, we describe how to traverse the tree, evaluating the field
+value, the surface value, and the normal.
+
 We will use notation similar to the object-oriented paradigm. For a given
 object $O$, we will use $O.center$ to represent the center of the object,
 $O.iso$ to represent the iso value of the object, and $O.f()$ to represent the
-field function of the object. Furthermore we will represent the right and left
-children of the object as $O.r$ and $O.l$ respectively. $F(O, p)$ returns the
+field function of the object.
+
+$F(O, p)$ returns the
 field function evaluation of object $O$ at point $p$, $E(O, p)$ returns the
-surface evaluation of object $O$ at point $p$, and
-$\overrightarrow{N}(O, p)$ returns the normal vector of object $O$ at point
-$p$.
+surface evaluation of object $O$ at point $p$, and $\overrightarrow{N}(O, p)$
+returns the normal vector of object $O$ at point $p$.
+
+\textbf{Primitive}\\
+Primitives are always stored as leaf nodes in the tree and therefore will never
+have children to evaluate.
+
+Let $O$ be a primitive\\
+$F(O, p) = O.f(\lvert p - O.center \rvert)$\\
+$E(O, p) = F(O, p) - O.iso$\\
+$\overrightarrow{N}(O, p) = {p - O.center \over \lvert p -
+O.center \rvert}$
+
+
+\textbf{Binary Operations}\\
+Blends, unions, and intersections are stored as binary operations in the
+blobtree. Binary operation objects have a left and right child, denoted as
+$O.l$ and $O.r$ respectively.
 
 Let $O$ be a
 \begin{itemize}
-	\item Primitive\\
-		$F(O, p) = O.f(\lvert p - O.center \rvert)$\\
-		$E(O, p) = F(O, p) - O.iso$\\
-		$\overrightarrow{N}(O, p) = {p - O.center \over \lvert p -
-		O.center \rvert}$
 	\item Union\\
 		$F(O, p) = max(F(O.l, p), F(O.r, p))$\\
 		$E(O, p) = F(O, p) - O.iso$\\
@@ -352,6 +401,27 @@ Let $O$ be a
 		\rvert}$\\
 \end{itemize}
 
+\textbf{Unary Operations}\\
+Transform operations are stored as unary nodes in the tree. Unary nodes have
+a single child object, denoted as $O.c$. The transform operations store all
+transforms in the form of a 3 dimensional homogeneous matrix.
+
+All transforms have three matrices: the transformation matrix $M$, the inverse
+matrix $M^{-1}$ and the inverse transpose matrix $(M^{-1})^T$. All transforms
+have two additional functions $map_t(w)$ and $map_f(l)$, where $w$ is a
+point in world space and $l$ is a point in local space. $map_t$ takes a point
+in world space and translates it to local space, $map_f$ takes a point in
+local space and translates it to world space.
+
+$F(O, p) = F(O.c, map_t(p))$\\
+$E(O, p) = E(O.c, map_t(p))$\\
+$\overrightarrow{N}(O, p) = (M^{-1})^T \cdot \overrightarrow{N}(O.c, map_t(p))$
+
+\evan{There is an error in this calculation that must be fixed in the implicit
+system as well. The normal will have a specific calculation for the various
+transformations. Scale is the only one of the defined translate, rotate, and
+scale where the inverse transform is required.}
+
 \subsection{Instancing}
 By using instancing, we are able to minimize the memory usage by not
 duplicating simpler geometry to build more complex geometry. As an example, a
@@ -378,7 +448,7 @@ The principal curvatures $k1$ and $k2$, define the curvature along the tangent
 and bi-normal vectors to the given point. The method for finding the curvature
 is described in section four of \textit{Curvature Formulas for Implicit
 Surfaces} \cite{Goldman2005}. By using a cofactor approach, we can find the adjoint matrix to the
-hessian, $H'$.
+Hessian, $H'$.
 
 $$
 H'(F) =
@@ -389,20 +459,26 @@ H'(F) =
 \end{bmatrix}
 $$
 By performing the adjoint operation on $H'$, we can get the
-hessian matrix $H$. Then we can use the mean $k_M$ and gaussian $k_G$
+Hessian matrix $H$. Then we can use the mean $k_M$ and Gaussian $k_G$
 curvatures to find
 the principal curvatures $k1$ and $k2$ with the formula:
 $$k1, k2 = k_M \pm \sqrt{k^2_{M} - k_G}$$
 
-
 $$k_M = {\nabla F * H'(F) * \nabla F^T \over |\nabla F|^4}$$
 
-$$k_G = {\nabla F * H(F) * \nabla F^T - |\nabla F|^2 * H_{diagonal} \over 2 *
+$$k_G = {\nabla F * H(F) * \nabla F^T - |\nabla F|^2 * H_{trace} \over 2 *
 |\nabla F|^3}$$
 
 I would like to investigate a method for finding curvature described in another
 paper\cite{DeAraujo2004} to see which handles sharp-edges and discontinuities
 better, and which method can be evaluated more quickly.
+
+\begin{figure}[htbp]
+	\includegraphics[height=1.5in]{images/union_sharp.png}
+	\caption{Detected sharp edge on unioned spheres}
+	\label{fig:UnionSharpEdge}
+\end{figure}
+
 
 The method described by De Ara\'{u}jo uses the partial derivatives of the
 normal vector in a single matrix, rather than computing multiple matrices.
