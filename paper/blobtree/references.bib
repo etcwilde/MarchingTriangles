@@ -22,7 +22,7 @@ year = {1999}
 abstract = {An algorithm for the polygonization of implicit surfaces is described and an implementation in C is provided. The discussion reviews implicit surface polygonization, and compares various methods.},
 author = {Bloomenthal, J.},
 doi = {10.3390/rs2030833},
-file = {:home/evan/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Bloomenthal - 1994 - An implicit surface polygonizer.pdf:pdf},
+file = {:home/evan/Downloads/ImplicitSurfacePolygonizer.pdf:pdf},
 isbn = {0123361559},
 issn = {2072-4292},
 journal = {Graphics gems IV},
@@ -51,7 +51,7 @@ year = {1984}
 abstract = { We present an algorithm for polygonizing closed implicit surfaces, which produces meshes adapted to the local curvature of the surface. Our method is similar to, but not based on, marching triangles, in that we start from a point on the surface and develop a mesh from that point using a surface-tracking approach. In a marked departure from previous approaches, our meshes approximate the surface through heuristics relying on curvature. Furthermore, our method works completely on-the-fly, resolving cracks as it proceeds, without the need for any post-remeshing step to correct failures. We have tested the algorithm with three different representations of implicit surfaces, variational, analytical and MPU, using non-trivial data sets, yielding results that illustrate the flexibility and scalability of our technique. Performance comparisons with variants of marching cubes show that our approach is capable of good accuracy and meshing quality without sacrificing computing resources.},
 author = {{De Ara\'{u}jo}, Blruno Rodrigues and Jorge, Joaquim Armando Pires},
 doi = {10.1109/SIBGRA.2004.1352970},
-file = {:home/evan/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/De Ara\'{u}jo, Jorge - 2004 - Curvature dependent polygonization of implicit surfaces.pdf:pdf},
+file = {:home/evan/Downloads/CurvaturePolygonizer.pdf:pdf},
 isbn = {0769522270},
 issn = {15301834},
 journal = {Brazilian Symposium of Computer Graphic and Image Processing},
@@ -105,21 +105,6 @@ url = {http://linkinghub.elsevier.com/retrieve/pii/S0097849307001197},
 volume = {31},
 year = {2007}
 }
-@article{Garcia-Puente2010,
-abstract = {The control polygon of a Bezier curve is well-defined and meaningful---there is a sequence of weights under which the limiting position of the curve is the control polygon. For a Bezier surface patch, there are many possible polyhedral control structures, and none are canonical. We propose a not necessarily polyhedral control structure for surface patches, regular control surfaces, which are certain C\^{}0 spline surfaces. While not unique, regular control surfaces are exactly the possible limiting positions of a Bezier patch when the weights are allowed to vary, but the control points are fixed.},
-archivePrefix = {arXiv},
-arxivId = {1006.4903},
-author = {Garcia-Puente, Luis David and Sottile, Frank and Zhu, Chungang},
-doi = {10.1145/XXXXXXX.YYYYYYY},
-eprint = {1006.4903},
-file = {:home/evan/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Garcia-Puente, Sottile, Zhu - 2010 - Toric degenerations of Bezier patches.pdf:pdf},
-isbn = {0103660054},
-pages = {18},
-title = {{Toric degenerations of Bezier patches}},
-url = {http://arxiv.org/abs/1006.4903},
-volume = {VV},
-year = {2010}
-}
 @article{Goldman2005,
 abstract = {Curvature formulas for implicit curves and surfaces are derived from the classical curvature formulas in Differential Geometry for parametric curves and surfaces. These closed formulas include curvature for implicit planar curves, curvature and torsion for implicit space curves, and mean and Gaussian curvature for implicit surfaces. Some extensions of these curvature formulas to higher dimensions are also provided. © 2005 Elsevier B.V. All rights reserved.},
 author = {Goldman, Ron},
@@ -161,13 +146,24 @@ volume = {c}
 @article{Scheidegger2005,
 abstract = {We introduce an algorithm for constructing a high-quality triangulation directly from Point Set Surfaces. Our algorithm requires no intermediate representation and no post-processing of the output, and naturally handles noisy input data, typically in the form of a set of registered range scans. It creates a triangulation where triangle size respects the geometry of the surface rather than the sampling density of the range scans. Our technique does not require normal information, but still produces a consistent orientation of the triangles, assuming the sampled surface is an orientable two-manifold. Our work is based on using Moving Least-Squares (MLS) surfaces as the underlying representation. Our technique is a novel advancing front algorithm, that bounds the Hausdorff distance to within a user-specified limit. Specifically, we introduce a way of augmenting advancing front algorithms with global information, so that triangle size adapts gracefully even when there are large changes in surface curvature. Our results show that our technique generates high-quality triangulations where other techniques fail to reconstruct the correct surface due to irregular sampling on the point cloud, noise, registration artifacts, and underlying geometric features, such as regions with high curvature gradients.},
 author = {Scheidegger, Ce and Fleishman, Shachar and Silva, Ct},
-file = {:home/evan/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Scheidegger, Fleishman, Silva - 2005 - Triangulating point set surfaces with bounded error.pdf:pdf},
+file = {:home/evan/Downloads/MLSMesh.pdf:pdf},
 isbn = {390567324X},
-journal = {Symposium on Geometry \ldots},
+journal = {Symposium on Geometry Processing},
 pages = {63},
 title = {{Triangulating point set surfaces with bounded error}},
 url = {http://www.sci.utah.edu/publications/cscheid05/tpss.pdf$\backslash$nhttp://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.106.2035\&rep=rep1\&type=pdf},
 year = {2005}
+}
+@article{Stam2011,
+abstract = {In this paper we derive an equation for the velocity of an arbitrary timeevolving implicit surface. Strictly speaking only the normal component of the velocity is unambiguously defined. This is because an implicit surface does not have a unique parametrization. However, by enforcing a constraint on the evolution of the normal field we obtain a unique tangential component. We apply our formulas to surface tracking and to the problem of computing velocity vectors of a motion blurred blobby surface. Other possible applications are mentioned at the end of the paper.},
+author = {Stam, Jos and Scmidt, Ryan},
+doi = {10.1145/1559755.1559763},
+file = {:home/evan/Downloads/Gradient.pdf:pdf},
+journal = {Autodesk Research},
+keywords = {Blobbies,implicit surfaces,motion blur},
+pages = {7},
+title = {{On the Velocity of an Implicit Surface}},
+year = {2011}
 }
 @misc{VanOverveld,
 abstract = {An algorithm is presented which generates a triangular mesh to approximate an iso-surface. It starts with a triangulation of a sphere and next applies a series of deformations to this triangulation to transform it into the required surface. These deformations leave the topology invariant, so the final iso-surface should be homeomorphic with a sphere. The algorithm is adaptive in the sense that the lengths of the sides of the triangles in the mesh vary with the local curvature of the underlying surface. A quantitative analysis of the accuracy of the algorithm is given along with an empirical comparison with earlier algorithms.},
@@ -176,9 +172,15 @@ file = {:home/evan/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/v
 keywords = {implicit surfaces,iso-surfaces,polygonization},
 title = {{Shrinkwrap: An efficient adaptive algorithm for trangulating an iso-surface}}
 }
+@article{Williams,
+author = {Williams, Amy and Barrus, Steve and Morley, R Keith},
+file = {:home/evan/Desktop/Box.pdf:pdf},
+pages = {1--4},
+title = {{An Efficient and Robust Ray – Box Intersection Algorithm}}
+}
 @article{Wyvill,
 author = {Wyvill, Brian and Guy, Andrew and Galin, Eric},
-file = {:home/evan/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Wyvill, Guy, Galin - Unknown - The BlobTree.pdf:pdf},
+file = {:home/evan/Desktop/blobtree.pdf:pdf},
 keywords = {blending,implicit surfaces,in a manner that,polygonizing,raytracing,the problem addressed by,this work is how,to organize,warping,warping and boolean operations},
 title = {{The BlobTree}}
 }
@@ -194,12 +196,6 @@ title = {{Polygonization of Implicit Surfaces With Constructive Solid Geometry}}
 url = {http://www.worldscientific.com/doi/abs/10.1142/S0218654396000142},
 volume = {02},
 year = {1996}
-}
-@article{Williams,
-author = {Williams, Amy and Barrus, Steve and Morley, R Keith},
-file = {:home/evan/.local/share/data/Mendeley Ltd./Mendeley Desktop/Downloaded/Williams, Barrus, Morley - Unknown - An Efficient and Robust Ray – Box Intersection Algorithm.pdf:pdf},
-pages = {1--4},
-title = {{An Efficient and Robust Ray – Box Intersection Algorithm}}
 }
 @article{Blinn,
 author = {{Jim Blinn}},
