@@ -9,7 +9,6 @@
 #include "World.hpp"
 #include <GL/gl.h>
 #include <iomanip>
-#include "vecHelp.hpp"
 
 World::World()
 	: m_drawGrid(true)
@@ -173,13 +172,7 @@ void World::Draw()
 		glVertex3f((*it).x, (*it).y, (*it).z);
 	}
 	glEnd();
-
-	/*for (std::list<Triangle>::iterator it = m_triangles.begin();
-			it != m_triangles.end(); it++)
-		(*it).Draw(); */
-
 	glColor3f(0.95f, 0.92f, 0.266f);
-	//m_box.draw();
 	glPopMatrix();
 }
 

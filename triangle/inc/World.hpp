@@ -20,12 +20,6 @@
 #include "Camera.hpp"
 #include "DrawUtils.hpp"
 
-#include "Mesh.hpp"
-#include "Triangle.hpp"
-
-#include "Aabb.hpp"
-
-
 // Camera movements
 #define CAM_ROTATE	0b0001
 #define CAM_STRAFE	0b0010
@@ -182,12 +176,6 @@ private:
 
 	std::list<glm::vec3> m_point_cloud;
 	std::list<glm::vec3> m_grad_cloud; // Just to see what happens
-
-	std::list<Triangle> m_triangles;
-
-	// TEST
-	Geometry::Mesh m_mesh;
-	Aabb m_box;
 
 };
 

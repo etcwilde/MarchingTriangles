@@ -12,7 +12,7 @@
 #include <glm/glm.hpp>
 
 #include "Window.hpp"
-#include "floatlibs.hpp"
+#include "utils/floatlibs.hpp"
 
 #ifdef TEST
 
