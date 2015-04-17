@@ -28,7 +28,7 @@ D_DOCS	= docs/
 
 # Flags
 CFLAGS	= -c -iquote $(D_INC) -march=native -mfpmath=sse
-LIBS	= -pthread -lGL -lglfw lib/libImplicit.a
+LIBS	= -pthread -lGL -lglfw # lib/libImplicit.a
 CXFLAGS = $(CFLAGS) -std=c++11
 
 # Generate Object file names
@@ -133,5 +133,5 @@ $(D_BUILD)%.o : $(D_TEST)%.C
 	$(CXX) $(CXFLAGS) $< -o $@
 
 # Link Objects
-$(D_BIN)$(EXEC): $(D_BIN) $(D_BUILD) $(OBJS) lib/libImplicit.a
+$(D_BIN)$(EXEC): $(D_BIN) $(D_BUILD) $(OBJS) # lib/libImplicit.a
 	$(CXX) -o $(D_BIN)$(EXEC) $(OBJS) $(LIBS)
