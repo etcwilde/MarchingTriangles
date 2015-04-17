@@ -1,7 +1,0 @@
-Look into 
-simd -- CPU power
-cuda -- GPU power
-
-
-Implicit Systems:
-http://pages.cpsc.ucalgary.ca/~blob/html/tigges-wyvill.ipc8.html#CITEWyvill:is98
