@@ -1,19 +1,32 @@
+# Evan Wide
+# Generic Makefile
 #
-# Marching Triangles
-# Makefile
-# Evan Wilde
-# January 30 2015
+# LIBS
+# pthread  	Threading
+#
+# Flags
+# march=native
+# mfpath=sse
+# O3 optimization on release build
+# g on debug build
+# Wall on debug build
+#
+# Defines
+# DEBUG	on debug build
+# TEST on test build
 #
 
-EXEC 	= mt
+
+
+EXEC 	= polygonizer
 
 # Commands
 RM	= rm -f
 RMD	= $(RM) -r
 CC	= gcc
 CXX	= g++
-TAR	= tar
 AR	= ar
+TAR	= tar
 MKDIR	= mkdir -p
 CP	= cp
 
@@ -21,14 +34,14 @@ CP	= cp
 D_SRC	= src/
 D_BUILD	= build/
 D_BIN	= bin/
-D_LIB	= lib/
+D_LIB	= libs/
 D_INC	= inc/
 D_TEST	= tests/
 D_DOCS	= docs/
 
 # Flags
 CFLAGS	= -c -iquote $(D_INC) -march=native -mfpmath=sse
-LIBS	= -pthread -lGL -lglfw # lib/libImplicit.a
+LIBS	= -pthread -lGL lib/libImplicit.a
 CXFLAGS = $(CFLAGS) -std=c++11
 
 # Generate Object file names
@@ -44,6 +57,9 @@ TEST_SRCS	= \
 	  $(wildcard $(D_TEST)*.C) \
 	  $(wildcard $(D_TEST)*.cc)
 
+LIBSS		= \
+	  $(wildcard $(D_LIB)*.a)
+
 OBJS	= \
 	  $(patsubst $(D_SRC)%.c, $(D_BUILD)%.o, \
 	  $(patsubst $(D_SRC)%.cpp, $(D_BUILD)%.o, \
@@ -56,13 +72,17 @@ TEST_OBJS	= \
 	  $(patsubst $(D_TEST)%.C, $(D_BUILD)%.o, \
 	  $(patsubst $(D_TEST)%.cc, $(D_BUILD)%.o, $(TEST_SRCS)))))
 
-.PHONY:	all release debug test clean rebuild docs
+.PHONY:	all release profile debug test clean rebuild docs
 # No optimizations
 all: $(D_BIN)$(EXEC)
 
 # Optimizations
 release: CFLAGS += -O3
 release: all
+
+profile: CFLAGS += -O3 -DPROFILE
+profile: LIBS += -lprofiler
+profile: all
 
 # Debug flags, function names, and all errors reported
 debug: CFLAGS += -g -DDEBUG -Wall
@@ -132,6 +152,8 @@ $(D_BUILD)%.o : $(D_TEST)%.cpp
 $(D_BUILD)%.o : $(D_TEST)%.C
 	$(CXX) $(CXFLAGS) $< -o $@
 
+
+
 # Link Objects
-$(D_BIN)$(EXEC): $(D_BIN) $(D_BUILD) $(OBJS) # lib/libImplicit.a
-	$(CXX) -o $(D_BIN)$(EXEC) $(OBJS) $(LIBS)
+$(D_BIN)$(EXEC): $(D_BIN) $(D_BUILD) $(LIBSS) $(OBJS)
+	$(CXX) -o $(D_BIN)$(EXEC)  $(OBJS) $(LIBS)
