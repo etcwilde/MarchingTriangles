@@ -29,8 +29,8 @@ protected:
 
 	Implicit::Object& m_scene;
 private:
-	bool m_mesh_set;
-	Mesh m_mesh;
+	bool m_cache_mesh_set;
+	Mesh m_cache_mesh;
 };
 
 
