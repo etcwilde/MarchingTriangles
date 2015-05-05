@@ -11,34 +11,42 @@
 #include "Mesh.hpp"
 
 
+
+/*
+ * Calculates the angle between two points
+ */
+float angle(const glm::vec3& A, const glm::vec3 B);
+
+/**
+ * This is a vertex on the front
+ *
+ * Will always contain two neighboring vertices
+ */
 class PolygonizerVertex
 {
 public:
 	PolygonizerVertex(const glm::vec3& p);
-	~PolygonizerVertex();
+	//
+	// Does not update the neighbors of the neighbors to include this
+	// Will not check that the other neighbors are null or freed
+	// You must free your neighboring vertices
+	//
+	void setNeighbors(const PolygonizerVertex* n1, const PolygonizerVertex* n2);
 
-	/**
-	 * \brief Adds a new neighbor to this vertex
-	 * This does not add this vertex to the other vertex neighbor groups
-	 * YOU MUST DO THIS
-	 *
-	 * \param new_neighbor The address of the node which is the new
-	 * neighbor
-	 */
-	void addNeighbor(const PolygonizerVertex* new_neighbor);
+	const glm::vec3& Position() const;
 
-	float getMinAngle();
-
+	float getAngle() const;
 protected:
 
 private:
-	// Should be 2 neighbors maximum
-	std::vector<const PolygonizerVertex*> m_neighbors;
+	const PolygonizerVertex* m_neighbors[2];
 	glm::vec3 m_position;
 };
 
+
+
 /*
- * We need to quickly find vers with the smallest angle
+ * We need to quickly find verts with the smallest angle
  * -- Using a heap priority queue might be good
  * Front Requirements:
  * Split
@@ -50,8 +58,13 @@ class PolygonizerFront
 {
 public:
 	PolygonizerFront(Implicit::Object& o);
-	//~PolygonizerFront();
-	
+
+	PolygonizerFront* Split();
+
+	void Join(PolygonizerFront*);
+
+	PolygonizerVertex* SeltIntersection(PolygonizerVertex);
+
 	unsigned int size() const;
 protected:
 private:
@@ -87,14 +100,16 @@ private:
 /*
  * Generates the polygonizer meshes and the final mesh itself
  */
-class TrianglePolygonizer : public Polygonizer
+class TriPoly : public Polygonizer
 {
 public:
-	TrianglePolygonizer(Implicit::Object& o);
-	TrianglePolygonizer(Implicit::Object& o, float growth_rate);
-	~TrianglePolygonizer();
+	TriPoly(Implicit::Object& o);
+	TriPoly(Implicit::Object& o, float growth_rate);
+	~TriPoly();
+
 protected:
 	virtual Mesh polygonize();
+
 private:
 	std::stack<PolygonizerFront*> m_fronts;
 	Mesh m_mesh;
