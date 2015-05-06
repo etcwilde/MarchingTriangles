@@ -36,10 +36,11 @@ class Mesh
 {
 public:
 	//DATASTRUCTURES
-	typedef struct
+	typedef struct Triangle
 	{
 		glm::vec3 p[3];
 		glm::vec3 n[3];
+		glm::vec2 u[3];
 	} Triangle;
 
 public:
@@ -63,10 +64,17 @@ public:
 
 	unsigned int normals() const;
 	unsigned int vertices() const;
+	unsigned int uvs() const;
 
-	const std::vector<glm::vec3>& get_normals() const;
 	const std::vector<glm::vec3>& get_vertices() const;
+	const std::vector<glm::vec3>& get_normals() const;
+	const std::vector<glm::vec2>& get_uvs() const;
 	const std::vector<Triangle> get_triangles() const;
+
+	const glm::vec3& get_vertex(unsigned int index) const;
+	const glm::vec3& get_normal(unsigned int index) const;
+	const glm::vec2& get_uv(unsigned int index) const;
+
 
 	void Export(const std::string& fname);
 	void Import(const std::string& fname);
@@ -78,10 +86,24 @@ public:
 
 protected:
 	//DATASTRUCTURES
-	typedef struct
+	typedef struct Index_Triangle
 	{
+		Index_Triangle()
+		{
+			// Initialize to 0
+			p[0] = 0;
+			p[1] = 0;
+			p[2] = 0;
+			n[0] = 0;
+			n[1] = 0;
+			n[2] = 0;
+			u[0] = 0;
+			u[1] = 0;
+			u[2] = 0;
+		}
 		unsigned int p[3];
 		unsigned int n[3];
+		unsigned int u[3];
 	} Index_Triangle;
 
 protected:
@@ -101,13 +123,14 @@ protected:
 protected:
 	//VARIABLES
 
-	// Todo: Profile the allocation time and the access time to see where
+	// TODO: Profile the allocation time and the access time to see where
 	// the bottle neck arises.
 	// If bottleneck is reference time, change these to lists and use
 	// iterators for linear
 	std::vector<Index_Triangle> m_triangles;
 	std::vector<glm::vec3> m_verts;
 	std::vector<glm::vec3> m_norms;
+	std::vector<glm::vec2> m_uvs;
 
 private:
 	//METHODS

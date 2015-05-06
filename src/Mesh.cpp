@@ -6,13 +6,15 @@ Mesh::Mesh()
 Mesh::Mesh(Mesh& m) :
 	m_triangles(m.m_triangles),
 	m_verts(m.m_verts),
-	m_norms(m.m_norms)
+	m_norms(m.m_norms),
+	m_uvs(m.m_uvs)
 { }
 
 Mesh::Mesh(const Mesh& m) :
 	m_triangles(m.m_triangles),
 	m_verts(m.m_verts),
-	m_norms(m.m_norms)
+	m_norms(m.m_norms),
+	m_uvs(m.m_uvs)
 { }
 
 Mesh::Mesh(const std::vector<Triangle>& tris)
@@ -30,6 +32,7 @@ void Mesh::operator=(const Mesh& m)
 	m_triangles = m.m_triangles;
 	m_verts = m.m_verts;
 	m_norms = m.m_norms;
+	m_uvs = m.m_uvs;
 }
 
 Mesh::Triangle Mesh::operator[](unsigned int index)
@@ -43,6 +46,9 @@ Mesh::Triangle Mesh::operator[](unsigned int index)
 	t.n[0] = m_norms[m_triangles[index].n[0]];
 	t.n[1] = m_norms[m_triangles[index].n[1]];
 	t.n[2] = m_norms[m_triangles[index].n[2]];
+	t.u[0] = (m_triangles[index].u[0] == 0) ? glm::vec2(0, 0) : m_uvs[m_triangles[index].u[0]];
+	t.u[1] = (m_triangles[index].u[1] == 0) ? glm::vec2(0, 0) : m_uvs[m_triangles[index].u[1]];
+	t.u[2] = (m_triangles[index].u[2] == 0) ? glm::vec2(0, 0) : m_uvs[m_triangles[index].u[2]];
 	return t;
 }
 Mesh::Triangle Mesh::Get(unsigned int index)
@@ -90,6 +96,11 @@ unsigned int Mesh::vertices() const
 	return m_verts.size();
 }
 
+unsigned int Mesh::uvs() const
+{
+	return m_uvs.size();
+}
+
 const std::vector<glm::vec3>& Mesh::get_normals() const
 {
 	// Constant time
@@ -100,6 +111,11 @@ const std::vector<glm::vec3>& Mesh::get_vertices() const
 {
 	// Constant time
 	return m_norms;
+}
+
+const std::vector<glm::vec2>& Mesh::get_uvs() const
+{
+	return m_uvs;
 }
 
 const std::vector<Mesh::Triangle> Mesh::get_triangles() const
@@ -119,6 +135,20 @@ const std::vector<Mesh::Triangle> Mesh::get_triangles() const
 		triangles.push_back(t);
 	}
 	return triangles;
+}
+
+const glm::vec3& Mesh::get_vertex(unsigned int index) const
+{
+	return m_verts[index];
+}
+const glm::vec3& Mesh::get_normal(unsigned int index) const
+{
+	return m_norms[index];
+}
+
+const glm::vec2& Mesh::get_uv(unsigned int index) const
+{
+	return m_uvs[index];
 }
 
 void Mesh::Export(const std::string& fname)
@@ -148,13 +178,26 @@ void Mesh::Export(const std::string& fname)
 			<< m_norms[i].y<< ' '
 			<< m_norms[i].z<< '\n';
 	}
+	os << "\n# UV coordinates\n";
+	for (unsigned int i = 0; i < m_uvs.size(); i++)
+	{
+		os << "vt "
+			<< m_uvs[i].x << ' '
+			<< m_uvs[i].y << '\n';
+	}
 	os << "\n# Faces\n";
 	for (auto face = m_triangles.begin(); face != m_triangles.end(); face++)
 	{
 		os << "f "
-			<< (*face).p[0] << "//" << (*face).n[0] << ' '
-			<< (*face).p[1] << "//" << (*face).n[1] << ' '
-			<< (*face).p[2] << "//" << (*face).n[2] << '\n';
+			<< ((*face).p[0] == 0 ? "" : std::to_string((*face).p[0])) << '/'
+			<< ((*face).u[0] == 0 ? "" : std::to_string((*face).u[0])) << '/'
+			<< ((*face).n[0] == 0 ? "" : std::to_string((*face).n[0])) << ' '
+			<< ((*face).p[1] == 0 ? "" : std::to_string((*face).p[1])) << '/'
+			<< ((*face).u[1] == 0 ? "" : std::to_string((*face).u[1])) << '/'
+			<< ((*face).n[1] == 0 ? "" : std::to_string((*face).n[1])) << ' '
+			<< ((*face).p[2] == 0 ? "" : std::to_string((*face).p[2])) << '/'
+			<< ((*face).u[2] == 0 ? "" : std::to_string((*face).u[2])) << '/'
+			<< ((*face).n[2] == 0 ? "" : std::to_string((*face).n[2])) << '\n';
 	}
 
 	os << "# " << m_verts.size() << " Vertices Written\n";
@@ -183,7 +226,7 @@ void Mesh::Import(const std::string& fname)
 	}
 	// Only handles a single object since this goes to one mesh
 #ifdef DEBUG
-	std::cout << "Importing " << fname << '\n';
+	std::cerr << "Importing " << fname << '\n';
 #endif
 
 	while (getline(in_file, line))
@@ -214,9 +257,6 @@ void Mesh::Import(const std::string& fname)
 			Index_Triangle t;
 			unsigned int tris_number = m_triangles.size();
 			std::string s = line;
-#ifdef DEBUG
-			std::cout << line  << '\n';
-#endif
 			std::string pattern = "f ([0-9]*)(?:/([0-9]*)?/([0-9]*)?)? ([0-9]*)(?:/([0-9]*)?/([0-9]*)?)? ([0-9]*)(?:/([0-9]*)?/([0-9]*)?)?";
 			std::vector<std::string> matches;
 			std::smatch match;
@@ -241,11 +281,6 @@ void Mesh::Import(const std::string& fname)
 			t.p[1] = std::stof(matches[4]);
 			t.p[2] = std::stof(matches[7]);
 
-#ifdef DEBUG
-			std::cout << "Normal: " << matches[3] << ", " <<
-				matches[6] << ", " << matches[9] << '\n';
-#endif
-
 			// If any normals are missing, the face is bad
 			//tris_to_fix.push_back(tris_number);
 			if (matches[3].compare("") == 0 ||
@@ -267,7 +302,7 @@ void Mesh::Import(const std::string& fname)
 	in_file.close();
 
 #ifdef DEBUG
-	std::cout << "Finished importing File\n";
+	std::cerr << "Finished importing File\n";
 #endif
 }
 
@@ -403,33 +438,6 @@ void Mesh::fix_norms(std::vector<unsigned int>& tris)
 		m_norms.push_back(glm::cross(v, w));
 		it.n[0] = it.n[1] = it.n[2] = m_norms.size();
 	}
-
-
-	/*
-#ifdef DEBUG
-	unsigned int fixed_faces = 0;
-#endif
-	for (auto face = m_triangles.begin(); face != m_triangles.end(); face++)
-	{
-		if ((*face).n[0] == 0 || (*face).n[1] == 0 || (*face).n[2] == 0)
-		{
-#ifdef DEBUG
-			fixed_faces += 1;
-#endif
-			const glm::vec3 p1 = m_verts[(*face).p[0]];
-			const glm::vec3 p2 = m_verts[(*face).p[1]];
-			const glm::vec3 p3 = m_verts[(*face).p[2]];
-
-			const glm::vec3 v = p2 - p1;
-			const glm::vec3 w = p3 - p1;
-			m_norms.push_back(glm::cross(v, w));
-			(*face).n[0] = (*face).n[1] = (*face).n[2] = m_norms.size();
-		}
-	}
-#ifdef DEBUG
-	std::cout << "Faces Fixed: " << fixed_faces << '\n';
-#endif
-*/
 }
 
 /*
