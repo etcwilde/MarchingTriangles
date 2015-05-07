@@ -1,22 +1,14 @@
 #ifndef POLYEDGE_HPP
 #define POLYEDGE_HPP
 
-#include "Mesh.hpp"
-
 class Edge
 {
 public:
-	Edge();
-	Edge(unsigned int a, unsigned int b, const Mesh& m);
-
-	void setEndpoints(unsigned int a, unsigned int b, const Mesh& m);
-
-	unsigned int getEndpointIndex(unsigned short i) const;
-	const glm::vec3& getEndpoint(unsigned short i) const;
-
+	Edge(unsigned int v1, unsigned int v2) : m_vertIndex[0](v1), m_vertIndex[1](v1) { }
+	// index: 0 or 1
+	unsigned int get(unsigned char index) const { return m_vertIndex[index]; }
 private:
-	unsigned int m_ia, m_ib;
-	glm::vec3 m_a, m_b;
+	unsigned int m_vertIndex[2];
 };
 
 #endif//POLYEDGE_HPP

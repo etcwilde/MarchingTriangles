@@ -1,76 +1,33 @@
 #ifndef POLYFRONT_HPP
 #define POLYFRONT_HPP
+#include <vector>
 
-#include <list>
-#include <map>
-
-#include "PolyEdge.hpp"
-
-class Front;
-
-// Construct kd-tree index
-/*
-typedef KDTreeSingleIndexAdaptorParams<L2_Simple_Adaptor<float, Front>>,
-	Front,
-	3,
-	>
-	*/
-
-
+typedef struct FrontVertex;
 
 class Front
 {
 public:
-	// Data Structures
-	/*
-	 * Front Vertex Manipulation
-	 */
-	struct Vertex
-	{
-		Vertex(unsigned int index) :
-			m_index(index),
-			m_active(true)
-		{ }
-		unsigned int m_index;
-		bool m_active;
-		float m_openAngle;
-		unsigned int m_triangleIndex;
+	Front();
+	Front(const Front& f) : m_verts(f.m_verts) { }
 
-		bool operator < (const Vertex& v) const
-		{
-			return m_openAngle < v.m_openAngle;
-		}
-	};
+	// Returns the index of the ith vertex
+	inline unsigned int operator[](unsigned int i)
+	{ return m_verts[i].v_index; }
 
-public:
-	// Returns index of next vertex
-	unsigned int nextVertex(unsigned int v);
-	std::list<Vertex>::iterator nextIter(std::list<Vertex>::iterator vertex);
-
-	// Returns the index of the previous vertex
-	unsigned int prevVertex(unsigned int v);
-	std::list<Vertex>::iterator prevIter(std::list<Vertex>::iterator vertex);
-
-	// Get the iterator from a vertex index
-	std::list<Vertex>::iterator getIterator(unsigned int v);
-
-	// Insert a new vertex v immediately after vertex p
-	void insertVertex(unsigned int p, unsigned int v);
-
-
-	// Number of vertices
-	//inline size_t kdtree_get_point_count() const { m_vertices.size(); }
-	//inline nanoflann::DistanceType kdtree_distance(const
 protected:
-private:
 
 private:
-	//Variables
-	std::list<Vertex> m_vertices;
-	std::map<unsigned int, std::list<Vertex>::iterator> m_VertIndexToFrontIterator;
+	typedef struct
+	{
+		unsigned int v_index;
+		FrontVertex*[2] neighbors;
+	} FrontVertex;
+
+private:
+	std::vector<FrontVertex> m_verts;
+
 };
 
-typedef std::list<Front::Vertex>::iterator VertexIterator;
 
 #endif//POLYFRONT_HPP
 
