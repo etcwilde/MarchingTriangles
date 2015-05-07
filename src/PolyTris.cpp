@@ -6,5 +6,11 @@ TrisPoly::TrisPoly(Implicit::Object& o) :
 { }
 
 
+Mesh TrisPoly::polygonize()
+{
+	return Mesh();
+}
+
+
 
 

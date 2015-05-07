@@ -4,6 +4,20 @@
 #include <list>
 #include <map>
 
+#include "PolyEdge.hpp"
+
+class Front;
+
+// Construct kd-tree index
+/*
+typedef KDTreeSingleIndexAdaptorParams<L2_Simple_Adaptor<float, Front>>,
+	Front,
+	3,
+	>
+	*/
+
+
+
 class Front
 {
 public:
@@ -42,6 +56,11 @@ public:
 
 	// Insert a new vertex v immediately after vertex p
 	void insertVertex(unsigned int p, unsigned int v);
+
+
+	// Number of vertices
+	//inline size_t kdtree_get_point_count() const { m_vertices.size(); }
+	//inline nanoflann::DistanceType kdtree_distance(const
 protected:
 private:
 

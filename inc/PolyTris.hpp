@@ -7,6 +7,9 @@
 #include "PolyFront.hpp"
 #include "Mesh.hpp"
 #include "utils/GeoCore.hpp"
+#include "implicit/Aabb.hpp"
+#include "nanoflann.hpp"
+
 
 // Curvature Dependent Marching Triangles Polygonizer
 
@@ -25,6 +28,7 @@ private:
 	// Variables
 	Mesh m_mesh;
 	std::stack<Front*> m_fronts;
+
 };
 
 
