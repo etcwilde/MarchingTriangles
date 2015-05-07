@@ -2,7 +2,7 @@
 #define POLYFRONT_HPP
 #include <vector>
 
-typedef struct FrontVertex;
+//typedef struct FrontVertex;
 
 class Front
 {
@@ -17,10 +17,10 @@ public:
 protected:
 
 private:
-	typedef struct
+	typedef struct FrontVertex
 	{
 		unsigned int v_index;
-		FrontVertex*[2] neighbors;
+		struct FrontVertex* neighbors[2];
 	} FrontVertex;
 
 private:
