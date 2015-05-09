@@ -21,7 +21,7 @@ int main()
 	Implicit::Union u2(&line_scale, &u1);
 	Implicit::Union jack(&u2, &caps);
 
-	TrisPoly marching_triangles(jack);
+	TrisPoly marching_triangles(s);
 	Mesh m = marching_triangles.Polygonize();
 	m.Export("output.obj");
 	return 0;

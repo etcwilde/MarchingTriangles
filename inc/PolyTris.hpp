@@ -15,6 +15,7 @@
 #include <list>
 #include <vector>
 #include <stack>
+#include <cmath>
 
 #include <glm/glm.hpp>
 
@@ -34,21 +35,37 @@ public:
 	{ return m_edges[index]; }
 
 	// Gets the top front
-	const Front* getFront() const { return m_fronts.back(); }
+	Front* getFront() const
+	{
+		if (m_fronts.size() > 0) return m_fronts.back();
+		else return NULL;
 
-	const Front* getFront(unsigned int index) const
-	{ return m_fronts[index];}
+	}
+
+	Front* getFront(unsigned int index) const
+	{
+		if (m_fronts.size() > index) return m_fronts[index];
+		else return NULL;
+	}
 
 	Front* getFront() { return m_fronts.back(); }
 
 
 	void popFront() { m_fronts.pop_back(); }
 
-// I may make these public
-private:
+	typedef struct
+	{
+		unsigned int vert_index[3];
+	} Face;
+
+
+	// Direct access is good
 	std::vector<glm::vec3> m_vertices;
+	std::vector<glm::vec3> m_normals;
+	std::vector<float> m_vertRocs;
 	std::vector<Edge> m_edges;
 	std::vector<Front*> m_fronts;
+	std::vector<Face> m_faces;
 };
 
 
@@ -89,13 +106,21 @@ public:
 	FrontPtAdaptor(const PolyContainer& poly) : m_pts(poly) { }
 
 	inline unsigned int kdtree_get_point_count() const
-	{ return m_pts.getFront()->verts(); }
+	{
+		return (m_pts.getFront() ) ? m_pts.getFront()->verts() : 0;
+	}
 
 	inline float kdtree_distance(const float* p1, const unsigned int index, unsigned int) const
 	{
-		return glm::length(
+		/*return glm::length(
 				glm::vec3(p1[0], p1[1], p1[2]) -
-				m_pts.getVertex(m_pts.getFront()->getVertex(index)));
+				m_pts.getVertex(m_pts.getFront()->getVertex(index))); */
+		if (m_pts.getFront())
+		{
+			return glm::length(glm::vec3(p1[0], p1[1], p1[2]) -
+					m_pts.getVertex(m_pts.getFront()->getVertex(index)));
+		}
+		else return 0;
 	}
 
 
@@ -156,19 +181,25 @@ private:
 	// Generate and set open angles in the front
 	void actualizeAngles();
 
+	// Uses front index value
+	float computeOpenAngle(unsigned int i, const Front* f) const;
+
 	// Gets the radius of curvature at a point
 	// Maximum absolute curvature used to calculate
 	float rocAtPt(const glm::vec3& v);
 
+
 private:
 	// Variables
-	Mesh m_mesh;
+	//Mesh m_mesh;
 
-	PolyContainer m_container;
+	PolyContainer m_container; // Contains all the data elements
 
+	// See if these are necessary
 	MeshPtAdaptor m_mesh_adaptor;
 	FrontPtAdaptor m_front_adaptor;
 
+	// Kd trees for finding closes point on the mesh or front
 	Mesh_pt_kdtree m_mesh_tree;
 	Front_pt_kdtree m_front_tree;
 };
