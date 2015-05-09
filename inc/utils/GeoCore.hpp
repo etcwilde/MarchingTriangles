@@ -14,7 +14,7 @@
  * \param T Tangent
  * \param B Binormal
  */
-inline void TangenSpace(const glm::vec3& N, glm::vec3& T, glm::vec3& B)
+inline void TangentSpace(const glm::vec3& N, glm::vec3& T, glm::vec3& B)
 {
 	if (N.x > 0.5f || N.y > 0.5f) T = glm::vec3(N.y, -N.x, 0.f);
 	else T = glm::vec3(-N.z, 0.f, N.x);

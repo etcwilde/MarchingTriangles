@@ -15,4 +15,16 @@ T clamp(const T& val, const T& min, const T& max)
 {
 	return std::max(min, std::min(max, val));
 }
+
+template <typename T>
+T toDegrees(T radians)
+{
+	return radians * 57.29577951;
+}
+
+template <typename T>
+T toRadians(T degrees)
+{
+	return degrees * 0.017453292;
+}
 #endif//MATHCORE_HPP
