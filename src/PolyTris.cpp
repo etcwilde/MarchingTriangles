@@ -57,8 +57,9 @@ void TrisPoly::seedHexagon(const glm::vec3& start)
 #endif
 
 		unsigned int f_v_index = 1 + (i % 6);
-		front->pushVertex(f_v_index);
+		//front->pushVertex(f_v_index);
 
+		front->appendVertex(f_v_index);
 		PolyContainer::Face f;
 		f.vert_index[0] = 0;
 		f.vert_index[1] = 1 + (i % 6);
@@ -81,9 +82,10 @@ void TrisPoly::actualizeAngles()
 {
 	Front* f = m_container.getFront();
 	if (f == NULL) return;
-	for (unsigned int i = 0; i < f->verts(); ++i)
+	for (unsigned int i = 0; i < f->size(); ++i)
 	{
-		f->setOpenAngle(i, computeOpenAngle(i, f));
+		f->setOpeningAngle(i, computeOpenAngle(i, f));
+		//f->setOpenAngle(i, computeOpenAngle(i, f));
 	}
 }
 
@@ -96,8 +98,9 @@ void TrisPoly::actualizeAngles()
 float TrisPoly::computeOpenAngle(unsigned int i, const Front* f) const
 {
 	if (f == NULL) return 0;
-	const glm::vec3 v = m_container.m_vertices[f->getVertex(i)];
-	const glm::vec3 n = m_container.m_normals[f->getVertex(i)];
+	const unsigned int vi = f->getVertex(i);
+	const glm::vec3 v = m_container.m_vertices[vi];
+	const glm::vec3 n = m_container.m_normals[vi];
 	const glm::vec3 vleft = m_container.m_vertices[f->getLeft(i)];
 	const glm::vec3 vright = m_container.m_vertices[f->getRight(i)];
 

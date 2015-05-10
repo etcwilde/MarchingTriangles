@@ -34,16 +34,16 @@ public:
 	{ return m_vertex_index[(fi % m_vertex_index.size())]; }
 
 	/**
-	 * \brief Gets the vertex index of the vertex to the left 
+	 * \brief Gets the vertex index of the vertex to the left
 	 */
 	inline unsigned int getLeft(unsigned int fi) const
-	{ return m_vertex_index[(fi % m_vertex_index.size()) - 1]; }
+	{ return m_vertex_index[(fi - 1 % m_vertex_index.size())]; }
 
 	/**
 	 * \brief Gets the vertex index of the vertex to the right
 	 */
 	inline unsigned int getRight(unsigned int fi) const
-	{ return m_vertex_index[(fi % m_vertex_index.size()) + 1]; }
+	{ return m_vertex_index[(fi + 1 % m_vertex_index.size())]; }
 
 	/**
 	 * \brief Gets the opening angle of a front vertex
