@@ -101,8 +101,15 @@ float TrisPoly::computeOpenAngle(unsigned int i, const Front* f) const
 	const unsigned int vi = f->getVertex(i);
 	const glm::vec3 v = m_container.m_vertices[vi];
 	const glm::vec3 n = m_container.m_normals[vi];
+#ifdef DEBUG
+	const unsigned int left_index = f->getLeft(i);
+	const unsigned int right_index = f->getRight(i);
+	const glm::vec3 vleft = m_container.m_vertices[left_index];
+	const glm::vec3 vright = m_container.m_vertices[right_index];
+#else
 	const glm::vec3 vleft = m_container.m_vertices[f->getLeft(i)];
 	const glm::vec3 vright = m_container.m_vertices[f->getRight(i)];
+#endif
 
 	glm::vec3 X, Y;
 	TangentSpace(n, X, Y);

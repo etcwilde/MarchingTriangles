@@ -37,19 +37,19 @@ public:
 	 * \brief Gets the vertex index of the vertex to the left
 	 */
 	inline unsigned int getLeft(unsigned int fi) const
-	{ return m_vertex_index[(fi - 1 % m_vertex_index.size())]; }
+	{ return m_vertex_index[(fi - 1) % (m_vertex_index.size() - 1)]; }
 
 	/**
 	 * \brief Gets the vertex index of the vertex to the right
 	 */
 	inline unsigned int getRight(unsigned int fi) const
-	{ return m_vertex_index[(fi + 1 % m_vertex_index.size())]; }
+	{ return m_vertex_index[(fi + 1) % (m_vertex_index.size() - 1)]; }
 
 	/**
 	 * \brief Gets the opening angle of a front vertex
 	 */
 	inline float getOpeningAngle(unsigned int fi) const
-	{ return m_open_angles[(fi % m_vertex_index.size())]; }
+	{ return m_open_angles[fi % (m_vertex_index.size() - 1)]; }
 
 	/**
 	 * \brief Gets the radius of curvature of a front vertex
@@ -59,7 +59,7 @@ public:
 	 *
 	 */
 	inline float getRadiusOfCurvature(unsigned int fi) const
-	{ return m_rocs[(fi % m_vertex_index.size())]; }
+	{ return m_rocs[fi % (m_vertex_index.size() - 1)]; }
 
 
 	/**
@@ -73,10 +73,10 @@ public:
 	void setVertex(unsigned int fi, unsigned int vi);
 
 	inline void setOpeningAngle(unsigned int fi, float angle)
-	{ m_open_angles[(fi % m_vertex_index.size())] = angle; }
+	{ m_open_angles[fi % (m_vertex_index.size() - 1)] = angle; }
 
 	inline void setRadiusOfCurvature(unsigned int fi, float roc)
-	{ m_rocs[(fi % m_vertex_index.size())] = roc; }
+	{ m_rocs[fi % (m_vertex_index.size() - 1)] = roc; }
 
 
 	/**
@@ -118,7 +118,7 @@ public:
 	void removeVertex(unsigned int fi);
 
 	inline bool sanityCheck() const
-	{ return (m_vertex_index.size() == m_open_angles.size() == m_rocs.size()); }
+	{ return (m_vertex_index.size() == m_open_angles.size() && m_vertex_index.size() == m_rocs.size()); }
 
 
 
