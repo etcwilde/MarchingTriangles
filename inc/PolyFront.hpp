@@ -25,7 +25,7 @@ public:
 	 */
 	inline unsigned int size() const
 	{ return m_vertex_index.size(); }
-	// Translate a front index to a vertex index
+
 	/**
 	 * \brief Gets the vertex index from a front index
 	 * \param fi Front Index, the index to get the vertex index from
@@ -33,15 +33,31 @@ public:
 	inline unsigned int getVertex(unsigned int fi) const
 	{ return m_vertex_index[(fi % m_vertex_index.size())]; }
 
+	/**
+	 * \brief Gets the vertex index of the vertex to the left 
+	 */
 	inline unsigned int getLeft(unsigned int fi) const
 	{ return m_vertex_index[(fi % m_vertex_index.size()) - 1]; }
 
+	/**
+	 * \brief Gets the vertex index of the vertex to the right
+	 */
 	inline unsigned int getRight(unsigned int fi) const
 	{ return m_vertex_index[(fi % m_vertex_index.size()) + 1]; }
 
+	/**
+	 * \brief Gets the opening angle of a front vertex
+	 */
 	inline float getOpeningAngle(unsigned int fi) const
 	{ return m_open_angles[(fi % m_vertex_index.size())]; }
 
+	/**
+	 * \brief Gets the radius of curvature of a front vertex
+	 *
+	 * This is how far along the shape the curvature of this point has an
+	 * effect
+	 *
+	 */
 	inline float getRadiusOfCurvature(unsigned int fi) const
 	{ return m_rocs[(fi % m_vertex_index.size())]; }
 
@@ -54,14 +70,13 @@ public:
 	 * \param fi Front index
 	 * \param vi vertex index
 	 */
-	inline void setVertex(unsigned int fi, unsigned int vi);
+	void setVertex(unsigned int fi, unsigned int vi);
 
-	inline void setOpeningAngle(unsigned int fi, float angle);
+	inline void setOpeningAngle(unsigned int fi, float angle)
+	{ m_open_angles[(fi % m_vertex_index.size())] = angle; }
 
 	inline void setRadiusOfCurvature(unsigned int fi, float roc)
-	{
-		m_rocs[(fi % m_vertex_index.size())] = roc;
-	}
+	{ m_rocs[(fi % m_vertex_index.size())] = roc; }
 
 
 	/**
@@ -73,15 +88,7 @@ public:
 	 * \return The front index of the new vertex
 	 *
 	 */
-	inline unsigned int appendVertex(unsigned int vi)
-	{
-		m_open_angles[0] = 0;
-		m_open_angles[m_vertex_index.size() - 1] = 0;
-		m_vertex_index.push_back(vi);
-		m_open_angles.push_back(0);
-		m_rocs.push_back(0);
-		return m_vertex_index.size() - 1;
-	}
+	unsigned int appendVertex(unsigned int vi);
 
 	/**
 	 * \brief Inserts a vertex at the front
@@ -91,15 +98,7 @@ public:
 	 * \param vi Vertex index to be added
 	 * \return The front index of the new vertex
 	 */
-	inline unsigned int prependVertex(unsigned int vi)
-	{
-		m_open_angles[0] = 0;
-		m_open_angles[m_vertex_index.size() - 1] = 0;
-		m_vertex_index.insert(m_vertex_index.begin(), vi);
-		m_open_angles.insert(m_open_angles.begin(), 0);
-		m_rocs.insert(m_rocs.begin(), 0);
-		return 0;
-	}
+	unsigned int prependVertex(unsigned int vi);
 
 	/**
 	 * \brief Inserts a new vertex at an arbitrary position
@@ -109,35 +108,17 @@ public:
 	 * \param fi Front index for the new vertex
 	 * \param vi vertex index
 	 */
-	inline unsigned int insertVertex(unsigned int fi, unsigned int vi)
-	{
-		fi = fi % m_vertex_index.size() + 1; // Don't go further than we have to
-		m_open_angles[fi] = 0;
-		m_open_angles[fi + 1] = 0;
-		m_vertex_index.insert(m_vertex_index.begin() + fi, vi);
-		m_open_angles.insert(m_open_angles.begin() + fi, 0);
-		m_rocs.insert(m_rocs.begin() + fi, 0);
-		return fi;
-	}
+	unsigned int insertVertex(unsigned int fi, unsigned int vi);
 
 	/**
 	 * \brief Removes a vertex at an arbitrary position
 	 *
 	 * Note: opening angle and roc are set to 0 for the neighbors
 	 */
-	inline void removeVertex(unsigned int fi)
-	{
-		m_open_angles[fi + 1] = 0;
-		m_open_angles[fi - 1] = 0;
-		m_vertex_index.erase(m_vertex_index.begin() + fi);
-		m_open_angles.erase(m_open_angles.begin() + fi);
-		m_rocs.erase(m_rocs.begin() + fi);
-	}
+	void removeVertex(unsigned int fi);
 
 	inline bool sanityCheck() const
-	{
-		return (m_vertex_index.size() == m_open_angles.size() == m_rocs.size());
-	}
+	{ return (m_vertex_index.size() == m_open_angles.size() == m_rocs.size()); }
 
 
 

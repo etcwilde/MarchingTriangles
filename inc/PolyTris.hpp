@@ -107,7 +107,7 @@ public:
 
 	inline unsigned int kdtree_get_point_count() const
 	{
-		return (m_pts.getFront() ) ? m_pts.getFront()->verts() : 0;
+		return (m_pts.getFront() ) ? m_pts.getFront()->size() : 0;
 	}
 
 	inline float kdtree_distance(const float* p1, const unsigned int index, unsigned int) const
