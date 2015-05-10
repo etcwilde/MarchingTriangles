@@ -1,26 +1,87 @@
 #include "PolyTris.hpp"
 // Protected Methods
+//
 
 Mesh TrisPoly::polygonize()
 {
-	seedHexagon(m_scene.GetCenterVertex());
-
-	Mesh m;
-	for (unsigned int i = 0; i < m_container.m_faces.size(); i++)
+	auto begin = std::chrono::high_resolution_clock::now();
+	//m_container.m_fronts.push_back(seedHexagon(m_scene.GetCenterVertex()));
+	m_container.pushFront(seedHexagon(m_scene.GetCenterVertex()));
+	while (m_container.fronts() > 0)
 	{
+		Front* f0 = m_container.popFront();
+		while (f0->size() > 3)
+		{
+
+			actualizeAngles(f0);
+			unsigned int min_angle_index = f0->getMinimalAngle();
+			float opening_angle = f0->getOpeningAngle(min_angle_index);
+			// This may get expensive
+			m_mesh_tree.buildIndex();
+			m_front_tree.buildIndex();
+
+			for (unsigned int i = 0; i < f0->size(); i++)
+				std::cout << "Opening Angle: " << toDegrees<float>(f0->getOpeningAngle(i)) << '\n';
+
+			break;
+
+			// Test self-intersection
+
+			// I may want to use the mesh kd tree for this
+
+			// If no self-intersection
+			// 	Check for front collisions
+			// 	    Use front-kdtree radius search -- heuristic
+			// 	    length
+			// 	    	if Collision, get front, and front index
+			//     		of vertex
+			//
+			//
+			//We need a mapping from glm::vec3 to vertex index
+			//We need a mapping from vertex index to front index
+		}
+
+		// fill front
+		// save faces
+		// delete front
+		delete f0;
+	}
+	auto end = std::chrono::high_resolution_clock::now();
+	std::cout << "Polygonization Time: " <<
+		std::chrono::duration_cast<std::chrono::milliseconds>(end-begin).count()
+		<<  " ms\n";
+	//actualizeAngles(m_co);
+	//m_mesh_tree.buildIndex();
+	//m_front_tree.buildIndex();
+
+	// Build mesh triangulation
+
+	std::cout << "Building " << m_container.faces() << " faces\n";
+	Mesh m;
+	for (unsigned int i = 0; i < m_container.faces(); i++)
+	{
+		m.AddFace(m_container.getVertex(m_container.getFace(i).vert_index[0]),
+			m_container.getVertex(m_container.getFace(i).vert_index[1]),
+		       	m_container.getVertex(m_container.getFace(i).vert_index[2]),
+			m_container.getNormal(m_container.getFace(i).vert_index[0]),
+			m_container.getNormal(m_container.getFace(i).vert_index[1]),
+		       	m_container.getNormal(m_container.getFace(i).vert_index[2]));
+
+		/*
 		m.AddFace(m_container.m_vertices[m_container.m_faces[i].vert_index[0]],
 			m_container.m_vertices[m_container.m_faces[i].vert_index[1]],
 			m_container.m_vertices[m_container.m_faces[i].vert_index[2]],
 			m_container.m_normals[m_container.m_faces[i].vert_index[0]],
 			m_container.m_normals[m_container.m_faces[i].vert_index[1]],
 			m_container.m_normals[m_container.m_faces[i].vert_index[2]]);
+			*/
 	}
 	return m;
 }
 
 // Private Methods
 // Given a seed, generates a seed hexagon
-void TrisPoly::seedHexagon(const glm::vec3& start)
+Front* TrisPoly::seedHexagon(const glm::vec3& start)
 {
 	const glm::vec3 seed = m_scene.Project(start);
 
@@ -32,9 +93,9 @@ void TrisPoly::seedHexagon(const glm::vec3& start)
 	std::cout << "Seed Value: " << m_scene.Evaluate(seed) << '\n';
 	std::cout << "Roc: " << roc << '\n';
 #endif
-	m_container.m_vertices.push_back(seed);
-	m_container.m_normals.push_back(n);
-	m_container.m_vertRocs.push_back(roc);
+	m_container.pushVertex(seed);
+	m_container.pushNormal(n);
+	m_container.pushRoc(roc);
 
 	// Generate first front!
 
@@ -45,48 +106,28 @@ void TrisPoly::seedHexagon(const glm::vec3& start)
 		float y = 2.f * roc * std::sin(float(i) * 0.33333333f * M_PI);
 		glm::vec3 proj_point = m_scene.Project(seed + (x*t) + (y*b));
 
-		glm::vec3 normal = m_scene.Normal(proj_point);
-		m_container.m_vertices.push_back(proj_point);
-		m_container.m_normals.push_back(normal);
-		m_container.m_vertRocs.push_back(rocAtPt(proj_point));
-
-#ifdef DEBUG
-		std::cout << "Point Value: " << m_scene.Evaluate(proj_point) << '\n';
-		std::cout << "Field Value: " << m_scene.FieldValue(proj_point) << '\n';
-		std::cout << "Normal Value: " << normal << '\n';
-#endif
+		m_container.pushVertex(proj_point);
+		m_container.pushNormal(m_scene.Normal(proj_point));
+		m_container.pushRoc(rocAtPt(proj_point));
 
 		unsigned int f_v_index = 1 + (i % 6);
-		//front->pushVertex(f_v_index);
 
 		front->appendVertex(f_v_index);
 		PolyContainer::Face f;
 		f.vert_index[0] = 0;
 		f.vert_index[1] = 1 + (i % 6);
 		f.vert_index[2] = 1 + ((i + 1) % 6);
-		m_container.m_faces.push_back(f);
+		m_container.pushFace(f);
 	}
-
-	m_container.m_fronts.push_back(front);
-	// Compute opening angles
-
-	actualizeAngles();
-
-	m_mesh_tree.buildIndex();
-	m_front_tree.buildIndex();
+	return front;
 }
 
 
-
-void TrisPoly::actualizeAngles()
+void TrisPoly::actualizeAngles(Front* f)
 {
-	Front* f = m_container.getFront();
 	if (f == NULL) return;
 	for (unsigned int i = 0; i < f->size(); ++i)
-	{
 		f->setOpeningAngle(i, computeOpenAngle(i, f));
-		//f->setOpenAngle(i, computeOpenAngle(i, f));
-	}
 }
 
 // Computes open angle from the values in the front
@@ -99,17 +140,15 @@ float TrisPoly::computeOpenAngle(unsigned int i, const Front* f) const
 {
 	if (f == NULL) return 0;
 	const unsigned int vi = f->getVertex(i);
-	const glm::vec3 v = m_container.m_vertices[vi];
-	const glm::vec3 n = m_container.m_normals[vi];
-#ifdef DEBUG
+	const glm::vec3 v = m_container.getVertex(vi);
+	const glm::vec3 n = m_container.getNormal(vi);
 	const unsigned int left_index = f->getLeft(i);
 	const unsigned int right_index = f->getRight(i);
-	const glm::vec3 vleft = m_container.m_vertices[left_index];
-	const glm::vec3 vright = m_container.m_vertices[right_index];
-#else
-	const glm::vec3 vleft = m_container.m_vertices[f->getLeft(i)];
-	const glm::vec3 vright = m_container.m_vertices[f->getRight(i)];
-#endif
+	//std::cout << "Left Vertex Index: " << left_index << ", " <<  right_index << '\n';
+	const glm::vec3 vleft = m_container.getVertex(left_index);
+	const glm::vec3 vright = m_container.getVertex(right_index);
+
+	std::cout << vleft << ", " << v << ", " << vright << '\n';
 
 	glm::vec3 X, Y;
 	TangentSpace(n, X, Y);

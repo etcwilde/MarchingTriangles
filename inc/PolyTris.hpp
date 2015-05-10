@@ -16,56 +16,117 @@
 #include <vector>
 #include <stack>
 #include <cmath>
+#include <chrono>
+#include <map>
 
 #include <glm/glm.hpp>
 
 class PolyContainer
 {
 public:
-	PolyContainer() { }
-
-	unsigned int verts() const { return m_vertices.size(); }
-	unsigned int edges() const { return m_edges.size(); }
-	unsigned int fronts() const { return m_fronts.size(); }
-
-	const glm::vec3& getVertex(unsigned int index) const
-	{ return m_vertices[index]; }
-
-	const Edge& getEdge(unsigned int index) const
-	{ return m_edges[index]; }
-
-	// Gets the top front
-	Front* getFront() const
-	{
-		if (m_fronts.size() > 0) return m_fronts.back();
-		else return NULL;
-
-	}
-
-	Front* getFront(unsigned int index) const
-	{
-		if (m_fronts.size() > index) return m_fronts[index];
-		else return NULL;
-	}
-
-	Front* getFront() { return m_fronts.back(); }
-
-
-	void popFront() { m_fronts.pop_back(); }
 
 	typedef struct
 	{
 		unsigned int vert_index[3];
 	} Face;
 
+public:
 
-	// Direct access is good
+	PolyContainer() :
+		m_vertices(),
+		m_normals(),
+		m_vertRocs(),
+		m_edges(),
+		m_fronts(),
+		m_faces()
+	{ }
+
+	inline std::vector<glm::vec3> getVertices() { return m_vertices; }
+
+	inline unsigned int verts() const { return m_vertices.size(); }
+	inline unsigned int edges() const { return m_edges.size(); }
+	inline unsigned int fronts() const { return m_fronts.size(); }
+	inline unsigned int faces() const { return m_faces.size(); }
+
+
+	// Vertex Handling
+
+	inline const glm::vec3& getVertex(unsigned int index) const
+	{ return m_vertices[index]; }
+
+
+	inline void pushVertex(const glm::vec3 v)
+	{
+		//vertex_index_map[v] = m_vertices.size();
+		m_vertices.push_back(v);
+	}
+
+	inline unsigned int getVertexIndex(glm::vec3 v) const
+	{
+	//	return m_vertex_index_map[v];
+	return 10;
+	}
+
+	// Normal Handling
+
+	inline const glm::vec3& getNormal(unsigned int index) const
+	{ return m_normals[index]; }
+
+	inline void pushNormal(const glm::vec3 n)
+	{ m_normals.push_back(n); }
+
+	// Face Handling
+
+	inline const Face& getFace(unsigned int index) const
+	{ return m_faces[index]; }
+
+	inline void pushFace(Face f)
+	{ m_faces.push_back(f); }
+
+
+	// Front Handling
+
+	inline Front* getFront() const
+	{
+		if (m_fronts.size() > 0) return m_fronts.back();
+		else return NULL;
+	}
+
+	inline Front* getFront(unsigned int index) const
+	{
+		if (index < m_fronts.size()) return m_fronts[index];
+		else return NULL;
+	}
+
+	inline void pushFront(Front* f)
+	{ m_fronts.push_back(f); }
+
+	// You should catch the pointer and delete it when done cause it isn't
+	// being stored anymore
+	Front* popFront()
+	{
+		Front* ret_front = m_fronts.back();
+		m_fronts.pop_back();
+		return ret_front;
+	}
+
+	// Roc handling
+	inline const float getRoc(unsigned int index) const
+	{ return m_vertRocs[index]; }
+
+	inline void pushRoc(float roc)
+	{ m_vertRocs.push_back(roc); }
+
+
+private:
 	std::vector<glm::vec3> m_vertices;
 	std::vector<glm::vec3> m_normals;
 	std::vector<float> m_vertRocs;
-	std::vector<Edge> m_edges;
+	std::vector<Edge> m_edges; // Don't think I need this
 	std::vector<Front*> m_fronts;
 	std::vector<Face> m_faces;
+
+	//std::map<glm::vec3, unsigned int> m_vertex_index_map;
 };
 
 
@@ -170,7 +231,7 @@ private:
 
 	// Generates a hexagon from a seed vertex
 	// adds generated front to fronts
-	void seedHexagon(const glm::vec3& start);
+	Front* seedHexagon(const glm::vec3& start);
 
 	Front* mergeFronts(Front* A, unsigned int a, Front* B, unsigned int b);
 	void splitFronts(Front* F, Front* A, unsigned int a, Front* B, unsigned int b);
@@ -179,7 +240,7 @@ private:
 	void fill(Front* f);
 
 	// Generate and set open angles in the front
-	void actualizeAngles();
+	void actualizeAngles(Front* f);
 
 	// Uses front index value
 	float computeOpenAngle(unsigned int i, const Front* f) const;

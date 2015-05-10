@@ -1,5 +1,21 @@
 #include "PolyFront.hpp"
 
+unsigned int Front::getMinimalAngle() const
+{
+	float minimal_angle = 2 * M_PI; // 360 degrees
+	unsigned int minimal_index = 0;
+	// Think about pipeline optimization here
+	for (unsigned int i = 0; i < m_open_angles.size(); ++i)
+	{
+		if (m_open_angles[i] < minimal_angle)
+		{
+			minimal_angle = m_open_angles[i];
+			minimal_index = i;
+		}
+	}
+	return minimal_index;
+}
+
 void Front::setVertex(unsigned int fi, unsigned int vi)
 {
 	if (fi < m_vertex_index.size())
@@ -37,7 +53,6 @@ unsigned int Front::prependVertex(unsigned int vi)
 	m_rocs.insert(m_rocs.begin(), 0);
 	return 0;
 }
-
 
 unsigned int Front::insertVertex(unsigned int fi, unsigned int vi)
 {

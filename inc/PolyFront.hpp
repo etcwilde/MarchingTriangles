@@ -1,6 +1,7 @@
 #ifndef POLYFRONT_HPP
 #define POLYFRONT_HPP
 #include <vector>
+#include <cmath>
 
 class Front
 {
@@ -26,6 +27,8 @@ public:
 	inline unsigned int size() const
 	{ return m_vertex_index.size(); }
 
+	unsigned int getMinimalAngle() const;
+
 	/**
 	 * \brief Gets the vertex index from a front index
 	 * \param fi Front Index, the index to get the vertex index from
@@ -37,19 +40,23 @@ public:
 	 * \brief Gets the vertex index of the vertex to the left
 	 */
 	inline unsigned int getLeft(unsigned int fi) const
-	{ return m_vertex_index[(fi - 1) % (m_vertex_index.size() - 1)]; }
+	{
+		if ((fi % m_vertex_index.size()) == 0)
+			return m_vertex_index[m_vertex_index.size() -1];
+		return m_vertex_index[(fi - 1) % m_vertex_index.size()];
+	}
 
 	/**
 	 * \brief Gets the vertex index of the vertex to the right
 	 */
 	inline unsigned int getRight(unsigned int fi) const
-	{ return m_vertex_index[(fi + 1) % (m_vertex_index.size() - 1)]; }
+	{ return m_vertex_index[(fi + 1) % m_vertex_index.size()]; }
 
 	/**
 	 * \brief Gets the opening angle of a front vertex
 	 */
 	inline float getOpeningAngle(unsigned int fi) const
-	{ return m_open_angles[fi % (m_vertex_index.size() - 1)]; }
+	{ return m_open_angles[fi % m_vertex_index.size()]; }
 
 	/**
 	 * \brief Gets the radius of curvature of a front vertex
@@ -59,7 +66,7 @@ public:
 	 *
 	 */
 	inline float getRadiusOfCurvature(unsigned int fi) const
-	{ return m_rocs[fi % (m_vertex_index.size() - 1)]; }
+	{ return m_rocs[fi % m_vertex_index.size()]; }
 
 
 	/**
@@ -73,10 +80,10 @@ public:
 	void setVertex(unsigned int fi, unsigned int vi);
 
 	inline void setOpeningAngle(unsigned int fi, float angle)
-	{ m_open_angles[fi % (m_vertex_index.size() - 1)] = angle; }
+	{ m_open_angles[fi % m_vertex_index.size()] = angle; }
 
 	inline void setRadiusOfCurvature(unsigned int fi, float roc)
-	{ m_rocs[fi % (m_vertex_index.size() - 1)] = roc; }
+	{ m_rocs[fi % m_vertex_index.size()] = roc; }
 
 
 	/**
@@ -117,16 +124,17 @@ public:
 	 */
 	void removeVertex(unsigned int fi);
 
+	/**
+	 * \brief Ensures that all the sizes of the datastructures are correct
+	 */
 	inline bool sanityCheck() const
-	{ return (m_vertex_index.size() == m_open_angles.size() && m_vertex_index.size() == m_rocs.size()); }
-
-
-
-protected:
+	{ return (m_vertex_index.size() == m_open_angles.size() &&
+			m_vertex_index.size() == m_rocs.size()); }
 
 private:
-
-private:
+	// The front vertices are not explicitly defined
+	// They are implicit. A front index will index into one of these
+	// vectors. That index for all vectors correspond to a given vertex
 	std::vector<unsigned int> m_vertex_index;
 	std::vector<float> m_open_angles;
 	std::vector<float> m_rocs;
