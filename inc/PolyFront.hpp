@@ -11,6 +11,13 @@ public:
 		m_open_angles(f.m_open_angles),
 		m_rocs(f.m_rocs) { }
 
+	// If we keep the vertex container ordered, we don't need to keep track
+	// of our neighbors
+	//
+	// The right-hand vertex will always be to the right, and the left will
+	// always be on the left in the buffer
+
+
 	/**
 	 * \brief Returns the number of vertices in the front
 	 *
@@ -47,19 +54,9 @@ public:
 	 * \param fi Front index
 	 * \param vi vertex index
 	 */
-	inline void setVertex(unsigned int fi, unsigned int vi)
-	{
-		m_vertex_index[(fi % m_vertex_index.size())] = vi;
-		m_open_angles[(fi % m_vertex_index.size())] = 0;
-		m_open_angles[(fi + 1 % m_vertex_index.size())] = 0;
-		m_open_angles[(fi - 1 % m_vertex_index.size())] = 0;
-		m_rocs[(fi % m_vertex_index.size())] = 0;
-	}
+	inline void setVertex(unsigned int fi, unsigned int vi);
 
-	inline void setOpeningAngle(unsigned int fi, float angle)
-	{
-		m_open_angles[(fi % m_vertex_index.size())] = angle;
-	}
+	inline void setOpeningAngle(unsigned int fi, float angle);
 
 	inline void setRadiusOfCurvature(unsigned int fi, float roc)
 	{
@@ -142,97 +139,7 @@ public:
 		return (m_vertex_index.size() == m_open_angles.size() == m_rocs.size());
 	}
 
-	// Returns the index of the ith vertex
-	/*
-	inline unsigned int operator[](unsigned int i)
-	{ return m_verts[i].v_index; }
 
-	inline unsigned int verts() const { return m_verts.size(); }
-
-	inline unsigned int getLeft(unsigned int i) const
-	{
-		return m_verts[m_verts[i].neighbors[0]].v_index;
-	}
-
-	inline unsigned int getRight(unsigned int i) const
-	{
-		return m_verts[m_verts[i].neighbors[1]].v_index;
-	}
-
-	inline unsigned int getVertex(unsigned int index) const
-	{ return m_verts[index].v_index; }
-
-	inline void setOpenAngle(unsigned int vertex_index, float angle)
-	{ m_verts[vertex_index].open_angle = angle; }
-
-	inline float getOpenAngle(unsigned int vertex_index) const
-	{ return m_verts[vertex_index].open_angle; }
-
-	inline void setRoc(unsigned int vertex_index, float roc)
-	{ m_verts[vertex_index].roc = roc; }
-
-	inline float getRoc(unsigned int vertex_index) const
-	{ return m_verts[vertex_index].roc; }
-	*/
-
-
-	// If we keep the vertex container ordered, we don't need to keep track
-	// of our neighbors
-	//
-	// The right-hand vertex will always be to the right, and the left will
-	// always be on the left in the buffer
-
-
-	// TODO: Put implementation in cpp file
-	// Index Vertex: Index in TrisPolyVerts
-	// neighbors: Index to verts in m_verts list
-	// Circularly-linked doubly-linked list implemented in an array-style
-
-	/*
-	void pushVertex(unsigned int vertex_index)
-	{
-		unsigned int my_index = m_verts.size();
-		unsigned int first_index = 0;
-		unsigned int last_index = m_verts.size() - 1;
-
-		FrontVertex f;
-		f.v_index = vertex_index;
-		f.open_angle = 0;
-		f.roc = 1;
-
-		if (m_verts.size() > 0)
-		{
-			FrontVertex *first, *last;
-			first = &m_verts[first_index];
-			last = &m_verts[last_index];
-
-			f.neighbors[0] = last_index;
-			f.neighbors[1] = first_index;
-
-			first->neighbors[0] = my_index;
-			last->neighbors[1] = my_index;
-		}
-		else f.neighbors[0] = f.neighbors[1] = 0;
-		m_verts.push_back(f);
-	}
-
-	// Removes the last vertex
-	// Updates the neighbor links
-	// TODO: Check that this actually works
-	void popVertex()
-	{
-		if (m_verts.size() ==  0) return;
-		else if (m_verts.size() == 1) m_verts.pop_back();
-		unsigned int my_index = m_verts.size() - 1;
-		unsigned int first_index = 0;
-		unsigned int last_index = m_verts.size() - 2;
-
-		m_verts[last_index].neighbors[0] = first_index;
-		m_verts[first_index].neighbors[1] = last_index;
-
-		m_verts.pop_back();
-	}
-	*/
 
 protected:
 
