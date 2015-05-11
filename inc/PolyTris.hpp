@@ -173,36 +173,35 @@ private:
 class FrontPtAdaptor
 {
 public:
-	FrontPtAdaptor(const PolyContainer& poly) : m_pts(poly) { }
+	FrontPtAdaptor(const PolyContainer& poly, const Front* f) :
+		m_container(poly), m_front(f) { }
 
 	inline unsigned int kdtree_get_point_count() const
-	{
-		return (m_pts.getFront() ) ? m_pts.getFront()->size() : 0;
-	}
+	{ return m_front->size(); }
 
-	inline float kdtree_distance(const float* p1, const unsigned int index, unsigned int) const
+	inline float kdtree_distance(const float* p1,
+			const unsigned int index, unsigned int size) const
 	{
-		if (m_pts.getFront())
-		{
-			return glm::length(glm::vec3(p1[0], p1[1], p1[2]) -
-					m_pts.getVertex(m_pts.getFront()->getVertex(index)));
-		}
-		else return 0;
+		return glm::length(glm::vec3(p1[0], p1[1], p1[2]) -
+				m_container.getVertex(
+					m_front->getVertex(index)));
 	}
-
 
 	inline float kdtree_get_pt(const unsigned int i, int dim) const
 	{
-		if (dim == 0) return m_pts.getVertex(m_pts.getFront()->getVertex(i)).x;
-		else if (dim == 1) return m_pts.getVertex(m_pts.getFront()->getVertex(i)).y;
-		else return m_pts.getVertex(m_pts.getFront()->getVertex(i)).z;
+		if (dim == 0)return
+			m_container.getVertex(m_front->getVertex(i)).x;
+		else if(dim == 1) return
+			m_container.getVertex(m_front->getVertex(i)).y;
+		else return m_container.getVertex(m_front->getVertex(i)).z;
 	}
 
 	template <class BBOX>
 	bool kdtree_get_bbox(BBOX&) const {return false;}
 
 private:
-	const PolyContainer& m_pts;
+	const PolyContainer& m_container;
+	const Front* m_front;
 };
 
 // Mesh Pt tree
@@ -221,12 +220,8 @@ public:
 	TrisPoly(Implicit::Object& o):
 		Polygonizer(o),
 		m_mesh_adaptor(m_container),
-		m_front_adaptor(m_container),
 		m_mesh_tree(2, m_mesh_adaptor ,
-				nanoflann::KDTreeSingleIndexAdaptorParams(10)),
-		m_front_tree(2, m_front_adaptor,
 				nanoflann::KDTreeSingleIndexAdaptorParams(10))
-
 	{ }
 
 protected:
@@ -264,11 +259,11 @@ private:
 
 	// See if these are necessary
 	MeshPtAdaptor m_mesh_adaptor;
-	FrontPtAdaptor m_front_adaptor;
+//	FrontPtAdaptor m_front_adaptor;
 
 	// Kd trees for finding closes point on the mesh or front
 	Mesh_pt_kdtree m_mesh_tree;
-	Front_pt_kdtree m_front_tree;
+//	Front_pt_kdtree m_front_tree;
 };
 
 

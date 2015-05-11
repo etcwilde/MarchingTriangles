@@ -10,15 +10,21 @@ Mesh TrisPoly::polygonize()
 	while (m_container.fronts() > 0)
 	{
 		Front* f0 = m_container.popFront();
+		// Build front kdtree
+		Front_pt_kdtree front_tree(2, FrontPtAdaptor(m_container, f0),
+				nanoflann::KDTreeSingleIndexAdaptorParams(10));
 		while (f0->size() > 3)
 		{
 
 			actualizeAngles(f0);
 			unsigned int min_angle_index = f0->getMinimalAngle();
-			float opening_angle = f0->getOpeningAngle(min_angle_index);
+
+			// Not sure if this is necessary
+			//float opening_angle = f0->getOpeningAngle(min_angle_index);
+
 			// This may get expensive
 			m_mesh_tree.buildIndex();
-			m_front_tree.buildIndex();
+			front_tree.buildIndex();
 
 #ifdef DEBUG
 			for (unsigned int i = 0; i < f0->size(); i++)
@@ -40,7 +46,11 @@ Mesh TrisPoly::polygonize()
 				<< point_array[2] << '\n';
 			std::vector<std::pair<long unsigned int, float>> ret_points;
 
-			m_mesh_tree.radiusSearch(&point.x, 0.15, ret_points, nanoflann::SearchParams(10));
+			float roc = m_container.getRoc(f0->getVertex(min_angle_index));
+			std::cout << "Point roc: " << roc << '\n';
+
+			front_tree.radiusSearch(&point.x, roc, ret_points, nanoflann::SearchParams(10));
+
 
 			std::cout << "Points in search: " << ret_points.size() << '\n';
 			for (unsigned int i = 0; i < ret_points.size(); ++i)
@@ -55,8 +65,11 @@ Mesh TrisPoly::polygonize()
 #endif
 
 
-
 			// Test self-intersection
+			// Find all points on the front within a
+			//
+
+
 
 			// I may want to use the mesh kd tree for this
 
