@@ -36,6 +36,17 @@ public:
 	inline unsigned int getVertex(unsigned int fi) const
 	{ return m_vertex_index[(fi % m_vertex_index.size())]; }
 
+	/*
+	inline unsigned int getVertexIndex(unsigned int vi) const
+	{ return m_vertex_index.at(vi); }
+	*/
+
+	// Cannot be placed in a map
+	// Due to how items can be inserted and removed from any location, it
+	// isn't worth maintaining a map as the number of O(n) operations
+	// skyrockets, whereas this is one O(n) operation
+	unsigned int getVertexIndex(unsigned int vi) const;
+
 	/**
 	 * \brief Gets the vertex index of the vertex to the left
 	 */

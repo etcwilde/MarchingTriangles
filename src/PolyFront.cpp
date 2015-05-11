@@ -16,6 +16,14 @@ unsigned int Front::getMinimalAngle() const
 	return minimal_index;
 }
 
+unsigned int Front::getVertexIndex(unsigned int vi) const
+{
+	for (unsigned int fi = 0; fi < m_vertex_index.size(); ++fi)
+		if (m_vertex_index[fi] == vi) return fi;
+	// There was an error -- This should throw an error instead
+	return 0;
+}
+
 void Front::setVertex(unsigned int fi, unsigned int vi)
 {
 	if (fi < m_vertex_index.size())
