@@ -17,57 +17,44 @@ Mesh TrisPoly::polygonize()
 		{
 
 			actualizeAngles(f0);
-			unsigned int min_angle_index = f0->getMinimalAngle();
-
-			// Not sure if this is necessary
-			//float opening_angle = f0->getOpeningAngle(min_angle_index);
+			const unsigned int min_angle_index = f0->getMinimalAngle();
+			const float* selected_point = &m_container.getVertex(f0->getVertex(min_angle_index)).x;
+			const float roc = m_container.getRoc(f0->getVertex(min_angle_index));
 
 			// This may get expensive
 			m_mesh_tree.buildIndex();
 			front_tree.buildIndex();
 
-#ifdef DEBUG
-			for (unsigned int i = 0; i < f0->size(); i++)
-				std::cout << "Opening Angle: "
-					<< toDegrees<float>(f0->getOpeningAngle(i))
-					<< '\n';
+			std::vector<std::pair<long unsigned int, float>> danger_points;
+			front_tree.radiusSearch(selected_point, roc, danger_points,
+					nanoflann::SearchParams(10));
 
-			// These are for testing purposes
-			// Gets the point with the minimum angle
-			glm::vec3 point = m_container.getVertex(f0->getVertex(min_angle_index));
-			// Wrong one, but well work it out later
+			std::cout << "Danger Points: " << danger_points.size() << '\n';
 
-			// Gets the last point in the container
-			//glm::vec3 point = m_container.getVertex(m_container.verts() - 1);
-			float * point_array= &point.x;
-			std::cout << "Point: " << point << ": "
-				<< point_array[0] << ", "
-				<< point_array[1] << ", "
-				<< point_array[2] << '\n';
-			std::vector<std::pair<long unsigned int, float>> ret_points;
-
-			float roc = m_container.getRoc(f0->getVertex(min_angle_index));
-			std::cout << "Point roc: " << roc << '\n';
-
-			front_tree.radiusSearch(&point.x, roc, ret_points, nanoflann::SearchParams(10));
-
-
-			std::cout << "Points in search: " << ret_points.size() << '\n';
-			for (unsigned int i = 0; i < ret_points.size(); ++i)
+			// The point we tested is the only point in danger, so
+			// there is no danger
+			if (danger_points.size() == 1)
 			{
-				std::cout << "Index: " 
-					<< std::get<0>(ret_points[i]) << ", "
-					<< m_container.getVertex(
-							std::get<0>(ret_points[i])
-							)
-					<< '\n';
+				// Perform a front-collision detection
+				// This is also difficult
+				// Look for collision with the mesh kdtree
+				// Get the indecies. Perform a reverse-lookup
+				// on all the fronts,
+				//
+				// If a front collides with this point, merge
+				// them
+				//
+				// Otherwise expand the triangle
+				//
+				// OH MY GOODNESS! THE END IS IN SIGHT! YEAH!!!
+				// (assuming everything works)
 			}
-#endif
-
-
-			// Test self-intersection
-			// Find all points on the front within a
-			//
+			else
+			{
+				// Split the front
+				std::cout << "Split Front!\n";
+				break;
+			}
 
 
 
@@ -87,7 +74,6 @@ Mesh TrisPoly::polygonize()
 
 
 
-			//const glm::vec3 test_point = m_con
 			break;
 		}
 
@@ -240,7 +226,6 @@ void TrisPoly::splitFronts(Front* F, Front* A, unsigned int a,
 	A = new Front();
 	{
 		A->appendVertex(F->getVertex(a));
-		A->appendVertex(F->getVertex(b_prime));
 		unsigned int current = b_prime;
 		while (current != a)
 		{
@@ -252,7 +237,6 @@ void TrisPoly::splitFronts(Front* F, Front* A, unsigned int a,
 	B = new Front();
 	{
 		B->appendVertex(F->getVertex(b));
-		B->appendVertex(F->getVertex(a_prime));
 		unsigned int current = a_prime;
 		while (current != b)
 		{
@@ -260,4 +244,28 @@ void TrisPoly::splitFronts(Front* F, Front* A, unsigned int a,
 			if(++current == B->size()) current = 0;
 		}
 	}
+}
+
+Front* TrisPoly::mergeFronts(Front* A, unsigned int a, Front* B, unsigned int b)
+{
+	unsigned int a_prime = a + 1;
+	unsigned int b_prime = b + 1;
+	Front* F = new Front();
+	F->appendVertex(A->getVertex(a));
+	unsigned int current = b_prime;
+	while (current != b)
+	{
+		F->appendVertex(B->getVertex(current));
+		if(++current == B->size()) current = 0;
+	}
+
+	F->appendVertex(A->getVertex(a_prime));
+	current = a_prime + 1;
+	while (current !=  a_prime)
+	{
+		F->appendVertex(A->getVertex(current));
+		if (current == A->size()) current = 0;
+	}
+
+	return F;
 }
