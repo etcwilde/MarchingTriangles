@@ -20,10 +20,41 @@ Mesh TrisPoly::polygonize()
 			m_mesh_tree.buildIndex();
 			m_front_tree.buildIndex();
 
+#ifdef DEBUG
 			for (unsigned int i = 0; i < f0->size(); i++)
-				std::cout << "Opening Angle: " << toDegrees<float>(f0->getOpeningAngle(i)) << '\n';
+				std::cout << "Opening Angle: "
+					<< toDegrees<float>(f0->getOpeningAngle(i))
+					<< '\n';
 
-			break;
+			// These are for testing purposes
+			// Gets the point with the minimum angle
+			glm::vec3 point = m_container.getVertex(f0->getVertex(min_angle_index));
+			// Wrong one, but well work it out later
+
+			// Gets the last point in the container
+			//glm::vec3 point = m_container.getVertex(m_container.verts() - 1);
+			float * point_array= &point.x;
+			std::cout << "Point: " << point << ": "
+				<< point_array[0] << ", "
+				<< point_array[1] << ", "
+				<< point_array[2] << '\n';
+			std::vector<std::pair<long unsigned int, float>> ret_points;
+
+			m_mesh_tree.radiusSearch(&point.x, 0.15, ret_points, nanoflann::SearchParams(10));
+
+			std::cout << "Points in search: " << ret_points.size() << '\n';
+			for (unsigned int i = 0; i < ret_points.size(); ++i)
+			{
+				std::cout << "Index: " 
+					<< std::get<0>(ret_points[i]) << ", "
+					<< m_container.getVertex(
+							std::get<0>(ret_points[i])
+							)
+					<< '\n';
+			}
+#endif
+
+
 
 			// Test self-intersection
 
@@ -39,6 +70,12 @@ Mesh TrisPoly::polygonize()
 			//
 			//We need a mapping from glm::vec3 to vertex index
 			//We need a mapping from vertex index to front index
+			//
+
+
+
+			//const glm::vec3 test_point = m_con
+			break;
 		}
 
 		// fill front
@@ -144,17 +181,8 @@ float TrisPoly::computeOpenAngle(unsigned int i, const Front* f) const
 	const glm::vec3 n = m_container.getNormal(vi);
 	const unsigned int left_index = f->getLeft(i);
 	const unsigned int right_index = f->getRight(i);
-	//std::cout << "Left Vertex Index: " << left_index << ", " <<  right_index << '\n';
 	const glm::vec3 vleft = m_container.getVertex(left_index);
 	const glm::vec3 vright = m_container.getVertex(right_index);
-
-	std::cout << vleft << ", " << v << ", " << vright << '\n';
-	std::cout << "Testing Map function: " << left_index << " => " << vleft
-		<< " => " << m_container.getVertexIndex(vleft) << '\n';
-
-	std::cout << "Testing Front map function: " << left_index << " => " <<
-		f->getVertexIndex(left_index) << " => " <<  f->getVertex(f->getVertexIndex(left_index)) << '\n';
-
 
 	glm::vec3 X, Y;
 	TangentSpace(n, X, Y);

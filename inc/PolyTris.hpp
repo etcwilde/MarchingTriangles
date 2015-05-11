@@ -20,6 +20,7 @@
 #include <cmath>
 #include <chrono>
 #include <unordered_map>
+#include <utility>
 
 #include <glm/glm.hpp>
 
@@ -181,9 +182,6 @@ public:
 
 	inline float kdtree_distance(const float* p1, const unsigned int index, unsigned int) const
 	{
-		/*return glm::length(
-				glm::vec3(p1[0], p1[1], p1[2]) -
-				m_pts.getVertex(m_pts.getFront()->getVertex(index))); */
 		if (m_pts.getFront())
 		{
 			return glm::length(glm::vec3(p1[0], p1[1], p1[2]) -
