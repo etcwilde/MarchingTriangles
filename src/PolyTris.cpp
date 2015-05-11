@@ -12,7 +12,7 @@ Mesh TrisPoly::polygonize()
 		Front* f0 = m_container.popFront();
 		// Build front kdtree
 		Front_pt_kdtree front_tree(2, FrontPtAdaptor(m_container, f0),
-				nanoflann::KDTreeSingleIndexAdaptorParams(10));
+				nanoflann::KDTreeSingleIndexAdaptorParams(KDTREE_PARAM_SIZE));
 		while (f0->size() > 3)
 		{
 
@@ -27,7 +27,8 @@ Mesh TrisPoly::polygonize()
 
 			std::vector<std::pair<long unsigned int, float>> danger_points;
 			front_tree.radiusSearch(selected_point, roc, danger_points,
-					nanoflann::SearchParams(10));
+					nanoflann::SearchParams(KDTREE_PARAM_SIZE));
+
 
 			std::cout << "Danger Points: " << danger_points.size() << '\n';
 
@@ -138,8 +139,8 @@ Front* TrisPoly::seedHexagon(const glm::vec3& start)
 	Front* front = new Front();
 	for (unsigned int i = 0; i < 6; ++i)
 	{
-		float x = 2.f * roc * std::cos(float(i) * 0.33333333f * M_PI);
-		float y = 2.f * roc * std::sin(float(i) * 0.33333333f * M_PI);
+		float x = 2.f * roc * SEED_ROC_MULTIPLIER * std::cos(float(i) * 0.33333333f * M_PI);
+		float y = 2.f * roc * SEED_ROC_MULTIPLIER * std::sin(float(i) * 0.33333333f * M_PI);
 		glm::vec3 proj_point = m_scene.Project(seed + (x*t) + (y*b));
 
 		m_container.pushVertex(proj_point);
@@ -210,7 +211,7 @@ float TrisPoly::rocAtPt(const glm::vec3& v)
 {
 	float k1, k2;
 	m_scene.Curvature(v, k1, k2);
-	return 1.f/((std::max(std::abs(k1), std::abs(k2)))  * 10);
+	return 1.f/((std::max(std::abs(k1), std::abs(k2))));
 }
 
 // a and b are vertex indices not front indices, they don't exist yet

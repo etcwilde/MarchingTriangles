@@ -27,6 +27,8 @@
 
 // Tune this number
 #define VERTEX_HASH_BUCKETS 10
+#define SEED_ROC_MULTIPLIER 0.05
+#define KDTREE_PARAM_SIZE 10
 
 class PolyContainer
 {
@@ -221,7 +223,7 @@ public:
 		Polygonizer(o),
 		m_mesh_adaptor(m_container),
 		m_mesh_tree(2, m_mesh_adaptor ,
-				nanoflann::KDTreeSingleIndexAdaptorParams(10))
+				nanoflann::KDTreeSingleIndexAdaptorParams(KDTREE_PARAM_SIZE))
 	{ }
 
 protected:
