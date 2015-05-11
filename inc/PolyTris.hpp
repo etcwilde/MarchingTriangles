@@ -234,7 +234,16 @@ private:
 	// adds generated front to fronts
 	Front* seedHexagon(const glm::vec3& start);
 
+	// Merges A and B at points A and B into one new Front
+	// The new Front is allocated
+	//
+	// A and B must be deallocated after method call
 	Front* mergeFronts(Front* A, unsigned int a, Front* B, unsigned int b);
+
+	// Splits front F
+	// Internal allocations are made, do not allocate A or B
+	// Later, they must be deallocated
+	// a and b are the front indices
 	void splitFronts(Front* F, Front* A, unsigned int a, Front* B, unsigned int b);
 
 	// Only works on fronts with 3 or 4 vertices (a hole)

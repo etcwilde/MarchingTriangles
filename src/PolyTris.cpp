@@ -227,3 +227,37 @@ float TrisPoly::rocAtPt(const glm::vec3& v)
 	return 1.f/((std::max(std::abs(k1), std::abs(k2)))  * 10);
 }
 
+// a and b are vertex indices not front indices, they don't exist yet
+// Wrong, they are front indices Use F to dereference them
+void TrisPoly::splitFronts(Front* F, Front* A, unsigned int a,
+		Front* B, unsigned int b)
+{
+	// a, b, a_prime, and b_prime are all front indices
+	// NOT vertex indices
+	unsigned int a_prime = a + 1;
+	unsigned int b_prime = b + 1;
+
+	A = new Front();
+	{
+		A->appendVertex(F->getVertex(a));
+		A->appendVertex(F->getVertex(b_prime));
+		unsigned int current = b_prime;
+		while (current != a)
+		{
+			A->appendVertex(F->getVertex(current));
+			if (++current == A->size()) current = 0;
+		}
+	}
+
+	B = new Front();
+	{
+		B->appendVertex(F->getVertex(b));
+		B->appendVertex(F->getVertex(a_prime));
+		unsigned int current = a_prime;
+		while (current != b)
+		{
+			B->appendVertex(F->getVertex(current));
+			if(++current == B->size()) current = 0;
+		}
+	}
+}
