@@ -1,6 +1,7 @@
 #ifndef POLYTRIS_HPP
 #define POLYTRIS_HPP
 
+
 #include "implicit/ImplicitSystem.hpp"
 #include "Polygonizer.hpp"
 #include "PolyTris.hpp"
@@ -12,14 +13,19 @@
 #include "nanoflann.hpp"
 
 
+#include <functional>
 #include <list>
 #include <vector>
 #include <stack>
 #include <cmath>
 #include <chrono>
-#include <map>
+#include <unordered_map>
 
 #include <glm/glm.hpp>
+
+
+// Tune this number
+#define VERTEX_HASH_BUCKETS 10
 
 class PolyContainer
 {
@@ -38,7 +44,8 @@ public:
 		m_vertRocs(),
 		m_edges(),
 		m_fronts(),
-		m_faces()
+		m_faces(),
+		m_vertex_index_map(VERTEX_HASH_BUCKETS, hashVector)
 	{ }
 
 	inline std::vector<glm::vec3> getVertices() { return m_vertices; }
@@ -48,24 +55,19 @@ public:
 	inline unsigned int fronts() const { return m_fronts.size(); }
 	inline unsigned int faces() const { return m_faces.size(); }
 
-
 	// Vertex Handling
-
 	inline const glm::vec3& getVertex(unsigned int index) const
 	{ return m_vertices[index]; }
 
 
 	inline void pushVertex(const glm::vec3 v)
 	{
-		//vertex_index_map[v] = m_vertices.size();
+		m_vertex_index_map[v] = m_vertices.size();
 		m_vertices.push_back(v);
 	}
 
 	inline unsigned int getVertexIndex(glm::vec3 v) const
-	{
-	//	return m_vertex_index_map[v];
-	return 10;
-	}
+	{ return m_vertex_index_map.at(v); }
 
 	// Normal Handling
 
@@ -117,8 +119,13 @@ public:
 	inline void pushRoc(float roc)
 	{ m_vertRocs.push_back(roc); }
 
-
 private:
+	static inline size_t hashVector(const glm::vec3& v)
+	{
+		return ((int)(v.x * 0x1459) ^ (int)(v.y * 0x713)) ^ (int)(v.z * 0x1c81);
+	}
+
+
 	std::vector<glm::vec3> m_vertices;
 	std::vector<glm::vec3> m_normals;
 	std::vector<float> m_vertRocs;
@@ -126,7 +133,8 @@ private:
 	std::vector<Front*> m_fronts;
 	std::vector<Face> m_faces;
 
-	//std::map<glm::vec3, unsigned int> m_vertex_index_map;
+	// Tune the number of buckets
+	std::unordered_map<glm::vec3, unsigned int, std::function<decltype(hashVector)> > m_vertex_index_map;
 };
 
 

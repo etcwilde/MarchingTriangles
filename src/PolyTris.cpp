@@ -149,6 +149,9 @@ float TrisPoly::computeOpenAngle(unsigned int i, const Front* f) const
 	const glm::vec3 vright = m_container.getVertex(right_index);
 
 	std::cout << vleft << ", " << v << ", " << vright << '\n';
+	std::cout << "Testing Map function: " << left_index << " => " << vleft 
+		<< " => " << m_container.getVertexIndex(vleft) << '\n';
+
 
 	glm::vec3 X, Y;
 	TangentSpace(n, X, Y);
