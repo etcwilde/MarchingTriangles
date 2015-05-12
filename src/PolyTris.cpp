@@ -17,6 +17,8 @@ Mesh TrisPoly::polygonize()
 
 			actualizeAngles(f0);
 			const unsigned int min_angle_index = f0->getMinimalAngle();
+			const float opening_angle = f0->getOpeningAngle(min_angle_index);
+			std::cout << "Front Min Angle Index: " << min_angle_index << '\n';
 			const float* selected_point = &m_container.getVertex(f0->getVertex(min_angle_index)).x;
 			const float roc = m_container.getRoc(f0->getVertex(min_angle_index)) * SEED_ROC_MULTIPLIER;
 
@@ -49,7 +51,7 @@ Mesh TrisPoly::polygonize()
 				else
 				{
 					std::cout << "Expand triangle\n";
-					expandTriangle(f0->getVertex(min_angle_index), f0);
+					expandTriangle(min_angle_index, opening_angle, f0);
 				}
 
 
@@ -141,10 +143,9 @@ Mesh TrisPoly::polygonize()
 Front* TrisPoly::seedHexagon(const glm::vec3& start)
 {
 	const glm::vec3 seed = m_scene.Project(start);
-
 	const glm::vec3 n = m_scene.Normal(seed);
 	glm::vec3 t, b;
-	float roc = rocAtPt(seed);
+	const float roc = rocAtPt(seed);
 	TangentSpace(n, t, b);
 #ifdef DEBUG
 	std::cout << "Seed Value: " << m_scene.Evaluate(seed) << '\n';
@@ -222,8 +223,8 @@ float TrisPoly::computeOpenAngle(unsigned int i, const Front* f) const
 	float opening_angle;
 	// Keep it on the exterior
 	if ((glm::cross(vleft_proj, vright_proj)).z >= 0.f)
-		opening_angle = M_PI - std::acos(dot);
-	else opening_angle = M_PI + std::acos(dot);
+		opening_angle = M_PI + std::acos(dot);
+	else opening_angle = M_PI - std::acos(dot);
 	return opening_angle;
 }
 
@@ -290,8 +291,36 @@ Front* TrisPoly::mergeFronts(Front* A, unsigned int a, Front* B, unsigned int b)
 
 	return F;
 }
-void TrisPoly::expandTriangle(unsigned int v, Front* F)
+
+// Take front index
+void TrisPoly::expandTriangle(unsigned int fi, float angle, Front* F)
 {
-	std::cout << "Expanding Triangle vertex: " << v << '\n';
+	const unsigned int n_tris = std::floor(3 * angle / M_PI); // Compute 3/pi by hand
+	const float roc = m_container.getRoc(F->getRadiusOfCurvature(fi));
+	const glm::vec3 seed = m_container.getVertex(F->getVertex(fi));
+	const glm::vec3 n = m_container.getNormal(F->getVertex(fi));
+	const glm::vec3 vleft = m_container.getVertex(F->getLeft(fi));
+	const glm::vec3 vright = m_container.getVertex(F->getRight(fi));
+	glm::vec3 t, b;
+	TangentSpace(n, t, b);
+#ifdef DEBUG
+	std::cout << "Front Index: " << fi << '\n';
+	std::cout << "Opening Angle: " << toDegrees<float>(angle) << '\n';
+	std::cout << "Generating " << n_tris << " triangles\n";
+	std::cout << "Radius of curvature: " << roc << '\n';
+	std::cout << "Adjusted Radius of Curvature: " << roc * SEED_ROC_MULTIPLIER << '\n';
+	std::cout << "Vertex: " << vleft << " < " << seed <<  " > " << vright <<'\n';
+	std::cout << "Normal: " << n << '\n';
+#endif
+
+	// Generate new triangles
+	for (unsigned int i = 0; i < n_tris; ++i)
+	{
+		float x = 2.f * roc * SEED_ROC_MULTIPLIER * std::cos(float(i) * 0.33333333f * M_PI);
+		float y = 2.f * roc * SEED_ROC_MULTIPLIER * std::sin(float(i) * 0.33333333f * M_PI);
+		std::cout << "[" << x << ", " << y << "]" << '\n';
+
+	}
+
 
 }

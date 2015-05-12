@@ -128,7 +128,6 @@ private:
 		return ((int)(v.x * 0x1459) ^ (int)(v.y * 0x713)) ^ (int)(v.z * 0x1c81);
 	}
 
-
 	std::vector<glm::vec3> m_vertices;
 	std::vector<glm::vec3> m_normals;
 	std::vector<float> m_vertRocs;
@@ -263,7 +262,7 @@ private:
 
 	// Grow the next triangle set off of this vertex
 	// Know the right and left vertices of this vertex
-	void expandTriangle(unsigned int v, Front* F);
+	void expandTriangle(unsigned int fi, float angle, Front* F);
 private:
 	// Variables
 	//Mesh m_mesh;
