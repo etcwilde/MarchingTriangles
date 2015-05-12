@@ -5,7 +5,6 @@
 Mesh TrisPoly::polygonize()
 {
 	auto begin = std::chrono::high_resolution_clock::now();
-	//m_container.m_fronts.push_back(seedHexagon(m_scene.GetCenterVertex()));
 	m_container.pushFront(seedHexagon(m_scene.GetCenterVertex()));
 	while (m_container.fronts() > 0)
 	{
@@ -19,7 +18,7 @@ Mesh TrisPoly::polygonize()
 			actualizeAngles(f0);
 			const unsigned int min_angle_index = f0->getMinimalAngle();
 			const float* selected_point = &m_container.getVertex(f0->getVertex(min_angle_index)).x;
-			const float roc = m_container.getRoc(f0->getVertex(min_angle_index));
+			const float roc = m_container.getRoc(f0->getVertex(min_angle_index)) * SEED_ROC_MULTIPLIER;
 
 			// This may get expensive
 			m_mesh_tree.buildIndex();
@@ -29,13 +28,33 @@ Mesh TrisPoly::polygonize()
 			front_tree.radiusSearch(selected_point, roc, danger_points,
 					nanoflann::SearchParams(KDTREE_PARAM_SIZE));
 
-
+#ifdef DEBUG
 			std::cout << "Danger Points: " << danger_points.size() << '\n';
+#endif
 
 			// The point we tested is the only point in danger, so
 			// there is no danger
 			if (danger_points.size() == 1)
 			{
+				std::vector<std::pair<long unsigned int, float>> mesh_points;
+				m_mesh_tree.radiusSearch(selected_point, roc, mesh_points,
+						nanoflann::SearchParams(KDTREE_PARAM_SIZE));
+#ifdef DEBUG
+				std::cout << "Mesh Collision Points: " << mesh_points.size() << '\n';
+#endif
+				if (mesh_points.size() > 1)
+				{
+					std::cout << "Merge maybe?\n";
+				}
+				else
+				{
+					std::cout << "Expand triangle\n";
+					expandTriangle(f0->getVertex(min_angle_index), f0);
+				}
+
+
+
+
 				// Perform a front-collision detection
 				// This is also difficult
 				// Look for collision with the mesh kdtree
@@ -49,6 +68,7 @@ Mesh TrisPoly::polygonize()
 				//
 				// OH MY GOODNESS! THE END IS IN SIGHT! YEAH!!!
 				// (assuming everything works)
+
 			}
 			else
 			{
@@ -269,4 +289,9 @@ Front* TrisPoly::mergeFronts(Front* A, unsigned int a, Front* B, unsigned int b)
 	}
 
 	return F;
+}
+void TrisPoly::expandTriangle(unsigned int v, Front* F)
+{
+	std::cout << "Expanding Triangle vertex: " << v << '\n';
+
 }

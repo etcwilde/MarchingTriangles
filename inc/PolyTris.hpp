@@ -261,7 +261,9 @@ private:
 	// Maximum absolute curvature used to calculate
 	float rocAtPt(const glm::vec3& v);
 
-
+	// Grow the next triangle set off of this vertex
+	// Know the right and left vertices of this vertex
+	void expandTriangle(unsigned int v, Front* F);
 private:
 	// Variables
 	//Mesh m_mesh;
