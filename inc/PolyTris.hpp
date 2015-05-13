@@ -34,10 +34,7 @@ class PolyContainer
 {
 public:
 
-	typedef struct
-	{
-		unsigned int vert_index[3];
-	} Face;
+	typedef struct { unsigned int vert_index[3]; } Face;
 
 public:
 

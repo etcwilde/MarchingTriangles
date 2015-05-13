@@ -76,9 +76,15 @@ unsigned int Front::insertVertex(unsigned int fi, unsigned int vi)
 
 void Front::removeVertex(unsigned int fi)
 {
+	unsigned int left_i;
+	if ((fi % m_vertex_index.size()) == 0)
+		left_i = m_vertex_index.size() - 1;
+	else left_i = fi - 1;
+
+
 	if (m_vertex_index.size() <= 0) return;
 	m_open_angles[fi + 1] = 0;
-	m_open_angles[fi - 1] = 0;
+	m_open_angles[left_i] = 0;
 	m_vertex_index.erase(m_vertex_index.begin() + fi);
 	m_open_angles.erase(m_open_angles.begin() + fi);
 	m_rocs.erase(m_rocs.begin() + fi);

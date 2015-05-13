@@ -2,6 +2,8 @@
 #define POLYFRONT_HPP
 #include <vector>
 #include <cmath>
+#include <iostream>
+
 
 class Front
 {
@@ -52,7 +54,6 @@ public:
 	 */
 	inline unsigned int getLeft(unsigned int fi) const
 	{
-		std::cout << "fi : " << fi << '\n';
 		if ((fi % m_vertex_index.size()) == 0)
 			return m_vertex_index[m_vertex_index.size() - 1];
 		return m_vertex_index[(fi - 1) % m_vertex_index.size()];

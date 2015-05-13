@@ -160,8 +160,8 @@ Front* TrisPoly::seedHexagon(const glm::vec3& start)
 	Front* front = new Front();
 	for (unsigned int i = 0; i < 6; ++i)
 	{
-		float x = 2.f * roc * SEED_ROC_MULTIPLIER * std::cos(float(i) * 0.33333333f * M_PI);
-		float y = 2.f * roc * SEED_ROC_MULTIPLIER * std::sin(float(i) * 0.33333333f * M_PI);
+		const float x = 2.f*roc*SEED_ROC_MULTIPLIER*std::cos(float(i)*0.33333333f*M_PI);
+		const float y = 2.f*roc*SEED_ROC_MULTIPLIER*std::sin(float(i)*0.33333333f*M_PI);
 		glm::vec3 proj_point = m_scene.Project(seed + (x*t) + (y*b));
 
 		m_container.pushVertex(proj_point);
@@ -313,14 +313,37 @@ void TrisPoly::expandTriangle(unsigned int fi, float angle, Front* F)
 	std::cout << "Normal: " << n << '\n';
 #endif
 
-	// Generate new triangles
+
+	// Generate new triangles=
+	unsigned int vleft_index = F->getLeft(fi);
+	std::cout << "v left index: " << vleft_index<< ", " << m_container.getVertex(vleft_index) << '\n';
 	for (unsigned int i = 0; i < n_tris; ++i)
 	{
-		float x = 2.f * roc * SEED_ROC_MULTIPLIER * std::cos(float(i) * 0.33333333f * M_PI);
-		float y = 2.f * roc * SEED_ROC_MULTIPLIER * std::sin(float(i) * 0.33333333f * M_PI);
-		std::cout << "[" << x << ", " << y << "]" << '\n';
+		const float x = 2.f*roc*SEED_ROC_MULTIPLIER*std::cos(float(i)*0.33333333f*M_PI);
+		const float y = 2.f*roc*SEED_ROC_MULTIPLIER*std::sin(float(i)*0.33333333f*M_PI);
 
+
+		glm::vec3 proj_point = m_scene.Project(seed + (x*t) + (y*b));
+		std::cout << "Projected Point: " << proj_point << '\n';
+
+		m_container.pushVertex(proj_point);
+
+		F->removeVertex(fi);
+		F->insertVertex(fi + (n_tris - i), m_container.verts() - 1);
+
+		PolyContainer::Face f;
+		f.vert_index[0] = F->getVertex(fi);
+		f.vert_index[1] = 1 + (i % n_tris);
+		f.vert_index[2] = 1 + ((i + 1) % n_tris);
+		m_container.pushFace(f);
 	}
+
+	/*
+	for (unsigned int i = 0; i < n_tris; ++i)
+	{
+		const glm::vec3 new_point = 
+	}
+	*/
 
 
 }
